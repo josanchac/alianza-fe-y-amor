@@ -1,0 +1,12 @@
+import {period, type RecordItem} from './domain.ts';
+export function shift(date:string,days:number){const d=new Date(date+'T12:00:00Z');d.setUTCDate(d.getUTCDate()+days);return d.toISOString().slice(0,10);}
+export function rangeFor(mode:string,date:string){if(mode==='week'){const start=period('reencantar',date);return {start,end:shift(start,6)};}if(mode==='year')return{start:date.slice(0,4)+'-01-01',end:date.slice(0,4)+'-12-31'};const end=new Date(date.slice(0,7)+'-01T12:00:00Z');end.setUTCMonth(end.getUTCMonth()+1);end.setUTCDate(0);return{start:date.slice(0,7)+'-01',end:end.toISOString().slice(0,10)};}
+export function previousRange(start:string,end:string){const days=Math.round((Date.parse(end)-Date.parse(start))/86400000)+1;return {start:shift(start,-days),end:shift(start,-1),days};}
+export function summarize(own:RecordItem[],shared:RecordItem[],start:string,end:string){const inRange=(d:string)=>d>=start&&d<=end;const checks=own.filter(r=>r.kind==='checks'&&inRange(r.key)&&Object.keys(r.data).length>0);let done=0,missed=0,skip=0;checks.forEach(r=>Object.values(r.data).forEach(s=>{if(s==='done')done++;if(s==='missed')missed++;if(s==='skip')skip++;}));const moments=shared.filter(r=>r.kind==='rs'&&r.data.done&&inRange(r.data.doneDate));return{days:checks.length,done,missed,skip,reflections:own.filter(r=>r.kind==='journal'&&inRange(r.key)&&(r.data.gratitude||r.data.offering)).length,moments: moments.length,rs:Object.fromEntries(['rezar','reencantar','revisar','renovar'].map(k=>[k,moments.filter(r=>r.data.type===k).length]))};}
+export function calendarPrevious(mode:string,start:string,end:string){
+ if(mode==='custom')return previousRange(start,end);
+ if(mode==='week')return {start:shift(start,-7),end:shift(end,-7),days:Math.round((Date.parse(end)-Date.parse(start))/86400000)+1};
+ const offset=mode==='year'?12:1;
+ function earlier(date:string){const d=new Date(date+'T12:00:00Z');const day=d.getUTCDate();d.setUTCDate(1);d.setUTCMonth(d.getUTCMonth()-offset);const last=new Date(Date.UTC(d.getUTCFullYear(),d.getUTCMonth()+1,0,12)).getUTCDate();d.setUTCDate(Math.min(day,last));return d.toISOString().slice(0,10);}
+ const priorStart=earlier(start);const complete=end===rangeFor(mode,start).end;const priorEnd=complete?rangeFor(mode,priorStart).end:earlier(end);return {start:priorStart,end:priorEnd,days:Math.round((Date.parse(priorEnd)-Date.parse(priorStart))/86400000)+1};
+}
