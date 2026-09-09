@@ -12,7 +12,7 @@ Base de datos Supabase y dos cuentas configuradas. Verificación local: 15 grupo
 
 ## Funciones
 
-- Entrada individual con correo y contraseña, activación por enlace privado y cambio de contraseña. La recuperación automática por correo está desactivada hasta configurar SMTP; el administrador puede emitir un nuevo enlace privado.
+- Entrada individual con correo electrónico (el usuario) y contraseña de al menos 6 caracteres, sin símbolos ni mayúsculas obligatorios; activación por enlace privado y cambio de contraseña. La recuperación automática por correo está desactivada hasta configurar SMTP; el administrador puede emitir un nuevo enlace privado.
 - Compromisos editables, señales cotidianas y una versión mínima para días difíciles.
 - Registro diario: «Lo viví», «Me costó» y «No aplicaba».
 - Propósito particular mensual y reflexión privada.
