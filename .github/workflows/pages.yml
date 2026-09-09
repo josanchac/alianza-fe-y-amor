@@ -28,13 +28,14 @@ jobs:
           SUPABASE_PUBLISHABLE_KEY: ${{ vars.SUPABASE_PUBLISHABLE_KEY }}
         run: |
           node --input-type=module <<'JS'
-          import {writeFileSync} from 'node:fs';
-          const url=process.env.SUPABASE_URL;
-          const publishableKey=process.env.SUPABASE_PUBLISHABLE_KEY;
+          import {readFileSync,writeFileSync} from 'node:fs';
+          const saved=JSON.parse(readFileSync('github/config.public.json','utf8'));
+          const url=process.env.SUPABASE_URL || saved.url;
+          const publishableKey=process.env.SUPABASE_PUBLISHABLE_KEY || saved.publishableKey;
           if(!/^https:\/\/[a-z0-9-]+\.supabase\.co$/.test(url||'') || !publishableKey?.startsWith('sb_publishable_')) {
             throw new Error('Configure Supabase and the two accounts before publishing. Public project variables are missing or invalid.');
           }
-          writeFileSync('github/config.local.json',JSON.stringify({url,publishableKey}));
+          writeFileSync('github/config.local.json',JSON.stringify({...saved,url,publishableKey}));
           JS
       - run: npm run build
       - uses: actions/upload-pages-artifact@v3

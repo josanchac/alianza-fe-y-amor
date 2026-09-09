@@ -9,7 +9,8 @@ export default defineConfig({
   plugins: [react(), { name:'public-assets', closeBundle(){
     const dir=path.resolve('github-dist'); mkdirSync(dir,{recursive:true});
     for(const f of ['emblem.png','icon.png'])copyFileSync('public/'+f,dir+'/'+f);
-    let config={url:'',publishableKey:''};
+    let config={url:'',publishableKey:'',emailRecoveryEnabled:false};
+    try{config=JSON.parse(readFileSync('github/config.public.json','utf8'));}catch{}
     try{config=JSON.parse(readFileSync('github/config.local.json','utf8'));}catch{}
     if(config.publishableKey && !config.publishableKey.startsWith('sb_publishable_'))throw new Error('Use only a Supabase publishable key. Secret and legacy keys are rejected.');
     if(config.url && !/^https:\/\/[a-z0-9-]+\.supabase\.co$/.test(config.url))throw new Error('Invalid Supabase project URL');

@@ -6,11 +6,11 @@ El árbol y el rosario son un emblema original; no representan una aplicación o
 
 ## Estado de publicación
 
-Código preparado y pruebas de privacidad verificadas localmente. **El acceso con las cuentas reales todavía no está publicado ni verificado.** La activación requiere configurar el proyecto Supabase, las dos cuentas y GitHub Pages. Sin configuración válida, la app muestra un aviso de preparación y el flujo de publicación se detiene.
+Base de datos Supabase y dos cuentas configuradas. Verificación local: 15 grupos de pruebas. Verificación contra Auth y PostgreSQL alojados: 8 grupos de integración con cuentas temporales, luego eliminadas. La publicación de la interfaz depende de habilitar GitHub Pages con GitHub Actions. Cada titular debe activar su enlace privado y elegir su contraseña; no se probaron ni se conocen sus contraseñas.
 
 ## Funciones
 
-- Entrada individual con correo y contraseña, recuperación y cambio de contraseña.
+- Entrada individual con correo y contraseña, activación por enlace privado y cambio de contraseña. La recuperación automática por correo está desactivada hasta configurar SMTP; el administrador puede emitir un nuevo enlace privado.
 - Compromisos editables, señales cotidianas y una versión mínima para días difíciles.
 - Registro diario: «Lo viví», «Me costó» y «No aplicaba».
 - Propósito particular mensual y reflexión privada.
@@ -41,7 +41,7 @@ npm run build
 npm run dev
 ```
 
-La configuración local, ignorada por Git, se coloca en `github/config.local.json`:
+La configuración pública está en `github/config.public.json`. Para sobrescribirla localmente, usar `github/config.local.json`, ignorado por Git:
 
 ```json
 {"url":"https://PROJECT.supabase.co","publishableKey":"sb_publishable_REPLACE"}
@@ -49,7 +49,7 @@ La configuración local, ignorada por Git, se coloca en `github/config.local.jso
 
 Solo se admite una clave **publishable**. El compilador rechaza claves administrativas, secretas y claves antiguas JWT. El resultado público queda en `github-dist/`.
 
-La configuración de publicación usa las variables de GitHub `SUPABASE_URL` y `SUPABASE_PUBLISHABLE_KEY`. Nunca utilizar una clave `service_role`, una contraseña o un token administrativo como variable pública.
+La configuración pública permite publicar sin secretos. Opcionalmente se puede sobrescribir con las variables de GitHub `SUPABASE_URL` y `SUPABASE_PUBLISHABLE_KEY`. Nunca utilizar una clave `service_role`, una contraseña o un token administrativo como variable pública.
 
 ## Arquitectura y mantenimiento
 

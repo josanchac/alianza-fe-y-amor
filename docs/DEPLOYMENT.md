@@ -1,4 +1,6 @@
-# Activación — trabajo pendiente del mantenedor
+# Activación y mantenimiento
+
+Estado actual: consultar [VERIFICATION.md](VERIFICATION.md). La base y las dos cuentas ya están preparadas; no recrearlas.
 
 No solicitar ni publicar las contraseñas de los usuarios. No incluir correos personales, tokens de invitación, diarios ni copias de bases en este repositorio.
 

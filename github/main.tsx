@@ -6,7 +6,7 @@ import Journal from '../app/journal';
 import '../app/globals.css';
 import './password.css';
 
-function Login({client,setupPassword=false}:{client:SupabaseClient;setupPassword?:boolean}){
+function Login({client,setupPassword=false,emailRecoveryEnabled=false}:{client:SupabaseClient;setupPassword?:boolean;emailRecoveryEnabled?:boolean}){
   const [session,setSession]=useState<Session|null>(null),[ready,setReady]=useState(false);
   const [mode,setMode]=useState<'login'|'recover'|'password'>(setupPassword?'password':'login');
   const [email,setEmail]=useState(''),[password,setPassword]=useState(''),[repeat,setRepeat]=useState('');
@@ -47,6 +47,7 @@ function Login({client,setupPassword=false}:{client:SupabaseClient;setupPassword
   }
   if(!ready)return <main className="gate"><LoaderCircle className="spin"/><p>Abriendo tu espacio…</p></main>;
   if(session&&mode!=='password')return <><Journal key={session.user.id} dataRequest={request} onSignOut={signOut} assetBase="./"/>{error&&<p className="auth-alert" role="alert">{error}</p>}<button className="change-password" onClick={()=>{setMode('password');setError('');setMessage('');}}>Cambiar mi contraseña</button></>;
+  if(mode==='recover'&&!emailRecoveryEnabled)return <main className="auth-page"><section className="auth-card"><LockKeyhole size={32}/><h1>Recuperar mi acceso</h1><p>La recuperación automática por correo todavía no está activada.</p><p>Solicitá un nuevo enlace privado a quien administra Alianza. Nunca compartás tu contraseña.</p><button className="primary" onClick={()=>setMode('login')}>Volver a entrar</button></section></main>;
   return <main className="auth-page"><section className="auth-card"><img className="auth-emblem" src="./emblem.png" alt="Árbol y rosario entrelazados"/><div className="brand-word">Alianza<span>FE Y AMOR</span></div><p className="auth-intro">Un camino compartido.<br/>Una entrega personal.</p><h1>{mode==='login'?'Tu espacio de fe y amor':mode==='recover'?'Recuperar mi acceso':'Elegir mi contraseña'}</h1><form onSubmit={submit}>
     {mode!=='password'&&<label>Tu correo<input type="email" autoComplete="username" value={email} onChange={e=>setEmail(e.target.value)} required autoCapitalize="none" spellCheck={false}/></label>}
     {mode!=='recover'&&<><label>Tu contraseña<div className="password-field"><input type={visible?'text':'password'} autoComplete={mode==='password'?'new-password':'current-password'} value={password} onChange={e=>setPassword(e.target.value)} required minLength={mode==='password'?12:undefined}/><button type="button" aria-label={visible?'Ocultar contraseña':'Mostrar contraseña'} onClick={()=>setVisible(v=>!v)}>{visible?<EyeOff size={20}/>:<Eye size={20}/>}</button></div></label>{mode==='password'&&<><p className="muted">Usá al menos 12 caracteres. Una frase puede ser más fácil de recordar.</p><label>Repetí tu contraseña<input type={visible?'text':'password'} autoComplete="new-password" value={repeat} onChange={e=>setRepeat(e.target.value)} required minLength={12}/></label></>}</>}
@@ -54,12 +55,20 @@ function Login({client,setupPassword=false}:{client:SupabaseClient;setupPassword
     <button className="primary" type="submit" disabled={busy}>{busy?<><LoaderCircle className="spin" size={18}/>Un momento…</>:mode==='login'?'Entrar':mode==='recover'?'Recibir enlace':'Guardar contraseña'}</button>
   </form><button className="text-button" disabled={busy} onClick={()=>{if(mode==='password'&&session){setMode('login');}else setMode(mode==='recover'?'login':'recover');setError('');setMessage('');setPassword('');setRepeat('');}}>{mode==='login'?'Olvidé mi contraseña':'Volver'}</button><p className="auth-private"><LockKeyhole size={14}/>Solo las cuentas habilitadas pueden entrar.</p></section></main>;
 }
+function Invitation({client,token,type,emailRecoveryEnabled}:{client:SupabaseClient;token:string;type:'invite'|'recovery';emailRecoveryEnabled:boolean}){
+ const [busy,setBusy]=useState(false),[activated,setActivated]=useState(false),[error,setError]=useState('');
+ async function activate(){if(busy)return;setBusy(true);setError('');try{const {error}=await client.auth.verifyOtp({token_hash:token,type});if(error)throw error;history.replaceState(null,'',new URL('./',location.href));setActivated(true);}catch{setError('Este enlace venció o ya se utilizó. Si ya elegiste tu contraseña, entrá normalmente; si no, solicitá un enlace nuevo.');}finally{setBusy(false);}}
+ if(activated)return <Login client={client} setupPassword emailRecoveryEnabled={emailRecoveryEnabled}/>;
+ return <main className="auth-page"><section className="auth-card"><img className="auth-emblem" src="./emblem.png" alt="Árbol y rosario"/><div className="brand-word">Alianza<span>FE Y AMOR</span></div><h1>Bienvenido a tu espacio</h1><p>Activá tu enlace privado y elegí una contraseña que solo vos conozcas.</p>{error&&<p role="alert" className="notice">{error}</p>}<button className="primary" disabled={busy} onClick={activate}>{busy?'Un momento…':'Elegir mi contraseña'}</button><a className="text-button" href="./">Ya tengo contraseña</a></section></main>;
+}
 async function start(){const root=createRoot(document.getElementById('root')!);try{
   const r=await fetch('./config.json',{cache:'no-store'});const c:any=await r.json();
   if(!/^https:\/\/[a-z0-9-]+\.supabase\.co$/.test(c.url)||!c.publishableKey?.startsWith('sb_publishable_'))throw new Error('Esta versión todavía está en preparación. El acceso se habilitará al completar la publicación.');
   // Only authentication tokens persist on this device; records stay in Postgres.
   const setupPassword=['invite','recovery'].includes(new URLSearchParams(location.hash.slice(1)).get('type')||'');
   const client=createClient(c.url,c.publishableKey,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,storageKey:'alianza-auth'}});
-  root.render(<Login client={client} setupPassword={setupPassword}/>);
+  const hash=new URLSearchParams(location.hash.slice(1));const token=hash.get('token_hash');const type=hash.get('type');
+  if(token&&(type==='invite'||type==='recovery'))root.render(<Invitation client={client} token={token} type={type} emailRecoveryEnabled={!!c.emailRecoveryEnabled}/>);
+  else root.render(<Login client={client} setupPassword={setupPassword} emailRecoveryEnabled={!!c.emailRecoveryEnabled}/>);
 }catch(e){root.render(<main className="gate"><LockKeyhole size={36}/><h1>Alianza · Fe y Amor</h1><p>{(e as Error).message}</p><button className="primary" onClick={()=>location.reload()}>Volver a intentar</button></main>);}}
 void start();

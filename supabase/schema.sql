@@ -134,4 +134,6 @@ revoke all on all functions in schema alianza_private from public,anon,authentic
 grant execute on function alianza_private.data(jsonb) to authenticated;
 revoke all on function public.alianza_data(jsonb) from public,anon;
 grant execute on function public.alianza_data(jsonb) to authenticated;
+create policy deny_direct_access on alianza_private.members for all to anon,authenticated using (false) with check (false);
+create policy deny_direct_access on alianza_private.records for all to anon,authenticated using (false) with check (false);
 commit;
