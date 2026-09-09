@@ -6,7 +6,9 @@ El árbol y el rosario son un emblema original; no representan una aplicación o
 
 ## Estado de publicación
 
-Base de datos Supabase y dos cuentas configuradas. Verificación local: 15 grupos de pruebas. Verificación contra Auth y PostgreSQL alojados: 8 grupos de integración con cuentas temporales, luego eliminadas. La publicación de la interfaz depende de habilitar GitHub Pages con GitHub Actions. Cada titular debe activar su enlace privado y elegir su contraseña; no se probaron ni se conocen sus contraseñas.
+**Publicada:** [Abrir Alianza](https://josanchac.github.io/alianza-fe-y-amor/). GitHub Actions completó verificación y despliegue del commit `32e5d5b42775bfccafbfbd057fe54d8dcf244e61`. La pantalla de entrada fue comprobada en navegador.
+
+Base de datos Supabase y dos cuentas configuradas. Verificación local: 15 grupos de pruebas. Verificación contra Auth y PostgreSQL alojados: 8 grupos de integración con cuentas temporales, luego eliminadas. GitHub Pages está habilitado con GitHub Actions. Cada titular debe activar su enlace privado y elegir su contraseña; no se probaron ni se conocen sus contraseñas.
 
 ## Funciones
 

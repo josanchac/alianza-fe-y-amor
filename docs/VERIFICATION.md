@@ -11,9 +11,9 @@
 - La función temporal de preparación quedó sustituida por una respuesta permanente HTTP 410, sin credenciales ni operaciones administrativas.
 - Las tablas privadas tienen RLS y una política explícita de denegación. La API comprueba la pertenencia a la pareja en cada solicitud.
 
-## Límites y configuración pendiente
+## Publicación y límites
 
-- GitHub Pages requiere que el propietario seleccione **GitHub Actions** en Settings → Pages. El repositorio ya incluye el flujo de verificación y publicación.
+- GitHub Pages quedó habilitado por el propietario. Los trabajos `verify` y `deploy` del flujo 34353453653 concluyeron correctamente. La interfaz publicada se comprobó en navegador; la entrada y sus recursos cargan sin errores de la aplicación.
 - No se han consumido los enlaces privados de los titulares ni se conocen sus contraseñas. Las pruebas de integración usaron exclusivamente cuentas temporales.
 - La recuperación automática por correo está desactivada en la interfaz hasta disponer de SMTP configurado y probado. El administrador puede generar un enlace privado nuevo mediante Auth Admin.
 - El asesor de Supabase avisa que la detección de contraseñas filtradas está desactivada. Esa función requiere Pro o superior; se conserva el plan gratuito solicitado. [Explicación y configuración del proveedor](https://supabase.com/docs/guides/auth/password-security#password-strength-and-leaked-password-protection).
