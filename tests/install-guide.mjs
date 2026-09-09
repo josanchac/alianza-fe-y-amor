@@ -22,6 +22,6 @@ try{
  fireEvent.click(screen.getByRole('button',{name:'Siguiente'}));assert(screen.getByText(/Tus registros siguen en tu cuenta/));
  console.log('PASS Switching to Android resets the guide and uses Chrome instructions');
  cleanup();let open=true;render(React.createElement(InstallGuide,{open,onOpenChange:v=>{open=v;}}));
- await screen.findByRole('dialog',{name:'Alianza en tu pantalla de inicio'});fireEvent.click(screen.getByRole('button',{name:'Cerrar la guía'}));assert.equal(open,false);
+ await screen.findByRole('dialog',{name:'Instalar Alianza en tu teléfono'});fireEvent.click(screen.getByRole('button',{name:'Cerrar la guía'}));assert.equal(open,false);
  console.log('PASS The guide closes without claiming installation or requiring registration');
 }finally{cleanup();dom.window.close();}

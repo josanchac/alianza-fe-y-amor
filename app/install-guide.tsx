@@ -5,13 +5,13 @@ import {Dialog, DialogContent, DialogTitle, DialogDescription} from '@/component
 export const APP_ADDRESS='https://josanchac.github.io/alianza-fe-y-amor/';
 const instructions={
  iphone:[
-  {title:'Abrí Alianza en Safari',text:'Copiá la dirección de abajo, abrí Safari y pegala en su barra de direcciones. Usá la dirección normal de Alianza, después de haber elegido tu contraseña.',label:'Safari',icon:Compass},
+  {title:'Abrí Alianza en Safari',text:'Copiá la dirección de abajo y abrila en Safari, el navegador de tu iPhone.',label:'Safari',icon:Compass},
   {title:'Tocá Compartir',text:'Buscá el cuadrado con una flecha hacia arriba. En algunas versiones primero hay que tocar los tres puntos y luego Compartir.',label:'Compartir',icon:Share},
   {title:'Elegí Agregar a Inicio',text:'Deslizá hacia abajo dentro del menú Compartir hasta encontrar «Agregar a Inicio» o «Añadir a pantalla de inicio».',label:'Agregar a Inicio',icon:PlusSquare},
   {title:'Confirmá y buscá el ícono',text:'Dejá el nombre Alianza. Si aparece «Abrir como app web», activalo y tocá Agregar. Buscá el ícono en la pantalla de inicio y abrilo.',label:'Agregar',icon:Check},
  ],
  android:[
-  {title:'Abrí Alianza en Chrome',text:'Copiá la dirección de abajo, abrí Chrome y pegala en su barra de direcciones. Usá la dirección normal de Alianza, después de haber elegido tu contraseña.',label:'Chrome',icon:Compass},
+  {title:'Abrí Alianza en Chrome',text:'Copiá la dirección de abajo y abrila en Chrome, el navegador de Google.',label:'Chrome',icon:Compass},
   {title:'Abrí el menú de Chrome',text:'Tocá los tres puntos que están junto a la barra de direcciones.',label:'Menú',icon:MoreVertical},
   {title:'Elegí instalar o agregar',text:'Buscá «Instalar y crear acceso directo», «Instalar aplicación» o «Agregar a la pantalla principal». El nombre depende de tu versión de Chrome.',label:'Agregar a pantalla principal',icon:PlusSquare},
   {title:'Confirmá y buscá el ícono',text:'Dejá el nombre Alianza y tocá Instalar o Agregar. Si el celular pide otra confirmación para poner el ícono en la pantalla principal, aceptala.',label:'Agregar',icon:Check},
@@ -42,7 +42,7 @@ export function InstallSteps(){
 }
 
 export function InstallGuide({open,onOpenChange}:{open:boolean;onOpenChange:(v:boolean)=>void}){
- return <Dialog open={open} onOpenChange={onOpenChange}><DialogContent className="editor-dialog install-dialog" showCloseButton={false}><DialogTitle className="dialog-title">Alianza en tu pantalla de inicio</DialogTitle><DialogDescription>Una guía paso a paso. Podés avanzar y volver a tu ritmo.</DialogDescription><InstallSteps/><button className="text-button" onClick={()=>onOpenChange(false)}>Cerrar la guía</button></DialogContent></Dialog>;
+ return <Dialog open={open} onOpenChange={onOpenChange}><DialogContent className="editor-dialog install-dialog" showCloseButton={false}><DialogTitle className="dialog-title">Instalar Alianza en tu teléfono</DialogTitle><DialogDescription>Te mostramos dónde tocar, paso a paso.</DialogDescription><InstallSteps/><button className="text-button" onClick={()=>onOpenChange(false)}>Cerrar la guía</button></DialogContent></Dialog>;
 }
 
-export function InstallPage(){return <main className="install-page"><section className="card install-page-card"><Smartphone size={28}/><h1>Alianza en tu pantalla de inicio</h1><p>Elegí tu teléfono y seguí los pasos a tu ritmo.</p><InstallSteps/><a className="primary" href={APP_ADDRESS}>Volver a Alianza</a></section></main>;}
+export function InstallPage(){return <main className="install-page"><section className="card install-page-card"><Smartphone size={28}/><h1>Instalar Alianza en tu teléfono</h1><p>Abrí Alianza tocando su ícono, como tus otras apps. Elegí tu teléfono para empezar.</p><InstallSteps/><a className="primary" href={APP_ADDRESS}>Volver a Alianza</a></section></main>;}
