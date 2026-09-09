@@ -14,7 +14,7 @@ export function StartCard({role,onCreate,onCouple}:{role:string;onCreate:(habit?
  </section>;
 }
 
-export function QuickHelp({open,onOpenChange,onNavigate}:{open:boolean;onOpenChange:(open:boolean)=>void;onNavigate:(tab:string)=>void}){
+export function QuickHelp({open,onOpenChange,onNavigate,onInstall}:{open:boolean;onOpenChange:(open:boolean)=>void;onNavigate:(tab:string)=>void;onInstall:()=>void}){
  const go=(tab:string)=>{onOpenChange(false);onNavigate(tab);};
  return <Dialog open={open} onOpenChange={onOpenChange}><DialogContent className="editor-dialog help-dialog" showCloseButton={false}>
   <CircleHelp className="gold-icon" size={28}/><DialogTitle className="dialog-title">Una guía a mano</DialogTitle>
@@ -25,6 +25,7 @@ export function QuickHelp({open,onOpenChange,onNavigate}:{open:boolean;onOpenCha
   <details><summary>¿Y si un día no lo hago?</summary><p>Podés dejarlo sin marcar. En los tres puntos del compromiso también están «Me costó» y «Hoy no aplicaba». Una casilla vacía no se cuenta como un incumplimiento.</p><p>Si necesitás menos compromisos, abrí sus tres puntos → Editar → Más opciones y apagá «Incluir en mi horario». El historial se conserva.</p></details>
   <details><summary>¿Quién puede ver lo que escribo?</summary><p>Tu horario y tus reflexiones son privados dentro de la app. En «Ajustes» podés dar o quitar visibilidad a tu cónyuge. Las 4 Rs pertenecen al espacio compartido. Allí también se explica el alcance de la privacidad.</p><button className="text-button" onClick={()=>go('settings')}>Revisar mi privacidad</button></details>
   <details><summary>¿Dónde veo mi avance?</summary><p>En «Camino» podés revisar semanas, meses, años o un período elegido y compararlos. Los resúmenes se forman con sus registros; no tenés que volver a escribirlos.</p><button className="text-button" onClick={()=>go('journey')}>Mirar mi camino</button></details>
+  <details><summary>¿Cómo guardo Alianza en mi teléfono?</summary><p>Podés agregar un ícono a la pantalla de inicio. La guía muestra dónde tocar en iPhone y Android.</p><button className="text-button" onClick={onInstall}>Ver guía paso a paso</button></details>
   <details><summary>¿Cómo pongo recordatorios?</summary><p>En «Ajustes», elegí una hora y tocá «Añadir al calendario». Abrí el archivo y confirmá que se agregue al calendario del celular. Los avisos son opcionales y dependen de ese calendario.</p></details>
   <details><summary>¿Cómo vuelvo a entrar?</summary><p>Guardá la dirección de Alianza. Tu usuario es tu correo electrónico y la contraseña es la que elegiste. El enlace privado solo se usa una vez para establecerla.</p><p>Si olvidás la contraseña y no podés entrar, pedí un enlace nuevo al administrador. La recuperación automática por correo todavía no está habilitada.</p></details>
   <button className="primary" onClick={()=>onOpenChange(false)}>Entendido, volver</button>

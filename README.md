@@ -6,9 +6,11 @@ El árbol y el rosario son un emblema original; no representan una aplicación o
 
 ## Estado de publicación
 
-**Publicada:** [Abrir Alianza](https://josanchac.github.io/alianza-fe-y-amor/). GitHub Actions completó verificación y despliegue del commit `32e5d5b42775bfccafbfbd057fe54d8dcf244e61`. La pantalla de entrada fue comprobada en navegador.
+**Publicada:** [Abrir Alianza](https://josanchac.github.io/alianza-fe-y-amor/). GitHub Actions verifica y despliega cada actualización de `main`. Resultados y límites en [VERIFICATION.md](docs/VERIFICATION.md).
 
-Base de datos Supabase y dos cuentas configuradas. Verificación local actual: 22 grupos de pruebas (datos, resúmenes e interacción). Verificación contra Auth y PostgreSQL alojados: 8 grupos de integración con cuentas temporales, luego eliminadas. GitHub Pages está habilitado con GitHub Actions. Cada titular debe activar su enlace privado y elegir su contraseña; no se probaron ni se conocen sus contraseñas.
+La base admite varias parejas aisladas. Las dos cuentas originales y su historial se conservan. Las parejas del piloto se habilitan por invitación individual; no hay un directorio público ni un selector de parejas. Verificación local actual: 37 grupos de pruebas de datos, migración, resúmenes e interacción.
+
+[Guía interactiva para agregar Alianza a la pantalla de inicio](https://josanchac.github.io/alianza-fe-y-amor/?guia=instalar), disponible sin iniciar sesión y también desde Ayuda y Ajustes.
 
 ## Funciones
 
@@ -20,7 +22,9 @@ Base de datos Supabase y dos cuentas configuradas. Verificación local actual: 2
 - Las 4 Rs con preguntas de apoyo, planificación e historia compartida.
 - Resúmenes semanales, mensuales, anuales y de intervalos acumulados; comparación con el período anterior equivalente.
 - Revisiones guardadas: agradecer, aprender y elegir el siguiente paso.
-- Compartir horario y reflexiones mediante dos interruptores independientes, apagados inicialmente.
+- Compartir horario y reflexiones solo con el cónyuge asignado, mediante dos interruptores independientes, apagados inicialmente. Las 4 Rs pertenecen exclusivamente a esa pareja.
+- Nuevas parejas con espacio vacío, ideal opcional y símbolos personales editables. La pareja original conserva sus ideales y emblema.
+- Guía ilustrada para iPhone y Android, con botones Atrás/Siguiente y dirección normal de la app para copiar.
 - Recordatorios mediante archivos de calendario. El usuario debe confirmar su importación; no hay notificaciones push propias.
 - Exportación de registros personales y matrimoniales. No se exportan registros privados del otro usuario.
 
@@ -62,10 +66,12 @@ La configuración pública permite publicar sin secretos. Opcionalmente se puede
 - `app/reports.tsx` y `lib/reports.ts`: historia, rangos y comparaciones.
 - `github/main.tsx`: entrada, recuperación de cuenta y transporte de datos.
 - `supabase/schema.sql`: esquema canónico y API con autorización y control de versiones.
-- `tests/password-db.mjs`: PostgreSQL real en PGlite, con identidades simuladas en el límite de Auth.
-- `docs/DEPLOYMENT.md`: activación y comprobaciones de producción pendientes.
+- `tests/password-db.mjs` y `tests/multi-couple.mjs`: PostgreSQL real en PGlite, con identidades simuladas en el límite de Auth; regresiones, migración y aislamiento.
+- `app/install-guide.tsx`: guía pública y diálogo integrado para guardar el acceso en el teléfono.
+- `docs/MULTI_COUPLE.md`: flujo de invitaciones y actualización compatible.
+- `docs/DEPLOYMENT.md`: activación y mantenimiento.
 
-Las actualizaciones se trabajan en ramas y se revisan antes de integrarlas en `main`. El flujo de GitHub Actions ejecuta las pruebas antes de publicar.
+Las mejoras se mantienen en este repositorio; se recomienda usar ramas y revisión antes de integrarlas en `main`. El flujo de GitHub Actions ejecuta las pruebas antes de publicar.
 
 ## Evidencia y límites
 

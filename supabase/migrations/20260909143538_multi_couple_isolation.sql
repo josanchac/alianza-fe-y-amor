@@ -1,40 +1,62 @@
--- Private data API for isolated married couples. Enrolment is administrator-only.
--- No personal identifiers or credentials belong in this file.
+-- Upgrade in one transaction. Old application requests keep the same payload.
 begin;
-create schema if not exists alianza_private;
-revoke all on schema alianza_private from public, anon, authenticated;
-grant usage on schema alianza_private to authenticated;
-create table if not exists alianza_private.couples (
+lock table alianza_private.members, alianza_private.records in access exclusive mode;
+-- Persist a private pre-upgrade snapshot. Never put its contents in GitHub.
+create schema alianza_backup;
+revoke all on schema alianza_backup from public,anon,authenticated;
+create table alianza_backup.pre_multi_members as table alianza_private.members;
+create table alianza_backup.pre_multi_records as table alianza_private.records;
+alter table alianza_backup.pre_multi_members enable row level security;
+alter table alianza_backup.pre_multi_records enable row level security;
+revoke all on all tables in schema alianza_backup from public,anon,authenticated;
+create policy deny_clients on alianza_backup.pre_multi_members for all to anon,authenticated using(false) with check(false);
+create policy deny_clients on alianza_backup.pre_multi_records for all to anon,authenticated using(false) with check(false);
+-- Rehearse restoring the snapshot into a temporary table, not the live table.
+create temporary table restore_check (like alianza_private.records including all) on commit drop;
+insert into restore_check select * from alianza_backup.pre_multi_records;
+do $$ begin
+ if exists((select * from restore_check except select * from alianza_private.records)
+ union all (select * from alianza_private.records except select * from restore_check)) then
+  raise exception 'Snapshot restoration verification failed';
+ end if;
+end $$;
+create table alianza_private.couples (
  id uuid primary key default gen_random_uuid(),
  emblem text not null default 'neutral' check(emblem in ('neutral','tree-rosary'))
 );
-create table if not exists alianza_private.members (
- id uuid primary key references auth.users(id) on delete cascade,
- role text not null default 'member',
- name text not null, ideal text not null default '',
- couple_id uuid not null references alianza_private.couples(id) on delete restrict,
- seat smallint not null check(seat in (1,2)),
- symbol text not null default 'heart' check(symbol in ('heart','tree','rosary','cross')),
- unique(couple_id,seat)
-);
-create table if not exists alianza_private.records (
- owner text not null, kind text not null, key text not null,
- data jsonb not null, version integer not null default 1 check(version>0),
- updated timestamptz not null default now(), primary key(owner,kind,key)
-);
 alter table alianza_private.couples enable row level security;
-alter table alianza_private.members enable row level security;
-alter table alianza_private.records enable row level security;
-revoke all on all tables in schema alianza_private from public,anon,authenticated;
-
-create or replace function alianza_private.valid_date(v text) returns boolean
-language plpgsql immutable set search_path='' as $$
-begin
- if v is null or v !~ '^\d{4}-\d{2}-\d{2}$' then return false; end if;
- return to_char(v::date,'YYYY-MM-DD')=v;
-exception when others then return false;
+revoke all on alianza_private.couples from public,anon,authenticated;
+create policy deny_direct_access on alianza_private.couples for all to anon,authenticated using(false) with check(false);
+alter table alianza_private.members drop constraint members_role_key, drop constraint members_role_check;
+alter table alianza_private.members alter column role set default 'member', alter column ideal set default '';
+alter table alianza_private.members add column couple_id uuid references alianza_private.couples(id) on delete restrict,
+ add column seat smallint check(seat in (1,2)),
+ add column symbol text not null default 'heart' check(symbol in ('heart','tree','rosary','cross'));
+do $$ declare original_pair uuid; begin
+ if (select count(*) from alianza_private.members)<>2 or
+    not exists(select 1 from alianza_private.members where role='jose') or
+    not exists(select 1 from alianza_private.members where role='neca') then
+  raise exception 'Unexpected membership: review migration before applying';
+ end if;
+ insert into alianza_private.couples(emblem) values('tree-rosary') returning id into original_pair;
+ update alianza_private.members set couple_id=original_pair,
+  seat=case role when 'jose' then 1 else 2 end,
+  symbol=case role when 'jose' then 'tree' else 'rosary' end;
+ update alianza_private.records set owner='couple:'||original_pair::text where owner='couple';
+ -- Compare every record, including content, key, version and timestamps.
+ if exists(
+  (select case when owner='couple' then 'couple:'||original_pair::text else owner end,kind,key,data,version,updated from alianza_backup.pre_multi_records
+   except select owner,kind,key,data,version,updated from alianza_private.records)
+  union all
+  (select owner,kind,key,data,version,updated from alianza_private.records
+   except select case when owner='couple' then 'couple:'||original_pair::text else owner end,kind,key,data,version,updated from alianza_backup.pre_multi_records)
+ ) then raise exception 'Record preservation verification failed'; end if;
+ if exists(select id,role,name,ideal from alianza_backup.pre_multi_members except select id,role,name,ideal from alianza_private.members) then
+  raise exception 'Account preservation verification failed';
+ end if;
 end $$;
-
+alter table alianza_private.members alter column couple_id set not null, alter column seat set not null;
+alter table alianza_private.members add constraint members_couple_seat_key unique(couple_id,seat);
 create or replace function alianza_private.valid_record(k text, ky text, d jsonb) returns boolean
 language plpgsql stable set search_path='' as $$
 declare fields text[]; f text; val jsonb; maxlen int; dt text; expected text;
@@ -127,15 +149,5 @@ begin
  end if;
  return jsonb_build_object('user',jsonb_build_object('id',uid,'role',member.role,'symbol',member.symbol,'coupleId',member.couple_id,'email',(select email from auth.users where id=uid)),'couple',jsonb_build_object('emblem',(select emblem from alianza_private.couples where id=member.couple_id)),'own',own_rows,'shared',shared_rows,'partner',partner,'today',to_char(now() at time zone 'America/Costa_Rica','YYYY-MM-DD'));
 end $$;
--- The public entry point is an invoker; the narrow privileged function above
--- lives in an unexposed schema and independently checks identity and membership.
-create or replace function public.alianza_data(payload jsonb default null) returns jsonb
-language sql security invoker set search_path='' as $$ select alianza_private.data(payload); $$;
-revoke all on all functions in schema alianza_private from public,anon,authenticated;
-grant execute on function alianza_private.data(jsonb) to authenticated;
-revoke all on function public.alianza_data(jsonb) from public,anon;
-grant execute on function public.alianza_data(jsonb) to authenticated;
-create policy deny_direct_access on alianza_private.couples for all to anon,authenticated using (false) with check (false);
-create policy deny_direct_access on alianza_private.members for all to anon,authenticated using (false) with check (false);
-create policy deny_direct_access on alianza_private.records for all to anon,authenticated using (false) with check (false);
+
 commit;

@@ -1,5 +1,5 @@
 export type Habit = {title:string; moment:'Mañana'|'Durante el día'|'Noche'; active:boolean; anchor:string; minimum:string};
-export type Profile = {name:string; ideal:string; shareSchedule:boolean; shareNotes:boolean};
+export type Profile = {name:string; ideal:string; shareSchedule:boolean; shareNotes:boolean; symbol?:'heart'|'tree'|'rosary'|'cross'};
 export type RecordItem = {owner:string;kind:string;key:string;data:any;version:number;updated:string};
 export const R_TYPES = [
  {id:'rezar', title:'Rezar', rhythm:'Cada día', description:'Un momento juntos ante Dios.', prompts:['¿Por qué queremos dar gracias?','¿Qué ponemos hoy en manos de la Mater?'], suggestion:'Después de cenar, rezar juntos un avemaría.'},
@@ -13,7 +13,7 @@ export function rKey(type:string,date:string){return type+':'+period(type,date);
 export function prettyDate(date:string){return new Intl.DateTimeFormat('es-CR',{day:'numeric',month:'long',year:'numeric',timeZone:'UTC'}).format(new Date(date+'T12:00:00Z'));}
 export function suggestedHabits(role:string):Habit[]{return [
  {title:'Ofrecer mi día a la Mater',moment:'Mañana',active:true,anchor:'Después de despertarme',minimum:'Una frase de ofrecimiento'},
- {title:role==='jose'?'Liderar con un gesto concreto de amor':'Vivir un gesto concreto de fe y confianza',moment:'Durante el día',active:true,anchor:'Al comenzar mi actividad principal',minimum:'Un gesto pequeño y consciente'},
+ {title:role==='jose'?'Liderar con un gesto concreto de amor':role==='neca'?'Vivir un gesto concreto de fe y confianza':'Vivir mi ideal con un gesto pequeño',moment:'Durante el día',active:true,anchor:'Al comenzar mi actividad principal',minimum:'Un gesto pequeño y consciente'},
  {title:'Cuidar mi descanso y mi cuerpo',moment:'Durante el día',active:true,anchor:'Después de almorzar',minimum:'Dos minutos de pausa'},
  {title:'Agradecer y revisar mi propósito particular',moment:'Noche',active:true,anchor:'Antes de acostarme',minimum:'Agradecer una cosa y mirar mi propósito'}
 ];}

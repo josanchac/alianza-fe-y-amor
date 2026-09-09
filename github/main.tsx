@@ -3,6 +3,7 @@ import {createRoot} from 'react-dom/client';
 import {createClient,type SupabaseClient,type Session} from '@supabase/supabase-js';
 import {Eye,EyeOff,LockKeyhole,LoaderCircle} from 'lucide-react';
 import Journal from '../app/journal';
+import {InstallPage} from '../app/install-guide';
 import '../app/globals.css';
 import './password.css';
 
@@ -57,7 +58,7 @@ function Login({client,setupPassword=false,emailRecoveryEnabled=false}:{client:S
     {mode!=='recover'&&<><label>Tu contraseña<div className="password-field"><input aria-describedby={mode==='password'?'password-help':undefined} type={visible?'text':'password'} autoComplete={mode==='password'?'new-password':'current-password'} value={password} onChange={e=>setPassword(e.target.value)} required minLength={mode==='password'?6:undefined}/><button type="button" aria-label={visible?'Ocultar contraseña':'Mostrar contraseña'} onClick={()=>setVisible(v=>!v)}>{visible?<EyeOff size={20}/>:<Eye size={20}/>}</button></div></label>{mode==='password'&&<><p id="password-help" className="muted">Usá al menos 6 caracteres. No necesitás símbolos ni mayúsculas.</p><label>Repetí tu contraseña<input type={visible?'text':'password'} autoComplete="new-password" value={repeat} onChange={e=>setRepeat(e.target.value)} required minLength={6}/></label></>}</>}
     {error&&<p className="notice" role="alert">{error}</p>}{message&&<p className="auth-success" role="status">{message}</p>}
     <button className="primary" type="submit" disabled={busy}>{busy?<><LoaderCircle className="spin" size={18}/>Un momento…</>:mode==='login'?'Entrar':mode==='recover'?'Recibir enlace':'Guardar y entrar'}</button>
-  </form>{mode==='login'&&<details className="auth-help"><summary>¿Es mi primera vez?</summary><p>Abrí tu enlace privado, elegí una contraseña de al menos 6 caracteres y tocá «Guardar y entrar». Después usá aquí tu correo y esa contraseña.</p><p>Si el enlace venció, pedí uno nuevo. Cada persona usa su propio enlace.</p></details>}<button className="text-button" disabled={busy} onClick={()=>{if(mode==='password'&&session){setMode('login');}else setMode(mode==='recover'?'login':'recover');setError('');setMessage('');setPassword('');setRepeat('');}}>{mode==='login'?'Olvidé mi contraseña':'Volver'}</button><p className="auth-private"><LockKeyhole size={14}/>Solo las cuentas habilitadas pueden entrar.</p></section></main>;
+  </form>{mode==='login'&&<details className="auth-help"><summary>¿Es mi primera vez?</summary><p>Abrí tu enlace privado, elegí una contraseña de al menos 6 caracteres y tocá «Guardar y entrar». Después usá aquí tu correo y esa contraseña.</p><p>Si el enlace venció, pedí uno nuevo. Cada persona usa su propio enlace.</p></details>}<button className="text-button" disabled={busy} onClick={()=>{if(mode==='password'&&session){setMode('login');}else setMode(mode==='recover'?'login':'recover');setError('');setMessage('');setPassword('');setRepeat('');}}>{mode==='login'?'Olvidé mi contraseña':'Volver'}</button><a className="text-button" href="?guia=instalar" target="_blank" rel="noreferrer">Guardar Alianza en mi teléfono</a><p className="auth-private"><LockKeyhole size={14}/>Solo las cuentas habilitadas pueden entrar.</p></section></main>;
 }
 function Invitation({client,token,type,emailRecoveryEnabled}:{client:SupabaseClient;token:string;type:'invite'|'recovery';emailRecoveryEnabled:boolean}){
  const [busy,setBusy]=useState(false),[activated,setActivated]=useState(false),[error,setError]=useState('');
@@ -65,7 +66,7 @@ function Invitation({client,token,type,emailRecoveryEnabled}:{client:SupabaseCli
  if(activated)return <Login client={client} setupPassword emailRecoveryEnabled={emailRecoveryEnabled}/>;
  return <main className="auth-page"><section className="auth-card"><img className="auth-emblem" src="./emblem.png" alt="Árbol y rosario"/><div className="brand-word">Alianza<span>FE Y AMOR</span></div><p className="auth-step">PASO 1 DE 2</p><h1>Tu acceso personal</h1><p>Este enlace te permite elegir tu contraseña. Después entrás con tu correo electrónico.</p><p>No necesitás completar un horario ahora: podés empezar con un solo compromiso o explorar.</p>{error&&<p role="alert" className="notice">{error}</p>}<button className="primary" disabled={busy} onClick={activate}>{busy?'Un momento…':'Continuar y elegir contraseña'}</button><p className="muted">El enlace es privado, vence y se usa una sola vez.</p><a className="text-button" href="./">Ya tengo contraseña</a></section></main>;
 }
-async function start(){const root=createRoot(document.getElementById('root')!);try{
+async function start(){const root=createRoot(document.getElementById('root')!);if(new URLSearchParams(location.search).get('guia')==='instalar'){root.render(<InstallPage/>);return;}try{
   const r=await fetch('./config.json',{cache:'no-store'});const c:any=await r.json();
   if(!/^https:\/\/[a-z0-9-]+\.supabase\.co$/.test(c.url)||!c.publishableKey?.startsWith('sb_publishable_'))throw new Error('Esta versión todavía está en preparación. El acceso se habilitará al completar la publicación.');
   // Only authentication tokens persist on this device; records stay in Postgres.

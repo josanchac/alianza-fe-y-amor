@@ -1,13 +1,5 @@
 import assert from 'node:assert/strict';
-import {JSDOM} from 'jsdom';
-const dom=new JSDOM('<!doctype html><html><body></body></html>',{url:'https://example.test/',pretendToBeVisual:true});
-for(const name of ['window','document','navigator','HTMLElement','Element','Node','NodeFilter','HTMLInputElement','HTMLFormElement','HTMLButtonElement','HTMLSelectElement','MutationObserver','CustomEvent','Event','getComputedStyle','requestAnimationFrame','cancelAnimationFrame']){
- Object.defineProperty(globalThis,name,{value:typeof dom.window[name]==='function'&&['getComputedStyle','requestAnimationFrame','cancelAnimationFrame'].includes(name)?dom.window[name].bind(dom.window):dom.window[name],configurable:true,writable:true});
-}
-for(const name of Object.getOwnPropertyNames(dom.window)){if(!(name in globalThis))Object.defineProperty(globalThis,name,Object.getOwnPropertyDescriptor(dom.window,name));}
-window.matchMedia=()=>({matches:false,addEventListener(){},removeEventListener(){}});
-globalThis.ResizeObserver=class{observe(){}unobserve(){}disconnect(){}};
-HTMLElement.prototype.scrollIntoView=()=>{};
+import {dom} from './dom.mjs';
 const React=await import('react');
 const {render,screen,fireEvent,waitFor,cleanup}=await import('@testing-library/react');
 const {default:Journal}=await import('../app/journal.tsx');
@@ -56,4 +48,10 @@ try{
  fireEvent.click(screen.getByRole('button',{name:'Cerrar',exact:true}));
  assert.equal(writes.length,2);assert.equal(fixture.shared.length,0);
  console.log('PASS Exploring a marital encounter leaves shared records empty until saved');
+ cleanup();
+ const newcomer={...fixture,user:{id:'new-person',role:'member',email:'new@example.test',symbol:'heart'},couple:{emblem:'neutral'},own:[{...profile,owner:'new-person',data:{name:'Invitado',ideal:'',shareSchedule:false,shareNotes:false}}],shared:[],partner:{name:'Su pareja',ideal:'',shareSchedule:false,shareNotes:false,records:[]}};
+ render(React.createElement(Journal,{dataRequest:async()=>Response.json(newcomer),onSignOut(){}}));
+ await screen.findByRole('heading',{name:/Un paso pequeño/});
+ assert.equal(screen.queryByText('Líder de amor'),null);assert(!document.body.textContent.includes('Neca'));assert.equal(document.querySelector('img[src$="emblem.png"]'),null);
+ console.log('PASS A new couple sees its own identity and can start without an ideal');
 }finally{cleanup();dom.window.close();}

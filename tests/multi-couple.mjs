@@ -1,0 +1,42 @@
+import {PGlite} from '@electric-sql/pglite';
+import {readFile,readdir} from 'node:fs/promises';
+import assert from 'node:assert/strict';
+const db=new PGlite();
+await db.exec(`create role anon;create role authenticated;create schema auth;
+create table auth.users(id uuid primary key,email text,email_confirmed_at timestamptz);
+create function auth.uid() returns uuid language sql stable as $$ select nullif(current_setting('request.jwt.claim.sub',true),'')::uuid $$;
+grant usage on schema auth to authenticated,anon;grant execute on function auth.uid() to authenticated,anon;`);
+const migrations=(await readdir('supabase/migrations')).filter(x=>x.endsWith('.sql')).sort();
+for(const f of migrations.filter(x=>!x.endsWith('_multi_couple_isolation.sql')))await db.exec(await readFile('supabase/migrations/'+f,'utf8'));
+const ids=[1,2,3,4,5].map(i=>'00000000-0000-4000-8000-'+String(i).padStart(12,'0'));const[a,b,c,d,out]=ids;
+for(const id of ids)await db.query('insert into auth.users values($1,$2,now())',[id,id+'@example.test']);
+await db.query("insert into alianza_private.members values($1,'jose','Primero','Líder de amor'),($2,'neca','Segunda','Mujer de fe')",[a,b]);
+async function as(id,role='authenticated'){await db.exec('reset role');await db.query("select set_config('request.jwt.claim.sub',$1,false)",[id||'']);await db.exec('set role '+role);}
+async function call(payload=null){return(await db.query('select public.alianza_data($1::jsonb) value',[payload===null?null:JSON.stringify(payload)])).rows[0].value;}
+const rejected=(fn,code)=>assert.rejects(fn,e=>e.code===code);
+let passed=0;async function test(name,fn){await fn();console.log('PASS '+name);passed++;}
+const day='2026-01-02',habit={title:'Compromiso que ya usaba',moment:'Mañana',active:true,anchor:'Después del café',minimum:'Una frase'};
+const event={kind:'rs',key:'rezar:'+day,version:0,data:{type:'rezar',periodDate:day,planDate:'',planTime:'',note:'Solo pareja A',done:true,doneDate:day}};
+await as(a);await call();
+await call({kind:'habit',key:'existing',version:0,data:habit});
+await call({kind:'checks',key:day,version:0,data:{existing:'done'}});
+await call({kind:'journal',key:day,version:0,data:{gratitude:'Nota A',offering:'Privada A'}});
+await call(event);
+const original=await call();await as(b);await call();await db.exec('reset role');
+const migration=await readFile('supabase/migrations/'+migrations.find(x=>x.endsWith('_multi_couple_isolation.sql')),'utf8');
+await db.exec(migration);
+let pairA;
+await test('Upgrade preserves existing identities, every personal record, versions and dates',async()=>{await as(a);const now=await call();pairA=now.user.coupleId;assert.equal(now.user.id,original.user.id);assert.equal(now.user.role,original.user.role);assert.deepEqual(now.own,original.own);assert.deepEqual(now.shared.map(x=>({...x,owner:'couple'})),original.shared);assert.equal(now.partner.name,original.partner.name);assert.equal(now.couple.emblem,'tree-rosary');});
+await test('Private snapshot is complete and cannot be read by clients',async()=>{await rejected(()=>db.query('select * from alianza_backup.pre_multi_records'),'42501');await db.exec('reset role');const count=(await db.query('select count(*)::int n from alianza_backup.pre_multi_records')).rows[0].n;assert.equal(count,6);});
+const pairB='10000000-0000-4000-8000-000000000002';
+await db.query('insert into alianza_private.couples(id) values($1)',[pairB]);
+await db.query("insert into alianza_private.members(id,name,ideal,couple_id,seat) values($1,'Tercero','',$3,1),($2,'Cuarta','',$3,2)",[c,d,pairB]);
+await test('Two couples discover only their own partner and begin with separate histories',async()=>{await as(c);const now=await call();assert.equal(now.partner.name,'Cuarta');assert.equal(now.shared.length,0);assert.equal(now.own.length,1);assert.equal(now.own[0].data.ideal,'');assert.equal(now.couple.emblem,'neutral');await as(a);assert.equal((await call()).partner.name,'Segunda');});
+await test('Same-day marital records in different couples cannot collide or overwrite',async()=>{await as(c);await call({...event,data:{...event.data,note:'Solo pareja B'}});await as(d);assert.equal((await call()).shared[0].data.note,'Solo pareja B');await as(a);assert.equal((await call()).shared[0].data.note,'Solo pareja A');});
+await test('Sharing and revocation apply only to the spouse, never another couple',async()=>{await as(a);let p=(await call()).own.find(x=>x.kind==='profile');await call({kind:'profile',key:'me',version:p.version,data:{...p.data,shareNotes:true,shareSchedule:true}});await as(b);const shared=(await call()).partner.records;assert(shared.some(x=>x.kind==='journal'));assert(shared.some(x=>x.kind==='checks'));for(const id of[c,d]){await as(id);const now=await call();assert(now.own.every(x=>x.owner===id));assert(now.partner.records.every(x=>x.owner===(id===c?d:c)));assert(!JSON.stringify(now).includes('Nota A'));assert(!JSON.stringify(now).includes('Solo pareja A'));}await as(a);p=(await call()).own.find(x=>x.kind==='profile');await call({kind:'profile',key:'me',version:p.version,data:{...p.data,shareNotes:false,shareSchedule:false}});await as(b);assert.equal((await call()).partner.records.length,0);});
+await test('Forged owner, couple or profile permissions are rejected',async()=>{await as(c);await rejected(()=>call({...event,owner:'couple:'+pairA}),'22023');await rejected(()=>call({...event,coupleId:pairA}),'22023');const p=(await call()).own[0];await rejected(()=>call({kind:'profile',key:'me',version:p.version,data:{...p.data,couple_id:pairA}}),'22023');await rejected(()=>db.query('select * from alianza_private.couples'),'42501');});
+await test('Old open-page payloads keep working and stale saves preserve newer content',async()=>{await as(a);let row=(await call()).own.find(x=>x.kind==='checks');await call({kind:'checks',key:day,version:row.version,data:{...row.data,second:'done'}});await rejected(()=>call({kind:'checks',key:day,version:row.version,data:{}}),'PT409');row=(await call()).own.find(x=>x.kind==='checks');assert.equal(row.data.existing,'done');assert.equal(row.data.second,'done');await as(b);const shared=(await call()).shared[0];await call({kind:shared.kind,key:shared.key,version:shared.version,data:{...shared.data,note:'Edición compatible'}});await as(a);await rejected(()=>call({kind:shared.kind,key:shared.key,version:shared.version,data:shared.data}),'PT409');});
+await test('Symbols and optional ideals are personal, and legacy profiles remain valid',async()=>{await as(c);let p=(await call()).own.find(x=>x.kind==='profile');await call({kind:'profile',key:'me',version:p.version,data:{...p.data,symbol:'cross'}});await as(d);assert.equal((await call()).partner.symbol,'cross');await as(a);const s=await call();assert.equal(s.user.symbol,'tree');assert.equal(s.partner.symbol,'rosary');await as(c);p=(await call()).own.find(x=>x.kind==='profile');await rejected(()=>call({kind:'profile',key:'me',version:p.version,data:{...p.data,symbol:'admin'}}),'22023');});
+await test('A couple has at most two members and a user cannot belong to two couples',async()=>{await db.exec('reset role');await rejected(()=>db.query("insert into alianza_private.members(id,name,ideal,couple_id,seat) values($1,'Intruso','',$2,1)",[out,pairB]),'23505');await rejected(()=>db.query("insert into alianza_private.members(id,name,ideal,couple_id,seat) values($1,'Intruso','',$2,3)",[out,pairB]),'23514');await rejected(()=>db.query("insert into alianza_private.members(id,name,ideal,couple_id,seat) values($1,'Duplicado','',$2,2)",[a,pairB]),'23505');});
+await test('Anonymous, nonmembers and revoked members cannot access any couple',async()=>{await as(null,'anon');await rejected(()=>call(),'42501');await as(out);await rejected(()=>call(),'42501');await db.exec('reset role');await db.query('delete from alianza_private.members where id=$1',[d]);await as(d);await rejected(()=>call(),'42501');await as(c);assert.equal((await call()).partner,null);});
+await db.close();console.log(`${passed} multi-couple migration and isolation groups passed.`);

@@ -1,5 +1,16 @@
 # Verificación de la instalación
 
+## Parejas independientes y guía del teléfono — 9 de septiembre de 2026
+
+- Migración aplicada en producción, compatible con las solicitudes de la interfaz anterior. Permanecen las dos cuentas originales y los seis registros existentes, sin cambios en contenido, claves, versiones ni fechas. Se conserva una copia privada de los seis registros y las dos membresías en el mismo proyecto; su restauración se comprobó en una tabla temporal. No es un respaldo independiente del proyecto.
+- 37 grupos locales pasaron: 13 de regresión de datos y permisos, 10 de migración y aislamiento de parejas, 4 de períodos/resúmenes, 6 de inicio y uso con React Testing Library, y 4 de la guía de instalación. También pasaron TypeScript y la compilación de producción.
+- Siete grupos adicionales pasaron contra Auth y PostgreSQL alojados, con cuatro cuentas temporales en dos parejas: sesiones e inicio vacío, escrituras matrimoniales simultáneas con la misma fecha, notas privadas, compartir solo con el cónyuge, revocación, suplantación/conflictos y bloqueo de acceso directo a tablas.
+- Se retiraron las cuatro cuentas, sus registros y las dos parejas de prueba. La comprobación final encontró dos usuarios, dos miembros, una pareja y seis registros originales íntegros. La función temporal `alianza-multi-qa` se sustituyó por una respuesta HTTP 410 sin operaciones administrativas.
+- El asesor de seguridad no encontró nuevas advertencias; persiste el aviso de detección de contraseñas filtradas descrito abajo.
+- La guía usa ilustraciones de referencia y pasos manuales para Safari/iPhone y Chrome/Android, basados en las ayudas oficiales enlazadas. Sus pruebas comprueban que nunca copia tokens de acceso y que no afirma una instalación sin poder comprobarla. No equivale a probar la instalación en teléfonos físicos.
+- La segunda pareja real todavía requiere nombres y correos para preparar sus invitaciones individuales. No se alteraron los enlaces ni contraseñas de las cuentas existentes.
+- El resultado de publicación se puede consultar en [GitHub Actions](https://github.com/josanchac/alianza-fe-y-amor/actions). La guía pública está en [Alianza: pantalla de inicio](https://josanchac.github.io/alianza-fe-y-amor/?guia=instalar).
+
 ## Completado
 
 - Proyecto Supabase en la organización autorizada, costo informado por el proveedor: USD 0/mes.
