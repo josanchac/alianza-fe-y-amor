@@ -11,7 +11,7 @@ export function localDate(d=new Date()){return new Intl.DateTimeFormat('en-CA',{
 export function period(type:string,date:string){if(type==='rezar')return date;if(type==='revisar')return date.slice(0,7);if(type==='renovar')return date.slice(0,4); const d=new Date(date+'T12:00:00Z');d.setUTCDate(d.getUTCDate()-(d.getUTCDay()+6)%7);return d.toISOString().slice(0,10);}
 export function rKey(type:string,date:string){return type+':'+period(type,date);}
 export function prettyDate(date:string){return new Intl.DateTimeFormat('es-CR',{day:'numeric',month:'long',year:'numeric',timeZone:'UTC'}).format(new Date(date+'T12:00:00Z'));}
-export function defaultHabits(role:string):Habit[]{return [
+export function suggestedHabits(role:string):Habit[]{return [
  {title:'Ofrecer mi día a la Mater',moment:'Mañana',active:true,anchor:'Después de despertarme',minimum:'Una frase de ofrecimiento'},
  {title:role==='jose'?'Liderar con un gesto concreto de amor':'Vivir un gesto concreto de fe y confianza',moment:'Durante el día',active:true,anchor:'Al comenzar mi actividad principal',minimum:'Un gesto pequeño y consciente'},
  {title:'Cuidar mi descanso y mi cuerpo',moment:'Durante el día',active:true,anchor:'Después de almorzar',minimum:'Dos minutos de pausa'},

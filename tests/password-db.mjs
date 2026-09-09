@@ -1,5 +1,5 @@
 import {PGlite} from '@electric-sql/pglite';
-import {readFile} from 'node:fs/promises';
+import {readFile,readdir} from 'node:fs/promises';
 import assert from 'node:assert/strict';
 const db=new PGlite();
 await db.exec(`create role anon;create role authenticated;create schema auth;
@@ -16,12 +16,13 @@ async function rejects(fn,code){await assert.rejects(fn,e=>e.code===code);}
 let passed=0;async function test(name,fn){await fn();console.log('PASS '+name);passed++;}
 const day='2026-01-02';const note={kind:'journal',key:day,data:{gratitude:'Privado',offering:'Texto personal'},version:0};
 await test('Anonymous and unenrolled users cannot enter',async()=>{await as(null,'anon');await rejects(()=>call(),'42501');await as(c);await rejects(()=>call(),'42501');});
-await test('Profiles default private and starter habits initialize once',async()=>{await as(a);let s=await call();assert.equal(s.own.length,5);assert.equal(s.own.find(x=>x.kind==='profile').data.shareNotes,false);assert.equal((await call()).own.length,5);});
+await test('First login is private and creates no commitments or marital records',async()=>{await as(a);let s=await call();assert.equal(s.own.length,1);assert.equal(s.shared.length,0);assert.equal(s.own.find(x=>x.kind==='profile').data.shareNotes,false);assert.equal((await call()).own.length,1);});
+await test('Commitments appear only after explicit creation',async()=>{await call({kind:'habit',key:'chosen',version:0,data:{title:'Mi compromiso elegido',moment:'Noche',anchor:'',minimum:'',active:true}});assert.equal((await call()).own.filter(x=>x.kind==='habit').length,1);});
 await test('Personal entries stay private across accounts',async()=>{await call(note);await as(b);let s=await call();assert.equal(s.partner.records.length,0);assert.equal(s.own.some(x=>x.kind==='journal'),false);});
 await test('Raw tables and internal validators are inaccessible',async()=>{await rejects(()=>db.query('select * from alianza_private.records'),'42501');await rejects(()=>db.query('select * from alianza_private.members'),'42501');await rejects(()=>db.query("select alianza_private.valid_record('profile','me','{}')"),'42501');});
 await test('Owner cannot be supplied or forged',async()=>{await rejects(()=>call({...note,owner:a}),'22023');let s=await call(note);assert.equal(s.record.owner,b);});
 await test('Sharing notes works and revocation immediately filters server responses',async()=>{await as(a);let p=(await call()).own.find(x=>x.kind==='profile');await call({...p,data:{...p.data,shareNotes:true},version:p.version,owner:undefined,updated:undefined});await as(b);let s=await call();assert.equal(s.partner.records.length,1);assert.equal(s.partner.records[0].owner,a);await as(a);p=(await call()).own.find(x=>x.kind==='profile');await call({kind:p.kind,key:p.key,data:{...p.data,shareNotes:false},version:p.version});await as(b);assert.equal((await call()).partner.records.length,0);});
-await test('Schedule sharing excludes notes',async()=>{await as(a);let p=(await call()).own.find(x=>x.kind==='profile');await call({kind:p.kind,key:p.key,data:{...p.data,shareSchedule:true},version:p.version});await as(b);let s=await call();assert.equal(s.partner.records.length,4);assert(s.partner.records.every(x=>x.kind==='habit'));});
+await test('Schedule sharing excludes notes',async()=>{await as(a);let p=(await call()).own.find(x=>x.kind==='profile');await call({kind:p.kind,key:p.key,data:{...p.data,shareSchedule:true},version:p.version});await as(b);let s=await call();assert.equal(s.partner.records.length,1);assert(s.partner.records.every(x=>x.kind==='habit'));});
 const r={kind:'rs',key:'rezar:'+day,version:0,data:{type:'rezar',periodDate:day,planDate:'',planTime:'',note:'Juntos',done:true,doneDate:day}};
 await test('Marital records are shared and concurrent edits never silently overwrite',async()=>{await as(a);await call(r);await as(b);assert.equal((await call()).shared.length,1);await rejects(()=>call(r),'PT409');await call({...r,version:1,data:{...r.data,note:'Actualizado'}});await as(a);await rejects(()=>call({...r,version:1}),'PT409');assert.equal((await call()).shared[0].data.note,'Actualizado');});
 await test('Dates, periods, values, lengths and unexpected fields are validated on server',async()=>{
@@ -33,6 +34,26 @@ await rejects(()=>call({kind:'review',key:'2026-01-02:2026-01-01',version:0,data
 await rejects(()=>call({kind:'checks',key:day,version:0,data:{a:'admin'}}),'22023');
 await rejects(()=>call({...note,version:-1}),'22023');
 await rejects(()=>call({...note,version:0.5}),'22023');
+});
+await test('Migration removes unused defaults and preserves edited or recorded habits',async()=>{
+ await db.exec('reset role');
+ const oldSchema=await readFile('supabase/migrations/20260909120832_initial_alianza.sql','utf8');
+ // Isolate the old seed in a fresh owner: preserve existing test data.
+ await db.query("delete from alianza_private.records where owner=$1 and kind='profile'",[a]);
+ const oldFunction=oldSchema.slice(oldSchema.indexOf('create or replace function alianza_private.data'),oldSchema.indexOf('-- The public entry point'));
+ await db.exec(oldFunction);await as(a);await call();
+ let rows=(await call()).own;
+ const changed=rows.find(x=>x.key==='starter-1');
+ await call({kind:'habit',key:changed.key,version:changed.version,data:{...changed.data,title:'Mi compromiso adaptado'}});
+ await call({kind:'checks',key:day,version:0,data:{'starter-2':'done'}});
+ await db.exec('reset role');
+ const filename=(await readdir('supabase/migrations')).find(x=>x.endsWith('_optional_starter_habits.sql'));
+ await db.exec(await readFile('supabase/migrations/'+filename,'utf8'));
+ await as(a);rows=(await call()).own;
+ assert.equal(rows.some(x=>x.key==='starter-0'),false);assert.equal(rows.some(x=>x.key==='starter-3'),false);
+ assert(rows.some(x=>x.key==='starter-1'&&x.data.title==='Mi compromiso adaptado'));
+ assert(rows.some(x=>x.key==='starter-2'));assert(rows.some(x=>x.key==='chosen'));
+ assert(rows.some(x=>x.kind==='journal'));assert.equal((await call()).own.filter(x=>x.kind==='habit').length,3);
 });
 await test('Unconfirmed accounts are denied even when enrolled',async()=>{await db.exec('reset role');await db.query('update auth.users set email_confirmed_at=null where id=$1',[b]);await as(b);await rejects(()=>call(),'42501');});
 await test('Membership revocation takes effect without waiting for token expiry',async()=>{await db.exec('reset role');await db.query('delete from alianza_private.members where id=$1',[a]);await as(a);await rejects(()=>call(),'42501');});

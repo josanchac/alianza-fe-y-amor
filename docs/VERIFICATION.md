@@ -29,3 +29,13 @@
 - El plan gratuito puede pausar proyectos por inactividad. [Condiciones operativas de Supabase](https://supabase.com/docs/guides/deployment/going-into-prod#availability).
 
 No publicar contraseñas, enlaces de activación, claves administrativas ni exportaciones personales en GitHub.
+
+## Inicio sencillo — 9 de septiembre de 2026
+
+- El primer acceso crea solo el perfil privado. Ya no se generan compromisos ni encuentros.
+- Migración aplicada: elimina únicamente los antiguos ejemplos con contenido exacto, versión 1 y sin referencias en registros diarios. En producción se retiraron cuatro ejemplos sin uso; se conservó el perfil. No se borraron notas, revisiones ni encuentros.
+- 22 comprobaciones locales: 13 de datos y privacidad, 4 de períodos y resúmenes, 5 de interacción con React Testing Library y JSDOM.
+- La prueba de migración conserva compromisos editados, compromisos con historial, compromisos elegidos y reflexiones.
+- Las pruebas de interacción comprueban inicio vacío, selección y cancelación de ideas, creación explícita, marcado diario, ayuda y exploración de las 4 Rs sin guardar accidentalmente. Son pruebas de DOM simulado; no equivalen a una prueba visual en un celular físico.
+- Nuevos enlaces personales se generan de forma privada mediante Auth Admin. No se incluyen en el repositorio ni se usan durante las pruebas.
+- La ayuda de inicio usa opciones secundarias desplegables, siguiendo [NN/g: Progressive Disclosure](https://www.nngroup.com/articles/progressive-disclosure/). No hay un recorrido obligatorio ni formularios que deban completarse para explorar.

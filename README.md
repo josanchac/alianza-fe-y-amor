@@ -8,10 +8,11 @@ El árbol y el rosario son un emblema original; no representan una aplicación o
 
 **Publicada:** [Abrir Alianza](https://josanchac.github.io/alianza-fe-y-amor/). GitHub Actions completó verificación y despliegue del commit `32e5d5b42775bfccafbfbd057fe54d8dcf244e61`. La pantalla de entrada fue comprobada en navegador.
 
-Base de datos Supabase y dos cuentas configuradas. Verificación local: 15 grupos de pruebas. Verificación contra Auth y PostgreSQL alojados: 8 grupos de integración con cuentas temporales, luego eliminadas. GitHub Pages está habilitado con GitHub Actions. Cada titular debe activar su enlace privado y elegir su contraseña; no se probaron ni se conocen sus contraseñas.
+Base de datos Supabase y dos cuentas configuradas. Verificación local actual: 22 grupos de pruebas (datos, resúmenes e interacción). Verificación contra Auth y PostgreSQL alojados: 8 grupos de integración con cuentas temporales, luego eliminadas. GitHub Pages está habilitado con GitHub Actions. Cada titular debe activar su enlace privado y elegir su contraseña; no se probaron ni se conocen sus contraseñas.
 
 ## Funciones
 
+- Inicio sin compromisos precargados. Ideas opcionales, formulario breve y ayuda consultable desde cualquier sección. Los ejemplos solo se agregan al elegirlos y guardarlos.
 - Entrada individual con correo electrónico (el usuario) y contraseña de al menos 6 caracteres, sin símbolos ni mayúsculas obligatorios; activación por enlace privado y cambio de contraseña. La recuperación automática por correo está desactivada hasta configurar SMTP; el administrador puede emitir un nuevo enlace privado.
 - Compromisos editables, señales cotidianas y una versión mínima para días difíciles.
 - Registro diario: «Lo viví», «Me costó» y «No aplicaba».

@@ -80,7 +80,7 @@ create or replace function alianza_private.data(payload jsonb default null) retu
 language plpgsql security definer set search_path='' as $$
 declare uid uuid:=auth.uid(); member alianza_private.members; spouse alianza_private.members;
  p jsonb; own_rows jsonb; shared_rows jsonb; partner_rows jsonb; partner jsonb:=null;
- k text; ky text; d jsonb; v integer; who text; result alianza_private.records; h jsonb; i int;
+ k text; ky text; d jsonb; v integer; who text; result alianza_private.records;
 begin
  if uid is null then raise insufficient_privilege; end if;
  select * into member from alianza_private.members where id=uid;
@@ -103,17 +103,9 @@ begin
   if result.owner is null then raise exception using errcode='PT409',message='Registro modificado en otro dispositivo'; end if;
   return jsonb_build_object('record',to_jsonb(result));
  end if;
- -- Initial records are inserted once, transactionally, without overwriting edits.
+ -- Initialize identity only. Commitments are created only by an explicit user choice.
  if not exists(select 1 from alianza_private.records where owner=uid::text and kind='profile' and key='me') then
   insert into alianza_private.records(owner,kind,key,data) values(uid::text,'profile','me',jsonb_build_object('name',member.name,'ideal',member.ideal,'shareSchedule',false,'shareNotes',false)) on conflict do nothing;
-  for h,i in select value,ordinality::int from jsonb_array_elements(jsonb_build_array(
-   jsonb_build_object('title','Ofrecer mi día a la Mater','moment','Mañana','anchor','Después de despertarme','minimum','Una frase de ofrecimiento','active',true),
-   jsonb_build_object('title',case when member.role='jose' then 'Liderar con un gesto concreto de amor' else 'Vivir un gesto concreto de fe y confianza' end,'moment','Durante el día','anchor','Al comenzar mi actividad principal','minimum','Un gesto pequeño y consciente','active',true),
-   jsonb_build_object('title','Cuidar mi descanso y mi cuerpo','moment','Durante el día','anchor','Después de almorzar','minimum','Dos minutos de pausa','active',true),
-   jsonb_build_object('title','Agradecer y revisar mi propósito particular','moment','Noche','anchor','Antes de acostarme','minimum','Agradecer una cosa y mirar mi propósito','active',true)
-  )) with ordinality loop
-   insert into alianza_private.records(owner,kind,key,data) values(uid::text,'habit','starter-'||(i-1),h) on conflict do nothing;
-  end loop;
  end if;
  select coalesce(jsonb_agg(to_jsonb(r) order by r.updated desc),'[]'::jsonb) into own_rows from alianza_private.records r where owner=uid::text;
  select coalesce(jsonb_agg(to_jsonb(r) order by r.updated desc),'[]'::jsonb) into shared_rows from alianza_private.records r where owner='couple';
