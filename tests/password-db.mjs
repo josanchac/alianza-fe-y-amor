@@ -6,7 +6,7 @@ await db.exec(`create role anon;create role authenticated;create schema auth;
 create table auth.users(id uuid primary key,email text,email_confirmed_at timestamptz);
 create function auth.uid() returns uuid language sql stable as $$ select nullif(current_setting('request.jwt.claim.sub',true),'')::uuid $$;
 grant usage on schema auth to authenticated,anon;grant execute on function auth.uid() to authenticated,anon;`);
-for(const f of (await readdir('supabase/migrations')).filter(f=>f.endsWith('.sql')&&!f.endsWith('_multi_couple_isolation.sql')).sort())await db.exec(await readFile('supabase/migrations/'+f,'utf8'));
+for(const f of (await readdir('supabase/migrations')).filter(f=>f.endsWith('.sql')&&!f.endsWith('_multi_couple_isolation.sql')&&!f.endsWith('_private_admin_activity.sql')&&!f.endsWith('_metrics_auth_boundary.sql')).sort())await db.exec(await readFile('supabase/migrations/'+f,'utf8'));
 const a='00000000-0000-4000-8000-000000000001',b='00000000-0000-4000-8000-000000000002',c='00000000-0000-4000-8000-000000000003';
 await db.query(`insert into auth.users values($1,'first@example.test',now()),($2,'second@example.test',now()),($3,'outsider@example.test',now())`,[a,b,c]);
 await db.query(`insert into alianza_private.members values($1,'jose','Primero','Líder de amor'),($2,'neca','Segunda','Mujer de fe')`,[a,b]);

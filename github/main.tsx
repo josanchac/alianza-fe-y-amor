@@ -3,6 +3,7 @@ import {createRoot} from 'react-dom/client';
 import {createClient,type SupabaseClient,type Session} from '@supabase/supabase-js';
 import {Eye,EyeOff,LockKeyhole,LoaderCircle} from 'lucide-react';
 import Journal from '../app/journal';
+import {UserEnvironment} from './admin';
 import {InstallPage} from '../app/install-guide';
 import '../app/globals.css';
 import './password.css';
@@ -51,7 +52,7 @@ function Login({client,setupPassword=false,emailRecoveryEnabled=false}:{client:S
     }catch(e){setError((e as Error).message);}finally{setBusy(false);}
   }
   if(!ready)return <main className="gate"><LoaderCircle className="spin"/><p>Abriendo tu espacio…</p></main>;
-  if(session&&mode!=='password')return <><Journal key={session.user.id} dataRequest={request} onSignOut={signOut} assetBase="./"/>{error&&<p className="auth-alert" role="alert">{error}</p>}<button className="change-password" onClick={()=>{setMode('password');setError('');setMessage('');}}>Cambiar mi contraseña</button></>;
+  if(session&&mode!=='password')return <UserEnvironment key={session.user.id} client={client} userId={session.user.id}><Journal key={session.user.id} dataRequest={request} onSignOut={signOut} assetBase="./"/>{error&&<p className="auth-alert" role="alert">{error}</p>}<button className="change-password" onClick={()=>{setMode('password');setError('');setMessage('');}}>Cambiar mi contraseña</button></UserEnvironment>;
   if(mode==='recover'&&!emailRecoveryEnabled)return <main className="auth-page"><section className="auth-card"><LockKeyhole size={32}/><h1>Recuperar mi acceso</h1><p>La recuperación automática por correo todavía no está activada.</p><p>Si todavía podés entrar, usá «Cambiar mi contraseña» dentro de tu espacio.</p><p>Si no podés entrar, pedí a quien administra Alianza un nuevo enlace privado para tu correo. Nunca compartás tu contraseña.</p><button className="primary" onClick={()=>setMode('login')}>Volver a entrar</button></section></main>;
   return <main className="auth-page"><section className="auth-card"><img className="auth-emblem" src="./emblem.png" alt="Árbol y rosario entrelazados"/><div className="brand-word">Alianza<span>FE Y AMOR</span></div><p className="auth-intro">Un camino compartido.<br/>Una entrega personal.</p><h1>{mode==='login'?'Tu espacio de fe y amor':mode==='recover'?'Recuperar mi acceso':'Elegir mi contraseña'}</h1>{mode==='password'&&session&&<><p className="auth-step">PASO 2 DE 2 · ELEGÍ Y GUARDÁ</p><div className="auth-account"><span>Tu usuario es tu correo electrónico</span><strong>{session.user.email}</strong><p>Usá este correo y tu contraseña para entrar la próxima vez.</p></div></>}<form onSubmit={submit}>
     {mode!=='password'&&<label>Correo electrónico (tu usuario)<input type="email" autoComplete="username" value={email} onChange={e=>setEmail(e.target.value)} required autoCapitalize="none" spellCheck={false}/></label>}
