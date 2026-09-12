@@ -15,7 +15,7 @@ async function person(label,{confirmed=true,enrolled=true}={}){
  const email=`${label}@example.test`,result=await operator.auth.admin.createUser({email,password,email_confirm:confirmed});assert(!result.error,'Synthetic account creation');const id=result.data.user.id;
  if(enrolled)await sql.query("insert into alianza_private.members(id,name) values($1,'Persona ficticia')",[id]);
  const client=make(),login=await client.auth.signInWithPassword({email,password});
- if(confirmed)assert(!login.error,'Confirmed synthetic login');else assert(login.error,'Unconfirmed account must not sign in');
+ if(confirmed)assert(!login.error,'Confirmed synthetic login: '+(login.error?.code??'')+' HTTP '+(login.error?.status??''));else assert(login.error,'Unconfirmed account must not sign in');
  return {id,email,client,login};
 }
 async function rpc(client,endpoint,payload=null){const {data,error}=await client.rpc(`alianza_${endpoint}`,{payload});if(error)throw Object.assign(Error('RPC '+endpoint+' failed: '+error.code),{code:error.code});return data;}
