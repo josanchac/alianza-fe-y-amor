@@ -60,3 +60,34 @@ jobs:
           path: test-results/*.json
           if-no-files-found: ignore
           retention-days: 14
+  auth-api:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - name: Start disposable Auth, API and database
+        run: |
+          npx --yes supabase@2.117.0 start --workdir tests/auth-stack -x realtime,storage-api,imgproxy,mailpit,postgres-meta,studio,edge-runtime,logflare,vector,supavisor > /tmp/alianza-auth-start.log 2>&1
+          npx --yes supabase@2.117.0 status --workdir tests/auth-stack -o json > /tmp/alianza-auth-status.json
+      - name: Exercise real JWT and API permissions
+        env:
+          ALIANZA_AUTH_STATUS_FILE: /tmp/alianza-auth-status.json
+        run: node tests/auth-api.mjs
+      - name: Preserve verification evidence only
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: review-auth-api-evidence
+          path: test-results/auth-api-evidence.json
+          if-no-files-found: ignore
+          retention-days: 14
+      - name: Remove disposable stack and credentials
+        if: always()
+        run: |
+          npx --yes supabase@2.117.0 stop --workdir tests/auth-stack --no-backup > /tmp/alianza-auth-stop.log 2>&1
+          rm -f /tmp/alianza-auth-status.json /tmp/alianza-auth-start.log /tmp/alianza-auth-stop.log
