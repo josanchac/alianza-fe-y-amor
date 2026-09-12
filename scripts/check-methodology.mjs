@@ -27,8 +27,8 @@ export async function verifyMethodology(root, review) {
   const errors = [];
   if (review.status !== 'approved') errors.push('Revisión metodológica pendiente. Ver docs/METHODOLOGY_REVIEW.md.');
   if (!review.approval?.reviewer?.trim() || !review.approval?.capacity?.trim() || !review.approval?.evidence?.trim() || !review.approval?.date?.match(/^\d{4}-\d{2}-\d{2}$/)) errors.push('Falta registrar quién revisó, en qué calidad, cuándo y la evidencia de su aprobación.');
-  const expectedIds = Array.from({length:12},(_,i)=>'M'+String(i+1).padStart(2,'0'));
-  if (!Array.isArray(review.items) || review.items.length !== expectedIds.length || expectedIds.some(id=>review.items.filter(x=>x.id===id).length!==1)) errors.push('La matriz debe resolver las doce áreas de revisión.');
+  const expectedIds = Array.from({length:13},(_,i)=>'M'+String(i+1).padStart(2,'0'));
+  if (!Array.isArray(review.items) || review.items.length !== expectedIds.length || expectedIds.some(id=>review.items.filter(x=>x.id===id).length!==1)) errors.push('La matriz debe resolver las trece áreas de revisión.');
   else for (const item of review.items) {
     if (!['verified','excluded'].includes(item.status) || !item.resolution?.trim()) errors.push(`${item.id}: falta resolución documentada.`);
     if (item.status === 'verified' && (!item.references?.length || item.references.some(r=>!r.institution?.trim() || !r.title?.trim() || !r.edition?.trim() || !r.locator?.trim() || !r.location?.trim()))) errors.push(`${item.id}: falta referencia institucional, documento, edición y ubicación exacta.`);

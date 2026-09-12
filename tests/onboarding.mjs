@@ -43,6 +43,15 @@ try{
  fireEvent.click(screen.getByRole('button',{name:'Ayuda'}));
  await screen.findByRole('dialog',{name:'Una guía a mano'});
  assert(screen.getByText('No hay que llenarlo todo. Usá lo que te ayude, a tu ritmo.'));
+ const confession=screen.getByText('Prepararme para la confesión').closest('details');
+ assert.equal(confession.open,false);
+ const localBefore=JSON.stringify({...window.localStorage});
+ fireEvent.click(confession.querySelector('summary'));
+ assert.equal(confession.open,true);
+ assert.equal(confession.querySelectorAll('input,textarea,select,button,[contenteditable]').length,0);
+ assert.equal(confession.querySelectorAll('a[href^="https://www.vatican.va/"]').length,2);
+ assert.equal(writes.length,2);
+ assert.equal(JSON.stringify({...window.localStorage}),localBefore);
  fireEvent.click(screen.getByText('¿Cómo usamos las 4 Rs?'));
  fireEvent.click(screen.getByRole('button',{name:'Ir a las 4 Rs'}));
  await waitFor(()=>assert.equal(screen.getByRole('tab',{name:'Las 4 Rs'}).getAttribute('aria-selected'),'true'));
@@ -59,8 +68,20 @@ try{
  console.log('PASS Exploring a marital encounter leaves shared records empty until saved');
  cleanup();
  const newcomer={...fixture,user:{id:'new-person',role:'member',email:'new@example.test',symbol:'heart'},couple:{emblem:'neutral'},own:[{...profile,owner:'new-person',data:{name:'Invitado',ideal:'',shareSchedule:false,shareNotes:false}}],shared:[],partner:{name:'Su pareja',ideal:'',shareSchedule:false,shareNotes:false,records:[]}};
- render(React.createElement(Journal,{dataRequest:async()=>Response.json(newcomer),onSignOut(){}}));
+ render(React.createElement(Journal,{dataRequest:async(init)=>{assert.notEqual(init?.method,'POST','Exploring guidance must not save newcomer records');return Response.json(newcomer);},onSignOut(){}}));
  await screen.findByRole('heading',{name:/Un paso pequeño/});
  assert.equal(screen.queryByText('Líder de amor'),null);assert(!document.body.textContent.includes('Neca'));assert.equal(document.querySelector('img[src$="emblem.png"]'),null);
  console.log('PASS A new couple sees its own identity and can start without an ideal');
+ fireEvent.click(screen.getByText('Mi propósito y mi reflexión'));
+ fireEvent.click(screen.getByRole('button',{name:'Anotar mi propósito'}));
+ await screen.findByRole('dialog');
+ const purpose=screen.getByRole('textbox',{name:'Mi propósito particular',exact:true});
+ fireEvent.change(purpose,{target:{value:'Mi propósito de prueba'}});
+ const purposeGuide=screen.getByText('Una ayuda para formular mi propósito').closest('details');
+ assert.equal(purposeGuide.open,false);
+ fireEvent.click(purposeGuide.querySelector('summary'));
+ assert.equal(purposeGuide.open,true);
+ assert.equal(purpose.value,'Mi propósito de prueba');
+ assert.equal(writes.length,2);
+ console.log('PASS Optional purpose guidance preserves the draft without requiring an ideal');
 }finally{cleanup();dom.window.close();}

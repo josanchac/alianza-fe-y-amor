@@ -1,13 +1,14 @@
 import {CircleHelp, Plus, ArrowRight, LockKeyhole} from 'lucide-react';
 import {Dialog, DialogContent, DialogTitle, DialogDescription} from '@/components/ui/dialog';
 import {ScheduleGuide, RsGuide, MarriageIdealGuide} from './formation-guide';
+import {ConfessionGuide} from './confession-guide';
 import {suggestedHabits, type Habit} from '@/lib/domain';
 
 export function StartCard({role,onCreate,onCouple}:{role:string;onCreate:(habit?:Habit)=>void;onCouple:()=>void}){
  return <section className="card start-card">
   <p className="eyebrow">A TU RITMO</p>
   <h2>Empezá con algo pequeño.</h2>
-  <p>Tu horario está vacío. Elegí un solo compromiso que tenga sentido para vos; podés añadir más cuando quieras.</p>
+  <p>Tu horario está vacío. Elegí un solo compromiso que tenga sentido para vos. Podés avanzar poco a poco y recomenzar cuando lo necesités.</p>
   <button className="primary" onClick={()=>onCreate()}><Plus size={18}/>Crear mi primer compromiso</button>
   <details className="optional-details"><summary>Necesito una idea para empezar</summary><p>Son ejemplos de la app para redactar un acto concreto, no puntos obligatorios. Adaptá y guardá solo el que elijás.</p><div className="idea-list">{suggestedHabits(role).map(h=><button className="idea-button" key={h.title} onClick={()=>onCreate(h)}><span>{h.title}</span><ArrowRight size={18}/></button>)}</div></details>
   <button className="text-button" onClick={onCouple}>Prefiero empezar con las 4 Rs <ArrowRight size={16}/></button>
@@ -29,6 +30,7 @@ export function QuickHelp({open,onOpenChange,onNavigate,onInstall}:{open:boolean
   <details><summary>¿Cómo instalo Alianza en mi teléfono?</summary><p>Podrás abrir Alianza tocando su ícono, como tus otras apps. Te mostramos cómo hacerlo en iPhone y Android.</p><button className="text-button" onClick={onInstall}>Instalar Alianza en mi teléfono</button></details>
   <details><summary>¿Cómo pongo recordatorios?</summary><p>En «Ajustes», elegí una hora y tocá «Añadir al calendario». Abrí el archivo y confirmá que se agregue al calendario del celular. Los avisos son opcionales y dependen de ese calendario.</p></details>
   <details><summary>¿Cómo vuelvo a entrar?</summary><p>Guardá la dirección de Alianza. Tu usuario es tu correo electrónico y la contraseña es la que elegiste. El enlace privado solo se usa una vez para establecerla.</p><p>Si olvidás la contraseña y no podés entrar, pedí un enlace nuevo al administrador. La recuperación automática por correo todavía no está habilitada.</p></details>
+  <ConfessionGuide/>
   <button className="primary" onClick={()=>onOpenChange(false)}>Entendido, volver</button>
  </DialogContent></Dialog>;
 }

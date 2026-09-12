@@ -23,6 +23,6 @@ try {
   const incomplete=structuredClone(approved);incomplete.items[0].references[0].locator='';
   assert((await verifyMethodology(root,incomplete)).some(x=>x.includes('M01')));
   const deleted=structuredClone(approved);deleted.items.pop();
-  assert((await verifyMethodology(root,deleted)).some(x=>x.includes('doce')));
+  assert((await verifyMethodology(root,deleted)).some(x=>x.includes('trece')));
   console.log('PASS methodology release gate: pending, approval, changed/new content, incomplete evidence and missing scope.');
 } finally {await rm(root,{recursive:true,force:true});}

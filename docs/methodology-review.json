@@ -7,7 +7,7 @@
       "id": "M01",
       "topic": "Horario espiritual",
       "status": "pending",
-      "resolution": "Ayuda breve y opcional con fuente. Pendiente validar alcance local y recorrido completo.",
+      "resolution": "Ayuda breve y opcional con fuente. Pendiente validar alcance local y recorrido completo. S9 respalda gradualidad, adecuación personal, actitud filial y recomienzo; procedencia pendiente.",
       "references": [
         {
           "institution": "Rama de Familias de Schoenstatt Chile",
@@ -15,6 +15,14 @@
           "edition": "No indicada; consulta 2026-09-12",
           "locator": "pp. 4–5",
           "location": "https://ramadefamilias.cl/web2025/wp-content/uploads/2025/10/R9.-Vivir-segun-Nuestro-Ideal.pdf"
+        },
+        {
+          "institution": "Material aportado; procedencia institucional pendiente",
+          "title": "Medios ascéticos de Schoenstatt — Autoeducación 8, Universitarias",
+          "edition": "No indicada",
+          "locator": "pp. 1–8 de la copia renderizada; apartados identificados en METHODOLOGY_REVIEW.md",
+          "location": "Archivo aportado por el propietario; original no publicado",
+          "sha256": "e67d3fb4a9ea5c17d54e4609026e9ee73761cfdd14a23ef3e998546ac0c0aaf9"
         }
       ]
     },
@@ -22,7 +30,7 @@
       "id": "M02",
       "topic": "Propósito particular y examen",
       "status": "pending",
-      "resolution": "Retirada equivalencia no resuelta entre PP y EP; registro mensual diferenciado del cultivo diario. Pendiente cotejo de terminología local y continuidad entre meses.",
+      "resolution": "Retirada equivalencia no resuelta entre PP y EP; registro mensual diferenciado del cultivo diario. Pendiente cotejo de terminología local y continuidad entre meses. S9 aporta área-actitud-acto y se incorpora guía opcional; no define EP ni cierra la diferencia S4/S7.",
       "references": [
         {
           "institution": "Rama de Familias de Schoenstatt Chile",
@@ -30,6 +38,14 @@
           "edition": "No indicada; consulta 2026-09-12",
           "locator": "pp. 4–5",
           "location": "https://ramadefamilias.cl/web2025/wp-content/uploads/2025/10/R9.-Vivir-segun-Nuestro-Ideal.pdf"
+        },
+        {
+          "institution": "Material aportado; procedencia institucional pendiente",
+          "title": "Medios ascéticos de Schoenstatt — Autoeducación 8, Universitarias",
+          "edition": "No indicada",
+          "locator": "pp. 1–8 de la copia renderizada; apartados identificados en METHODOLOGY_REVIEW.md",
+          "location": "Archivo aportado por el propietario; original no publicado",
+          "sha256": "e67d3fb4a9ea5c17d54e4609026e9ee73761cfdd14a23ef3e998546ac0c0aaf9"
         }
       ]
     },
@@ -37,21 +53,39 @@
       "id": "M03",
       "topic": "Ejemplos de compromisos",
       "status": "pending",
-      "resolution": "Ejemplos concretos sin asignación por roles ni mínimos predefinidos. Pendiente revisión del repertorio.",
-      "references": []
+      "resolution": "Ejemplos concretos sin asignación por roles ni mínimos predefinidos. Pendiente revisión del repertorio. S9 ofrece ejemplos y cuatro vínculos; no se incorporan automáticamente restricciones de dieta o tabaco.",
+      "references": [
+        {
+          "institution": "Material aportado; procedencia institucional pendiente",
+          "title": "Medios ascéticos de Schoenstatt — Autoeducación 8, Universitarias",
+          "edition": "No indicada",
+          "locator": "pp. 1–8 de la copia renderizada; apartados identificados en METHODOLOGY_REVIEW.md",
+          "location": "Archivo aportado por el propietario; original no publicado",
+          "sha256": "e67d3fb4a9ea5c17d54e4609026e9ee73761cfdd14a23ef3e998546ac0c0aaf9"
+        }
+      ]
     },
     {
       "id": "M04",
       "topic": "Marcas de registro",
       "status": "pending",
-      "resolution": "",
-      "references": []
+      "resolution": "S9 describe registro escrito pero no incluye el anexo anunciado ni define nuestra escala de estados.",
+      "references": [
+        {
+          "institution": "Material aportado; procedencia institucional pendiente",
+          "title": "Medios ascéticos de Schoenstatt — Autoeducación 8, Universitarias",
+          "edition": "No indicada",
+          "locator": "pp. 1–8 de la copia renderizada; apartados identificados en METHODOLOGY_REVIEW.md",
+          "location": "Archivo aportado por el propietario; original no publicado",
+          "sha256": "e67d3fb4a9ea5c17d54e4609026e9ee73761cfdd14a23ef3e998546ac0c0aaf9"
+        }
+      ]
     },
     {
       "id": "M05",
       "topic": "Frecuencias y cálculos",
       "status": "pending",
-      "resolution": "Respaldo para frecuencias diarias, semanales y mensuales. Pendiente integrar metas, historial de cambios y cálculo de semanas parciales.",
+      "resolution": "Respaldo para frecuencias diarias, semanales y mensuales. Pendiente integrar metas, historial de cambios y cálculo de semanas parciales. S9 contempla puntos diarios, semanales y mensuales; integración pendiente.",
       "references": [
         {
           "institution": "Rama de Familias de Schoenstatt Chile",
@@ -59,6 +93,14 @@
           "edition": "No indicada; consulta 2026-09-12",
           "locator": "pp. 4–5",
           "location": "https://ramadefamilias.cl/web2025/wp-content/uploads/2025/10/R9.-Vivir-segun-Nuestro-Ideal.pdf"
+        },
+        {
+          "institution": "Material aportado; procedencia institucional pendiente",
+          "title": "Medios ascéticos de Schoenstatt — Autoeducación 8, Universitarias",
+          "edition": "No indicada",
+          "locator": "pp. 1–8 de la copia renderizada; apartados identificados en METHODOLOGY_REVIEW.md",
+          "location": "Archivo aportado por el propietario; original no publicado",
+          "sha256": "e67d3fb4a9ea5c17d54e4609026e9ee73761cfdd14a23ef3e998546ac0c0aaf9"
         }
       ]
     },
@@ -81,8 +123,17 @@
       "id": "M07",
       "topic": "Ideal personal",
       "status": "pending",
-      "resolution": "",
-      "references": []
+      "resolution": "S9 permite comenzar sin ideal; no constituye curso de discernimiento.",
+      "references": [
+        {
+          "institution": "Material aportado; procedencia institucional pendiente",
+          "title": "Medios ascéticos de Schoenstatt — Autoeducación 8, Universitarias",
+          "edition": "No indicada",
+          "locator": "pp. 1–8 de la copia renderizada; apartados identificados en METHODOLOGY_REVIEW.md",
+          "location": "Archivo aportado por el propietario; original no publicado",
+          "sha256": "e67d3fb4a9ea5c17d54e4609026e9ee73761cfdd14a23ef3e998546ac0c0aaf9"
+        }
+      ]
     },
     {
       "id": "M08",
@@ -103,8 +154,17 @@
       "id": "M09",
       "topic": "Revisión de períodos",
       "status": "pending",
-      "resolution": "Acción renombrada Escribir mi revisión y aclarada su función. Pendiente revisar las preguntas restantes.",
-      "references": []
+      "resolution": "Acción renombrada Escribir mi revisión y aclarada su función. Pendiente revisar las preguntas restantes. S9 relaciona meditación diaria y revisión mensual, sin inferencia automática de dificultades.",
+      "references": [
+        {
+          "institution": "Material aportado; procedencia institucional pendiente",
+          "title": "Medios ascéticos de Schoenstatt — Autoeducación 8, Universitarias",
+          "edition": "No indicada",
+          "locator": "pp. 1–8 de la copia renderizada; apartados identificados en METHODOLOGY_REVIEW.md",
+          "location": "Archivo aportado por el propietario; original no publicado",
+          "sha256": "e67d3fb4a9ea5c17d54e4609026e9ee73761cfdd14a23ef3e998546ac0c0aaf9"
+        }
+      ]
     },
     {
       "id": "M10",
@@ -117,8 +177,17 @@
       "id": "M11",
       "topic": "Sugerencias progresivas",
       "status": "pending",
-      "resolution": "",
-      "references": []
+      "resolution": "S9 respalda gradualidad voluntaria, no inferencia de hábito por plazo fijo.",
+      "references": [
+        {
+          "institution": "Material aportado; procedencia institucional pendiente",
+          "title": "Medios ascéticos de Schoenstatt — Autoeducación 8, Universitarias",
+          "edition": "No indicada",
+          "locator": "pp. 1–8 de la copia renderizada; apartados identificados en METHODOLOGY_REVIEW.md",
+          "location": "Archivo aportado por el propietario; original no publicado",
+          "sha256": "e67d3fb4a9ea5c17d54e4609026e9ee73761cfdd14a23ef3e998546ac0c0aaf9"
+        }
+      ]
     },
     {
       "id": "M12",
@@ -126,6 +195,28 @@
       "status": "pending",
       "resolution": "Repaso opcional junto al acceso directo; falta revisión integral. No se incorpora curso pago.",
       "references": []
+    },
+    {
+      "id": "M13",
+      "topic": "Examen de conciencia para preparar la confesión",
+      "status": "pending",
+      "resolution": "Ayuda secundaria de lectura, sin respuestas ni historial. Base catequética cotejada; texto de Alianza pendiente de revisión pastoral.",
+      "references": [
+        {
+          "institution": "Santa Sede",
+          "title": "Catecismo de la Iglesia Católica",
+          "edition": "Versión web española consultada 2026-09-12",
+          "locator": "1451–1460",
+          "location": "https://www.vatican.va/archive/catechism_sp/p2s2c2a4_sp.html"
+        },
+        {
+          "institution": "Santa Sede",
+          "title": "Catecismo de la Iglesia Católica, Los diez mandamientos",
+          "edition": "Versión web española consultada 2026-09-12",
+          "locator": "2052–2055",
+          "location": "https://www.vatican.va/archive/catechism_sp/p3s2_sp.html"
+        }
+      ]
     }
   ]
 }
