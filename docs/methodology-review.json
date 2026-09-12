@@ -30,7 +30,7 @@
       "id": "M02",
       "topic": "Propósito particular y examen",
       "status": "pending",
-      "resolution": "Retirada equivalencia no resuelta entre PP y EP; registro mensual diferenciado del cultivo diario. Pendiente cotejo de terminología local y continuidad entre meses. S9 aporta área-actitud-acto y se incorpora guía opcional; no define EP ni cierra la diferencia S4/S7.",
+      "resolution": "Retirada equivalencia no resuelta entre PP y EP; registro mensual diferenciado del cultivo diario. Pendiente cotejo de terminología local y continuidad entre meses. S9 aporta área-actitud-acto y se incorpora guía opcional; no define EP ni cierra la diferencia S4/S7. Mi mes revisa el mes anterior y prepara el actual; continuidad como borrador probada, sin copia automática.",
       "references": [
         {
           "institution": "Rama de Familias de Schoenstatt Chile",
@@ -69,7 +69,7 @@
       "id": "M04",
       "topic": "Marcas de registro",
       "status": "pending",
-      "resolution": "S9 describe registro escrito pero no incluye el anexo anunciado ni define nuestra escala de estados.",
+      "resolution": "S9 describe registro escrito pero no incluye el anexo anunciado ni define nuestra escala de estados. Los resúmenes no convierten ausencia de registro en incumplimiento; falta confirmación explícita cuando no hay marcas.",
       "references": [
         {
           "institution": "Material aportado; procedencia institucional pendiente",
@@ -85,7 +85,7 @@
       "id": "M05",
       "topic": "Frecuencias y cálculos",
       "status": "pending",
-      "resolution": "Respaldo para frecuencias diarias, semanales y mensuales. Pendiente integrar metas, historial de cambios y cálculo de semanas parciales. S9 contempla puntos diarios, semanales y mensuales; integración pendiente.",
+      "resolution": "S7 y S9 contemplan puntos diarios, semanales y mensuales. Frecuencias, vigencia y cálculos ya integrados y probados en entorno aislado. Períodos parciales sin porcentaje; reglas de producto pendientes de revisión metodológica.",
       "references": [
         {
           "institution": "Rama de Familias de Schoenstatt Chile",

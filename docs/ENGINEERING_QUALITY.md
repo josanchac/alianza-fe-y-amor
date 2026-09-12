@@ -57,3 +57,15 @@ Para el reinicio individual autorizado: identificar una sola cuenta, respaldar s
 - La compilación informa un bloque JavaScript superior a 500 kB. Debe medirse su impacto y evaluar carga por secciones en la integración; no se ocultará la advertencia para simular mejor rendimiento.
 
 El objetivo de calidad se demuestra mediante estos resultados y sus correcciones, no mediante la etiqueta «primer mundo» ni una garantía absoluta.
+
+## Evidencia de la primera integración del recorrido
+
+La suite completa pasó con datos sintéticos. Las pruebas añadidas verifican: persistencia de la capacidad elegida; guardado fallido sin navegación de éxito; revisión del mes anterior sin alterar el propósito actual; continuación como borrador; metas semanales sin compensación entre períodos; meses bisiestos; semanas parciales; cambios de meta y pausas con vigencia; migración conservando filas, propietarios, versiones y fechas previas; rechazo de frecuencia inválida y de escrituras directas del historial; conflictos entre versiones; preferencias privadas y acceso de pareja condicionado al permiso de horario. Los roles anónimo, ajeno y de métricas no obtienen contenido personal.
+
+Se ejecutaron `npm test`, `npm run typecheck` y `npm run build`. La compilación conserva la advertencia de un bloque superior a 500 kB. Estas pruebas usan PGlite y JSDOM; no sustituyen la prueba de navegador y dispositivo, los asesores de seguridad de Supabase ni un ensayo de restauración. La revisión metodológica permanece pendiente deliberadamente.
+
+### Compatibilidad y publicación futura
+
+La migración `20260912041345_guided_schedule.sql` debe aplicarse y verificarse antes de activar el cliente nuevo. El cliente anterior puede seguir guardando compromisos después de migrar: el servidor conserva su frecuencia aunque ese cliente no la envíe. El historial lo genera el servidor en la misma transacción del compromiso. No se trasladan registros entre propietarios ni se amplían los permisos de notas; el historial de frecuencias forma parte del permiso existente de horario.
+
+Antes de producción: respaldo y ensayo de restauración; aplicar en preproducción, revisar los asesores de seguridad y probar clientes anterior/nuevo; inspección móvil y aprobación de contenido; luego publicación autorizada y comprobación sintética. Volver al cliente anterior no exige borrar el historial añadido. Una reversión de base de datos requiere un procedimiento ensayado y preservar los registros nuevos; no eliminar tablas o filas como atajo. El reinicio individual requiere además protección contra escrituras desde sesiones anteriores y permanece pendiente.

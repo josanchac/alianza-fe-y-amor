@@ -1,0 +1,54 @@
+import {PGlite} from '@electric-sql/pglite';
+import {readFile,readdir} from 'node:fs/promises';
+import assert from 'node:assert/strict';
+const db=new PGlite();
+await db.exec(`create role anon;create role authenticated;create schema auth;
+create table auth.users(id uuid primary key,email text,email_confirmed_at timestamptz);
+create function auth.uid() returns uuid language sql stable as $$select nullif(current_setting('request.jwt.claim.sub',true),'')::uuid$$;
+grant usage on schema auth to authenticated,anon;grant execute on function auth.uid() to authenticated,anon;`);
+const files=(await readdir('supabase/migrations')).filter(x=>x.endsWith('.sql')).sort();
+for(const f of files.filter(x=>x<'20260909143538'))await db.exec(await readFile('supabase/migrations/'+f,'utf8'));
+const a='00000000-0000-4000-8000-000000000001',b='00000000-0000-4000-8000-000000000002',c='00000000-0000-4000-8000-000000000003';
+await db.query("insert into auth.users values($1,'a@example.test',now()),($2,'b@example.test',now()),($3,'c@example.test',now())",[a,b,c]);
+await db.query("insert into alianza_private.members values($1,'jose','A',''),($2,'neca','B','')",[a,b]);
+async function as(id,role='authenticated'){await db.exec('reset role');await db.query("select set_config('request.jwt.claim.sub',$1,false)",[id??'']);await db.exec('set role '+role);}
+async function call(payload=null){return(await db.query('select public.alianza_data($1::jsonb) v',[payload===null?null:JSON.stringify(payload)])).rows[0].v;}
+const habit={title:'Ejercicio',moment:'Durante el día',active:true,anchor:'',minimum:''};
+await as(a);await call();await call({kind:'habit',key:'exercise',version:0,data:habit});
+await call({kind:'purpose',key:'2026-08',version:0,data:{text:'Propósito anterior',review:'Revisión anterior'}});
+await db.exec('reset role');
+for(const f of files.filter(x=>x>='20260909143538'&&!x.endsWith('_guided_schedule.sql')))await db.exec(await readFile('supabase/migrations/'+f,'utf8'));
+await as(a);const before=await call();await db.exec('reset role');
+await db.exec(await readFile('supabase/migrations/'+files.find(x=>x.endsWith('_guided_schedule.sql')),'utf8'));
+await as(a);let state=await call();
+assert.deepEqual(state.own.filter(r=>r.kind!=='habit_plan'),before.own);
+assert.deepEqual(state.shared,before.shared);
+assert.equal(state.own.find(r=>r.kind==='habit_plan').data.versions[0].from,state.today);
+console.log('PASS Upgrade preserves original records, owners, versions and dates; no inferred past targets');
+let result=await call({kind:'habit',key:'exercise',version:1,data:{...habit,frequency:{period:'week',target:3}}});
+assert.equal(result.record.data.frequency.target,3);assert.equal(result.related[0].data.versions.length,1);
+assert.equal(result.related[0].data.versions[0].target,3);
+// Simulate an established historical plan in the isolated database.
+await db.exec('reset role');await db.query("update alianza_private.records set data=jsonb_build_object('versions',jsonb_build_array(jsonb_build_object('from','2026-01-01','period','week','target',3,'active',true))) where owner=$1 and kind='habit_plan'",[a]);await as(a);
+result=await call({kind:'habit',key:'exercise',version:2,data:{...habit,frequency:{period:'week',target:4}}});
+assert.equal(result.related[0].data.versions.length,2);assert.equal(result.related[0].data.versions[0].target,3);
+const stable=structuredClone(result.related);
+await assert.rejects(()=>call({kind:'habit',key:'exercise',version:2,data:{...habit,frequency:{period:'week',target:7}}}),e=>e.code==='PT409');
+assert.deepEqual((await call()).own.filter(r=>r.kind==='habit_plan'),stable);
+result=await call({kind:'habit',key:'exercise',version:3,data:{...habit,title:'Cliente anterior'}});
+assert.equal(result.record.data.frequency.target,4);assert.deepEqual(result.related,stable);
+console.log('PASS Frequency history survives changes, stale saves and payloads from older clients');
+for(const frequency of [{period:'week',target:8},{period:'week',target:1.5},{period:'month',target:29},{period:'day',target:2},{period:null,target:1},{period:'week',target:null},{period:'year',target:1},{period:'week',target:'3'},{period:'week',target:3,owner:b}])await assert.rejects(()=>call({kind:'habit',key:'bad',version:0,data:{...habit,frequency}}),e=>e.code==='22023');
+await assert.rejects(()=>call({kind:'habit_plan',key:'exercise',version:1,data:{versions:[]}}),e=>e.code==='22023');
+await call({kind:'preferences',key:'experience',version:0,data:{focus:'ideal',lastSeenRelease:'journey-2026-09'}});
+let profile=(await call()).own.find(r=>r.kind==='profile');await call({kind:'profile',key:'me',version:profile.version,data:{...profile.data,shareSchedule:true,shareNotes:true}});
+await as(b);state=await call();assert(state.partner.records.some(r=>r.kind==='habit_plan'));assert(!state.partner.records.some(r=>r.kind==='preferences'));
+await as(a);profile=(await call()).own.find(r=>r.kind==='profile');await call({kind:'profile',key:'me',version:profile.version,data:{...profile.data,shareSchedule:false}});
+await as(b);assert(!(await call()).partner.records.some(r=>r.kind==='habit_plan'));
+await as(c);await assert.rejects(()=>call(),e=>e.code==='42501');await as(null,'anon');await assert.rejects(()=>call(),e=>e.code==='42501');
+await db.exec('reset role;set role alianza_metrics');await assert.rejects(()=>db.query('select * from alianza_private.records'),e=>e.code==='42501');
+console.log('PASS Exact validation, server-owned plans, spouse permissions and administrator content isolation');
+await db.exec('reset role');
+// Defense-in-depth: none of the new private functions is exposed to clients.
+const grants=(await db.query("select has_function_privilege('anon','alianza_private.capture_habit_plan()','EXECUTE') a,has_function_privilege('authenticated','alianza_private.capture_habit_plan()','EXECUTE') b")).rows[0];assert.deepEqual(grants,{a:false,b:false});
+await db.close();

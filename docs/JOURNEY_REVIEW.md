@@ -1,12 +1,12 @@
 # Alianza · Rediseño del recorrido
 
-Estado: navegación probada favorablemente por el propietario y su esposa. Implementación y publicación sujetas a la verificación metodológica oficial exigida el 12/9/2026. Ver [revisión metodológica](METHODOLOGY_REVIEW.md) y [sección Costa Rica](COSTA_RICA.md).
+Estado: prototipo de navegación revisado favorablemente por el propietario y su esposa. Primera integración funcional preparada en la rama de revisión; aún requiere prueba humana sobre esta integración y cierre de revisión metodológica antes de publicar. Ver [revisión metodológica](METHODOLOGY_REVIEW.md) y [sección Costa Rica](COSTA_RICA.md).
 
 ## Objetivo y alcance aprobado
 
 En los primeros cinco minutos, la persona deja configurada la capacidad que más beneficio le representa y sabe dónde volver para darle seguimiento. Las capacidades disponibles no deben sentirse como una lista de obligaciones incumplidas. El registro sirve al discernimiento; no mide crecimiento espiritual.
 
-El plan aprobado pide revisar, diseñar y prototipar; probar con José, su esposa y participantes invitados; implementar lo validado; verificar datos y permisos; y presentar una versión probada y la comunicación de cambios para aprobar su publicación. Esta entrega completa la revisión y propone un prototipo. No sustituye esa prueba humana ni autoriza publicar una experiencia no validada.
+El plan aprobado pide revisar, diseñar y prototipar; probar con José, su esposa y participantes invitados; implementar lo validado; verificar datos y permisos; y presentar una versión probada y la comunicación de cambios para aprobar su publicación. La revisión inicial incluyó un prototipo; la integración parcial posterior se describe al final. No sustituye esa prueba humana ni autoriza publicar una experiencia no validada.
 
 ## Revisión de la implementación real
 
@@ -32,7 +32,7 @@ Fuente revisada: `josanchac/alianza-fe-y-amor`, rama main, commit `8bf94a7`. Pro
 - Intenciones de implementación: vincular una conducta a una situación concreta y prever una versión mínima. https://cancercontrol.cancer.gov/brp/research/constructs/implementation-intentions
 - Lally y colaboradores: la automatización varía entre personas y conductas. No hay un plazo único para afirmar que un hábito está adquirido. https://doi.org/10.1002/ejsp.674
 
-Las reglas específicas del prototipo son hipótesis de producto, no umbrales clínicos ni prescripciones del Movimiento. La definición de las cuatro Rs se conserva de la aplicación: rezar cada día, reencantar cada semana, revisar cada mes y renovar cada año. Las preguntas nuevas sobre ideales son apoyo inicial propuesto, pendiente de revisión por alguien con formación en el Movimiento.
+Las reglas específicas del prototipo son hipótesis de producto, no umbrales clínicos ni prescripciones del Movimiento. La pauta consultada de la Rama de Familias de Chile documenta las cuatro Rs: rezar cada día, reencantar cada semana, revisar cada mes y renovar cada año. Las preguntas nuevas sobre ideales son apoyo inicial propuesto, pendiente de revisión por alguien con formación en el Movimiento.
 
 ## Recorrido propuesto y resultados esperados
 
@@ -49,7 +49,7 @@ Las reglas específicas del prototipo son hipótesis de producto, no umbrales cl
 11. **Desvinculación:** conservar registros propios; revocar permisos personales; archivar el historial compartido como lectura para sus participantes originales, sin trasladarlo a una pareja futura. Esta política se muestra antes de confirmar y debe validarse con usuarios.
 12. **Novedades:** una explicación contextual por versión, con accesos directos y un archivo consultable. No reiniciar la configuración de usuarios existentes.
 
-## Reglas que deben implementarse y probarse después de validar el prototipo
+## Reglas de aceptación de la integración completa
 
 ### Compromisos y revisión
 
@@ -109,6 +109,23 @@ Gates antes de publicar: ninguna confusión sobre privacidad; completar la capac
 - `prototype/journey.tsx` y `journey.css`: prototipo de navegación con datos de ejemplo en memoria; no consulta ni modifica Supabase, no autentica usuarios y no envía invitaciones reales.
 - `prototype/alianza-emblema.svg`: geometría trazada del original, simplificada a azul y dorado, sin imagen raster embebida. Los originales de producción se conservan.
 - `prototype/build.mjs`: genera una vista autocontenida para revisar y una vista en conversación. No forma parte del build de producción.
-- La prueba de navegación no demuestra seguridad de servidor. La integración real, migraciones, pruebas de aislamiento y concurrencia, configuración de invitaciones y aprobación de publicación quedan para después de la validación con usuarios acordada en el plan.
+- La prueba del prototipo no demuestra seguridad de servidor. La primera integración descrita abajo añade pruebas aisladas; vinculación, ensayo de publicación y validación humana siguen pendientes.
 
 No se publicaron cambios ni se modificaron datos de usuarios.
+
+## Primera integración funcional · 12/9/2026
+
+El propietario indicó continuar sin Dropbox e integrar sus documentos en otra sesión. Se conserva esa documentación como pendiente, sin detener el desarrollo funcional ni atribuirle una validación que no se ha realizado.
+
+- Inicio guarda la capacidad elegida y permite retomarla o cambiarla. Explorar sin elegir no crea compromisos. La elección de ideal abre el editor existente; el curso de discernimiento y los estados de borrador aún no se integran.
+- Horario reúne Mi día, Mi mes e Historial. Mi mes consulta el propósito y los registros del mes anterior; guarda su revisión en ese mes y prepara el propósito del actual. Continuar el propósito anterior solo crea un borrador que requiere guardar. Mi día conserva el recordatorio del propósito y la reflexión diaria opcional.
+- Compromisos diarios o metas en días por semana/mes. Se muestran días registrados y adicionales; se conservan las marcas de compromisos pausados. Un compromiso con vigencia conocida y sin marcas aparece en el resumen sin atribuirle incumplimiento.
+- El servidor registra la frecuencia y las pausas desde la fecha del cambio en Costa Rica. Los cambios del mismo día sustituyen el plan de ese día; las fechas anteriores se conservan. Para compromisos existentes se inicia la vigencia el día de la migración, sin inventar frecuencias históricas.
+- Las semanas son de lunes a domingo. Los períodos con historia desconocida, pausa o cambio de meta se identifican como parciales, sin porcentaje de cumplimiento. Una semana puede aparecer completa en dos revisiones mensuales; no se suman esas filas como totales de días del mes.
+- Novedades consultables en Inicio hasta reconocerlas y siempre en Mi espacio. La preferencia es personal y no se comparte con la pareja.
+
+La frecuencia mensual admite 1–28 días: es una restricción inicial del producto para admitir todos los meses, no una norma de Schoenstatt. Las marcas describen registros; no califican la vida espiritual. Falta integrar confirmación personal de cumplimiento cuando no hay marcas, notas por compromiso, sugerencias voluntarias de continuidad, vinculación bilateral, ideal matrimonial y repertorio ampliado de símbolos.
+
+Verificación: suite automatizada completa, tipos y compilación aprobados; pruebas nuevas de elección y recarga, errores de guardado, separación mensual, borradores, frecuencias, cambios históricos, migración y permisos. La integración actual no ha pasado todavía observación humana en móvil, evaluación completa de accesibilidad ni ensayo en un entorno Supabase de preproducción.
+
+No se aplicó la migración a producción, no se reinició ninguna cuenta y no se publicó esta integración.

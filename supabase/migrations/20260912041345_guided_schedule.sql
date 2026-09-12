@@ -1,40 +1,6 @@
--- Private data API for isolated married couples. Enrolment is administrator-only.
--- No personal identifiers or credentials belong in this file.
+-- Additive upgrade: preserve existing records, owners, versions and timestamps.
 begin;
-create schema if not exists alianza_private;
-revoke all on schema alianza_private from public, anon, authenticated;
-grant usage on schema alianza_private to authenticated;
-create table if not exists alianza_private.couples (
- id uuid primary key default gen_random_uuid(),
- emblem text not null default 'neutral' check(emblem in ('neutral','tree-rosary'))
-);
-create table if not exists alianza_private.members (
- id uuid primary key references auth.users(id) on delete cascade,
- role text not null default 'member',
- name text not null, ideal text not null default '',
- couple_id uuid not null references alianza_private.couples(id) on delete restrict,
- seat smallint not null check(seat in (1,2)),
- symbol text not null default 'heart' check(symbol in ('heart','tree','rosary','cross')),
- unique(couple_id,seat)
-);
-create table if not exists alianza_private.records (
- owner text not null, kind text not null, key text not null,
- data jsonb not null, version integer not null default 1 check(version>0),
- updated timestamptz not null default now(), primary key(owner,kind,key)
-);
-alter table alianza_private.couples enable row level security;
-alter table alianza_private.members enable row level security;
-alter table alianza_private.records enable row level security;
-revoke all on all tables in schema alianza_private from public,anon,authenticated;
-
-create or replace function alianza_private.valid_date(v text) returns boolean
-language plpgsql immutable set search_path='' as $$
-begin
- if v is null or v !~ '^\d{4}-\d{2}-\d{2}$' then return false; end if;
- return to_char(v::date,'YYYY-MM-DD')=v;
-exception when others then return false;
-end $$;
-
+lock table alianza_private.records in share row exclusive mode;
 create or replace function alianza_private.valid_record(k text, ky text, d jsonb) returns boolean
 language plpgsql stable set search_path='' as $$
 declare fields text[]; f text; val jsonb; maxlen int; dt text; expected text;
@@ -155,15 +121,12 @@ begin
  end if;
  return jsonb_build_object('user',jsonb_build_object('id',uid,'role',member.role,'symbol',member.symbol,'coupleId',member.couple_id,'email',(select email from auth.users where id=uid)),'couple',jsonb_build_object('emblem',(select emblem from alianza_private.couples where id=member.couple_id)),'own',own_rows,'shared',shared_rows,'partner',partner,'today',to_char(now() at time zone 'America/Costa_Rica','YYYY-MM-DD'));
 end $$;
--- The public entry point is an invoker; the narrow privileged function above
--- lives in an unexposed schema and independently checks identity and membership.
-create or replace function public.alianza_data(payload jsonb default null) returns jsonb
-language sql security invoker set search_path='' as $$ select alianza_private.data(payload); $$;
-revoke all on all functions in schema alianza_private from public,anon,authenticated;
-grant execute on function alianza_private.data(jsonb) to authenticated;
-revoke all on function public.alianza_data(jsonb) from public,anon;
-grant execute on function public.alianza_data(jsonb) to authenticated;
-create policy deny_direct_access on alianza_private.couples for all to anon,authenticated using (false) with check (false);
-create policy deny_direct_access on alianza_private.members for all to anon,authenticated using (false) with check (false);
-create policy deny_direct_access on alianza_private.records for all to anon,authenticated using (false) with check (false);
+-- The old model supported daily points only. Establish a baseline from the
+-- upgrade date; do not reconstruct unknown activation or pause dates.
+insert into alianza_private.records(owner,kind,key,data)
+select owner,'habit_plan',key,jsonb_build_object('versions',jsonb_build_array(jsonb_build_object('from',to_char(now() at time zone 'America/Costa_Rica','YYYY-MM-DD'),'period','day','target',1,'active',(data->>'active')::boolean)))
+from alianza_private.records where kind='habit'
+on conflict do nothing;
+
+revoke all on function alianza_private.capture_habit_plan() from public,anon,authenticated;
 commit;

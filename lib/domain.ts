@@ -1,4 +1,4 @@
-export type Habit = {title:string; moment:'Mañana'|'Durante el día'|'Noche'; active:boolean; anchor:string; minimum:string};
+export type Habit = {title:string; moment:'Mañana'|'Durante el día'|'Noche'; active:boolean; anchor:string; minimum:string; frequency?:{period:'day'|'week'|'month';target:number}};
 export type Profile = {name:string; ideal:string; shareSchedule:boolean; shareNotes:boolean; symbol?:'heart'|'tree'|'rosary'|'cross'};
 export type RecordItem = {owner:string;kind:string;key:string;data:any;version:number;updated:string};
 export const R_TYPES = [
