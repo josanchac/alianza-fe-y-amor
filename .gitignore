@@ -9,3 +9,6 @@ supabase/.branches/
 
 /tests/preview-dist/
 /test-results/
+
+/tests/auth-stack/supabase/.temp/
+/tests/auth-stack/supabase/.branches/

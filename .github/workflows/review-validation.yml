@@ -78,12 +78,14 @@ jobs:
         env:
           ALIANZA_AUTH_STATUS_FILE: /tmp/alianza-auth-status.json
         run: node tests/auth-api.mjs
+      - name: Check isolated database security advisors
+        run: npx --yes supabase@2.117.0 db advisors --local --workdir tests/auth-stack --type security --fail-on error --output-format json > test-results/auth-security-advisors.json
       - name: Preserve verification evidence only
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: review-auth-api-evidence
-          path: test-results/auth-api-evidence.json
+          path: test-results/auth-*.json
           if-no-files-found: ignore
           retention-days: 14
       - name: Remove disposable stack and credentials
