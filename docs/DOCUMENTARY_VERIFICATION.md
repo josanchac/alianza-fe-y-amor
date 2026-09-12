@@ -4,7 +4,7 @@ Por indicación del propietario, esta etapa se verifica contra fuentes de alta f
 
 ## Alcance y criterio
 
-Se cotejaron las guías breves activas, sus enlaces, las preguntas y ejemplos visibles y las reglas que afectan su registro. La matriz ejecutable es [methodology-review.json](methodology-review.json): ocho áreas documentadas con fuentes, tres decisiones de producto y dos exclusiones. Una exclusión no equivale a validar el contenido retirado.
+Se cotejaron las guías breves activas, sus enlaces, las preguntas y ejemplos visibles y las reglas que afectan su registro. La matriz ejecutable es [methodology-review.json](methodology-review.json): ocho áreas documentadas con fuentes, cuatro decisiones de producto y una exclusión. Una exclusión no equivale a validar el contenido retirado.
 
 Se consultaron los documentos completos desde las fichas de la biblioteca de la Rama de Familias de Chile, el portal nacional de Brasil y el archivo oficial del Vaticano. La atribución territorial permanece visible. No se afirma que estos materiales constituyan un manual oficial de Costa Rica ni un curso completo.
 
@@ -34,3 +34,7 @@ Se consultaron los documentos completos desde las fichas de la biblioteca de la 
 Este control detecta cambios y evidencia incompleta; no puede determinar por sí solo fidelidad doctrinal. El registro identifica a Codex como quien realizó el cotejo asistido, sin representación del Movimiento. No habilita publicidad de aval institucional, certificación espiritual ni validación universal.
 
 La revisión documental queda cerrada para este alcance reducido. Los cursos completos, la adopción específica de una pauta costarricense y las guías nuevas necesitan su propio respaldo antes de incorporarse. Dropbox y la revisión de un asesor quedan para otra etapa por decisión del propietario.
+
+## Notas por compromiso y elección del siguiente paso
+
+Se añadieron notas semanales y mensuales, privadas incluso con los permisos de compartir activados. Su valoración es una declaración del usuario; no completa casillas ausentes ni recalcula porcentajes. En períodos todavía abiertos se guardan únicamente notas. Al revisar uno cerrado, la persona puede elegir continuar, ajustar o explorar; explorar abre el selector de comienzo sin crear registros. No se infiere un hábito adquirido. Estas funciones se registran en M04, M09 y M11 como controles de registro y navegación, sin atribuirlas a una pauta oficial de Schoenstatt.

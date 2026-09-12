@@ -32,8 +32,8 @@ try {
     const incomplete=structuredClone(documented);incomplete.items[0].references[0][field]='';
     assert((await verifyMethodology(root,incomplete)).some(x=>x.includes('M01')));
   }
-  const excluded=structuredClone(documented);excluded.items.find(x=>x.id==='M11').exclusion='';
-  assert((await verifyMethodology(root,excluded)).some(x=>x.includes('M11')));
+  const excluded=structuredClone(documented);excluded.items.find(x=>x.id==='M10').exclusion='';
+  assert((await verifyMethodology(root,excluded)).some(x=>x.includes('M10')));
   const product=structuredClone(documented);product.items.find(x=>x.id==='M07').boundary='';
   assert((await verifyMethodology(root,product)).some(x=>x.includes('M07')));
   const deleted=structuredClone(documented);deleted.items.pop();

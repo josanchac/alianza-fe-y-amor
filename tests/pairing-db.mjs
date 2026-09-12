@@ -87,5 +87,29 @@ await save('profile','me',{...symbolProfile.data,symbol:'flame'},symbolProfile.v
 const afterSymbol=await data();assert.deepEqual(afterSymbol.own.find(r=>r.kind==='profile').data,{...symbolProfile.data,symbol:'flame'});assert.deepEqual(afterSymbol.shared,symbolState.shared);
 await db.exec('reset role');
 console.log('PASS Symbol migration preserves records; all UI choices pass server validation; profile round-trip preserves ideal and permissions');
+// New reviews stay owner-only even when every existing sharing switch is on.
+await as(a);let reviewState=await data();
+const reviewHabit={title:'Owned commitment',moment:'Mañana',active:true,anchor:'',minimum:'',frequency:{period:'week',target:3}};
+await save('habit','review-habit',reviewHabit);
+const rp=reviewState.own.find(r=>r.kind==='profile');
+await save('profile','me',{...rp.data,shareSchedule:true,shareNotes:true,shareIdeal:true},rp.version,reviewState.user.relationshipVersion);
+const reviewData={habitKey:'review-habit',period:'week',start:'2026-08-03',end:'2026-08-09',note:'Private period note',assessment:'met',nextStep:'explore'};
+const reviewKey=x=>x.habitKey+':'+x.start+':'+x.end;
+const checksBefore=(await data()).own.filter(r=>r.kind==='checks');
+await save('habit_review',reviewKey(reviewData),reviewData);
+assert.deepEqual((await data()).own.filter(r=>r.kind==='checks'),checksBefore);
+await assert.rejects(()=>save('habit_review',reviewKey(reviewData),reviewData),err=>err.code==='PT409');
+await save('habit_review',reviewKey(reviewData),{...reviewData,note:'Updated private note'},1);
+await assert.rejects(()=>save('habit_review',reviewKey(reviewData),reviewData,1),err=>err.code==='PT409');
+for(const bad of [{...reviewData,habitKey:'missing'},{...reviewData,start:'2026-08-04'},{...reviewData,end:'2026-08-10'},{...reviewData,assessment:'automatic'},{...reviewData,nextStep:'forced'},{...reviewData,note:'x'.repeat(4001)},{...reviewData,owner:b},{...reviewData,start:'2026-02-30'}])await assert.rejects(()=>save('habit_review',reviewKey(bad),bad),err=>err.code==='22023');
+const currentMonth=(await data()).today.slice(0,7),currentEnd=new Date(Date.UTC(Number(currentMonth.slice(0,4)),Number(currentMonth.slice(5,7)),0)).toISOString().slice(0,10);
+const openReview={...reviewData,period:'month',start:currentMonth+'-01',end:currentEnd,assessment:'unsure',nextStep:'keep'};
+await save('habit_review',reviewKey(openReview),openReview);
+for(const changed of [{assessment:'met'},{nextStep:'explore'}])await assert.rejects(()=>save('habit_review',reviewKey(openReview),{...openReview,...changed},1),err=>err.code==='22023');
+const longKey='a'.repeat(100);await save('habit',longKey,reviewHabit);const longReview={...reviewData,habitKey:longKey};await save('habit_review',reviewKey(longReview),longReview);
+await as(b);const spouseReviewState=await data();assert(spouseReviewState.partner.records.some(r=>r.kind==='habit'&&r.key==='review-habit'));assert(!spouseReviewState.partner.records.some(r=>r.kind==='habit_review'));
+await assert.rejects(()=>save('habit_review',reviewKey(reviewData),reviewData),err=>err.code==='22023');
+await db.exec('reset role');
+console.log('PASS Period reviews: owner-only despite sharing, stale saves denied, no invented marks, exact periods, open-period notes only and legacy long keys supported');
 const acl=(await db.query("select has_function_privilege('anon','public.alianza_relationship(jsonb)','execute') a,has_function_privilege('authenticated','alianza_private.ideal_view(uuid,uuid)','execute') b")).rows[0];assert.deepEqual(acl,{a:false,b:false});
 }catch(error){console.error(error.message,error.code,error.where);process.exitCode=1;}finally{await db.close();}

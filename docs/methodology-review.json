@@ -1,7 +1,7 @@
 {
   "kind": "documentary",
   "status": "documented",
-  "scope": "Guías breves y comportamiento de la aplicación compilada desde github/main.tsx. Síntesis atribuidas, no curso completo ni formato nacional costarricense. El prototipo exploratorio está excluido de publicación. No acredita aval institucional ni pastoral.",
+  "scope": "Guías breves y comportamiento de la aplicación compilada desde github/main.tsx. Síntesis atribuidas, no curso completo ni formato nacional costarricense. El prototipo exploratorio está excluido de publicación. No acredita aval institucional ni pastoral. Incluye notas privadas por compromiso y valoración personal por período; invitación voluntaria a explorar basada únicamente en la elección del usuario.",
   "verification": {
     "performedBy": "Codex — cotejo documental asistido, no representante del Movimiento",
     "date": "2026-09-12",
@@ -14,12 +14,13 @@
     "evidence": null
   },
   "reviewedContent": {
+    "app/commitment-review.tsx": "69a77c528a3754e99c73a4cd68fdbb41d11ac538f5101d6f4a7d3acfddfb9fa0",
     "app/confession-guide.tsx": "22e7cf6d2fb52021e38a78a5144a10049c916eb2a0c6cdbfb417a995b54469b9",
     "app/formation-guide.tsx": "66f8c2d175dba6e85c267fb6e06c89a97571d52e1b0b53c7b32777b8992b0ddf",
-    "app/home.tsx": "543e6aab4c20dfdc709d2b8bb3e8cafb2b510d58761748f7818800cdb78d0289",
+    "app/home.tsx": "f9feb5780fe24a6808a100715f7f2c829d322a4cb7a1cae9f2c4756d9f16347b",
     "app/install-guide.tsx": "00bab2940d281dfd1e7e07ce9ef8f9a3e4464ae9c18f03e9058c3dfe3966b275",
-    "app/journal.tsx": "bf2d18bbacc839f1b5f2a61ba27d4797f7ea0b7f545ae3cc0279f028ef6b2939",
-    "app/month-review.tsx": "4818776f8bc57c3c6b941eafabddc36956abec5517f54031b5345676adf6ae2b",
+    "app/journal.tsx": "10799debf7aa9e5041d53ed4c8fb9ab14ca7ab1eabbc6a263326b5655dd1bc42",
+    "app/month-review.tsx": "868435a186a69a1d9612a31d75ff82420fcad5df6de62226fd039fd7caec8b7e",
     "app/movement-costa-rica.tsx": "62b05210bea82d6d7a969d0f5a98bac4d2fc9d5bceaecabd177b24e29034be76",
     "app/pairing.tsx": "be4f636c5db9cab664b0eb87756496fff654eb1e9904eedde3b9a0ead8023c41",
     "app/personal-symbol.tsx": "011b3ae16097f602154dc6cce66b3c9654102750c847ad54a86bb5a7f61a5951",
@@ -38,6 +39,7 @@
     "github/config.public.json": "a6b4b267682dd075b4a9986f61f1308ff2269e21a24dd21935265d92dd8b0774",
     "github/index.html": "fd340334f04792bf4791ef681c18b315489b93cc2f613536ad807d4a92905862",
     "github/main.tsx": "d6c65e493a4edf725f310f2fb55fde101cb8bf5c9e6c3f4874b26c534d5d756f",
+    "lib/commitment-review.ts": "0793538ad22268549c4964794923a1f0bfebc5837e3897a496d1945cdf26d57c",
     "lib/domain.ts": "66813a4434e337225bda8977fb24030d96a0eac2e1ef4b20c1ef0bb96d6603e6",
     "lib/personal-symbols.ts": "bdee26342e7e07d8b3439ce93c8bc4ad66f5b2947b896316e2dcb7d6d433550d",
     "lib/reports.ts": "836c317694854fdbdbc0259d928c61123ece5b4a0e2215341220cc1355c47fd7",
@@ -53,7 +55,8 @@
     "supabase/migrations/20260912041345_guided_schedule.sql": "f6353014a4afa9b69d03aba5e9bb125a8a20c902445591acc1ed88f87c3a47ed",
     "supabase/migrations/20260912132546_bilateral_pairing.sql": "08e61273652ff531bcdb1e94778b138229042dfab5c36a48b47b8aaef8868f97",
     "supabase/migrations/20260912141154_personal_symbols.sql": "38a8ca7cf68c0de3ce70504390fd984448e31af04fc2b60fb8d8e5c770485562",
-    "supabase/schema.sql": "d0094ec9a336083210775a76de7fcab5a95ac37708b2ccb1b3adb17f35f043c0",
+    "supabase/migrations/20260912142635_commitment_reviews.sql": "3dcbf1a32dee7ebe3a82d21b73b5142111f9d1c9ced66ebb0526d5e0f427cbff",
+    "supabase/schema.sql": "c49ebc51f33501e7ff063b3b35d95eb002769653c37452354a1942e3b45044d0",
     "vite.github.config.ts": "4782f41f71503dfadd3a535c60b08794b058d73cb80b9fca09295920361bd26a"
   },
   "items": [
@@ -124,8 +127,8 @@
       "id": "M04",
       "topic": "Marcas de registro",
       "status": "verified",
-      "resolution": "Marcas elegidas por la persona. Casilla vacía significa desconocido; «Me costó» no certifica una realización parcial. No se inventa una escala oficial.",
-      "evidence": "app/journal.tsx: labels y mark; lib/schedule.ts; tests/schedule.ts.",
+      "resolution": "Marcas elegidas por la persona. Casilla vacía significa desconocido; «Me costó» no certifica una realización parcial. No se inventa una escala oficial. La valoración personal por período se guarda aparte y nunca crea marcas ni modifica los recuentos.",
+      "evidence": "app/journal.tsx: labels y mark; lib/schedule.ts; tests/schedule.ts. app/commitment-review.tsx; tests/commitment-review.mjs y tests/pairing-db.mjs.",
       "references": [
         {
           "institution": "Central Nacional de Assessores del Movimiento de Schoenstatt Brasil",
@@ -205,8 +208,8 @@
       "id": "M09",
       "topic": "Revisión de períodos",
       "status": "product-rule",
-      "resolution": "Notas personales de revisión con etiquetas propias. No se presentan como ejercicio oficial o como una quinta R.",
-      "evidence": "app/reports.tsx; app/month-review.tsx; app/journal.tsx: journal/review; tests/reports.ts y tests/journey.mjs.",
+      "resolution": "Notas por compromiso y período, junto con revisiones generales. Etiquetas propias de la app; valoración declarada por el usuario, no inferida. Semanas o meses en curso admiten notas; su valoración se habilita al cerrar el período.",
+      "evidence": "app/commitment-review.tsx; app/month-review.tsx; lib/commitment-review.ts; tests/commitment-review.mjs; tests/pairing-db.mjs; tests/postgres-concurrency.mjs.",
       "references": [],
       "boundary": "Los resúmenes muestran registros y ofrecen espacio de escritura; no infieren estado espiritual ni dificultades."
     },
@@ -222,11 +225,11 @@
     {
       "id": "M11",
       "topic": "Sugerencias progresivas",
-      "status": "excluded",
-      "resolution": "Sin criterio automático de hábito adquirido ni invitación tras cuatro semanas.",
-      "evidence": "vite.github.config.ts: exclude-unreviewed-prototype; app/home.tsx: elección voluntaria; tests/methodology.mjs.",
+      "status": "product-rule",
+      "resolution": "La persona elige continuar, ajustar o explorar después de su revisión. Explorar abre la elección de comienzo, sin guardar una nueva práctica. No se deduce hábito adquirido ni avance espiritual por marcas o plazos.",
+      "evidence": "app/commitment-review.tsx; app/journal.tsx; tests/commitment-review.mjs: explorar sin escrituras ni compromisos añadidos.",
       "references": [],
-      "exclusion": "El prototipo exploratorio no se importa ni se publica. El build rechaza cualquier importación de prototype/; su hash se conserva para trazabilidad, no como aval de sus ejercicios."
+      "boundary": "Preferencia explícita de navegación y disposición declarada por el usuario. Sin recomendación automática por plazo, sin presión ni progreso espiritual calculado."
     },
     {
       "id": "M12",

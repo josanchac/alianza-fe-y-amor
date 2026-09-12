@@ -139,3 +139,7 @@ La interfaz permite repasar las 4 Rs mientras se vincula; todavía no ofrece un 
 ## Actualización de símbolos y ayuda del ideal
 
 Se incorporaron dieciséis símbolos con sus nombres y una ayuda cerrada para continuar sin ideal personal. El registro del ideal sigue siendo libre; no se generan frases. Las guías activas quedaron cotejadas documentalmente en DOCUMENTARY_VERIFICATION.md. La revisión por asesor está diferida y no condiciona esta etapa. Siguen pendientes las notas por compromiso, la confirmación de cumplimiento sin marcas, las sugerencias voluntarias de continuidad y el reinicio individual protegido.
+
+## Seguimiento y continuidad voluntaria
+
+Desde las opciones de un compromiso se abre la nota del período actual. En Mi mes se consultan y editan notas y valoraciones del mes anterior y sus semanas, junto al propósito nuevo. La valoración no sustituye los recuentos. En la revisión de un período cerrado se ofrece, de forma opcional, continuar, ajustar o explorar otra práctica. Explorar lleva al selector inicial sin agregar compromisos ni modificar el foco guardado. La decisión no dispara avisos, rachas ni objetivos nuevos. Las notas se conservan al cambiar frecuencia o pausar y permanecen privadas aun con los permisos de compartir activados.

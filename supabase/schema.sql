@@ -86,7 +86,7 @@ language plpgsql stable set search_path='' as $$
 declare fields text[]; f text; val jsonb; maxlen int; dt text; expected text;
  today text:=to_char(now() at time zone 'America/Costa_Rica','YYYY-MM-DD');
 begin
- if k is null or ky is null or d is null or jsonb_typeof(d)<>'object' or octet_length(d::text)>40000 or length(ky)>100 or ky!~'^[a-zA-Z0-9:_-]+$' then return false; end if;
+ if k is null or ky is null or d is null or jsonb_typeof(d)<>'object' or octet_length(d::text)>40000 or length(ky)>(case when k='habit_review' then 122 else 100 end) or ky!~'^[a-zA-Z0-9:_-]+$' then return false; end if;
  fields:=case k
  when 'profile' then array['name','ideal','shareSchedule','shareNotes'] || case when d ? 'symbol' then array['symbol'] else array[]::text[] end || case when d ? 'shareIdeal' then array['shareIdeal'] else array[]::text[] end
  when 'habit' then case when d ? 'frequency' then array['title','moment','active','anchor','minimum','frequency'] else array['title','moment','active','anchor','minimum'] end
@@ -94,6 +94,7 @@ begin
  when 'journal' then array['gratitude','offering']
  when 'purpose' then array['text','review']
  when 'review' then array['start','end','gratitude','learning','next']
+ when 'habit_review' then array['habitKey','period','start','end','note','assessment','nextStep']
  when 'rs' then array['type','periodDate','planDate','planTime','note','done','doneDate']
  when 'checks' then array(select jsonb_object_keys(d)) else null end;
  if fields is null or not(d ?& fields) or d-fields <> '{}'::jsonb then return false; end if;
@@ -117,6 +118,17 @@ begin
       if f in ('name','title') and length(btrim(d->>f))=0 then return false; end if;
     end if;
    end loop;
+ end if;
+ if k='habit_review' then
+  if not alianza_private.valid_date(d->>'start') or not alianza_private.valid_date(d->>'end') then return false; end if;
+  if d->>'start'>today or d->>'start'>d->>'end' or d->>'period' not in ('week','month') then return false; end if;
+  if length(d->>'habitKey')>100 or d->>'habitKey'!~'^[a-zA-Z0-9:_-]+$' or length(d->>'note')>4000 then return false; end if;
+  if ky<>(d->>'habitKey')||':'||(d->>'start')||':'||(d->>'end') then return false; end if;
+  if d->>'assessment' not in ('unsure','met','not-met') or d->>'nextStep' not in ('keep','adjust','explore') then return false; end if;
+  if d->>'period'='week' and (extract(isodow from (d->>'start')::date)<>1 or (d->>'end')::date<>(d->>'start')::date+6) then return false; end if;
+  if d->>'period'='month' and (right(d->>'start',2)<>'01' or (d->>'end')::date<>((d->>'start')::date+interval '1 month'-interval '1 day')::date) then return false; end if;
+  -- Open periods accept notes only, never a final assessment or readiness claim.
+  if d->>'end'>=today and (d->>'assessment'<>'unsure' or d->>'nextStep'<>'keep') then return false; end if;
  end if;
  if k='profile' and (ky<>'me' or (d ? 'symbol' and d->>'symbol' not in ('heart','tree','rosary','cross','flame','anchor','mountain','sun','star','flower','sprout','bird','church','compass','waves','book'))) then return false; end if;
  if k='preferences' and (ky<>'experience' or d->>'focus' not in ('schedule','rs','ideal') or d->>'lastSeenRelease' not in ('','journey-2026-09')) then return false; end if;
@@ -178,6 +190,7 @@ begin
     then raise invalid_parameter_value; end if;
   k:=payload->>'kind'; ky:=payload->>'key'; d:=payload->'data';v:=(payload->>'version')::integer;
   if not alianza_private.valid_record(k,ky,d) then raise invalid_parameter_value; end if;
+  if k='habit_review' and not exists(select 1 from alianza_private.records where owner=uid::text and kind='habit' and key=d->>'habitKey') then raise invalid_parameter_value; end if;
   if payload ? 'relationshipVersion' and (jsonb_typeof(payload->'relationshipVersion')<>'number' or payload->>'relationshipVersion'!~'^[1-9][0-9]{0,8}$') then raise invalid_parameter_value; end if;
   if k in('rs','profile') and coalesce((payload->>'relationshipVersion')::integer,1)<>member.relationship_version then raise exception using errcode='PT409',message='La vinculación cambió; actualizá tu espacio'; end if;
   if k='rs' and (member.couple_id is null or not exists(select 1 from alianza_private.couples where id=member.couple_id and archived_at is null)) then raise insufficient_privilege; end if;

@@ -77,6 +77,21 @@ pass('Save versus unlink cannot restore old sharing permissions in either orderi
  assert(results.every(r=>r.ok));const s=await rpc(a.uid,'data',null);assert.equal(s.marriageIdeal.text,'Frase nueva');assert.equal(s.marriageIdeal.confirmations,0);
  pass('Concurrent ideal confirmation and revision do not confirm the new phrase');
 }
+{
+ const {a,b}=await couple();const original=await rpc(a.uid,'data',null),profile=original.own.find(r=>r.kind==='profile');
+ await rpc(a.uid,'data',{kind:'profile',key:'me',version:profile.version,relationshipVersion:2,data:{...profile.data,shareSchedule:true,shareNotes:true,shareIdeal:true}});
+ await rpc(a.uid,'data',{kind:'habit',key:'period-note',version:0,data:{title:'Compromiso ficticio',moment:'Mañana',active:true,anchor:'',minimum:'',frequency:{period:'week',target:3}}});
+ const payload={kind:'habit_review',key:'period-note:2026-08-03:2026-08-09',version:0,data:{habitKey:'period-note',period:'week',start:'2026-08-03',end:'2026-08-09',note:'Nota privada ficticia',assessment:'met',nextStep:'explore'}};
+ await rpc(a.uid,'data',payload);
+ const held=await clientFor(a.uid);
+ try{await held.query('select public.alianza_data($1)',[JSON.stringify({...payload,version:1,data:{...payload.data,note:'Revisión guardada primero'}})]);
+  const waiting=await start(a.uid,'data',{...payload,version:1,data:{...payload.data,note:'Borrador desactualizado'}});await blocked([waiting.pid]);await held.query('commit');const result=await waiting.promise;assert.equal(result.ok,false);assert.equal(result.code,'PT409');
+ }finally{await close(held);}
+ const own=await rpc(a.uid,'data',null),partner=await rpc(b.uid,'data',null);
+ assert.equal(own.own.find(r=>r.kind==='habit_review').data.note,'Revisión guardada primero');assert.deepEqual(own.own.filter(r=>r.kind==='checks'),original.own.filter(r=>r.kind==='checks'));
+ assert(partner.partner.records.some(r=>r.kind==='habit'));assert(!partner.partner.records.some(r=>r.kind==='habit_review'));
+ pass('Concurrent period reviews preserve the first save, remain private despite sharing and never fabricate daily checks');
+}
 const rls=(await admin.query("select c.relname,c.relrowsecurity from pg_class c join pg_namespace n on n.oid=c.relnamespace where n.nspname='alianza_private' and c.relkind='r'")).rows;assert(rls.every(r=>r.relrowsecurity));
 for(const role of ['anon','authenticated','alianza_metrics'])for(const table of ['records','pair_invitations','couple_participants','ideal_confirmations'])assert.equal((await admin.query('select has_table_privilege($1,$2,$3) ok',[role,'alianza_private.'+table,'SELECT,INSERT,UPDATE,DELETE'])).rows[0].ok,false);
 assert.equal((await admin.query("select count(*)::int n from pg_proc p join pg_namespace n on n.oid=p.pronamespace where n.nspname='public' and p.proname like 'alianza_%' and p.prosecdef")).rows[0].n,0);

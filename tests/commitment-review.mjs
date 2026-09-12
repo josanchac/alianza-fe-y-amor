@@ -1,0 +1,44 @@
+import assert from 'node:assert/strict';
+import {dom} from './dom.mjs';
+const React=await import('react');
+const {render,screen,fireEvent,waitFor,cleanup}=await import('@testing-library/react');
+const {default:Journal}=await import('../app/journal.tsx');
+const {localDate}=await import('../lib/domain.ts');
+const {monthBefore}=await import('../lib/schedule.ts');
+const {rangeFor}=await import('../lib/reports.ts');
+const {weeklyReviews,commitmentReviewKey}=await import('../lib/commitment-review.ts');
+const today=localDate(),month=today.slice(0,7),previous=monthBefore(month);
+const row=(kind,key,data)=>({owner:'fixture',kind,key,data,version:1,updated:new Date().toISOString()});
+const habit={title:'Escuchar con atención',moment:'Mañana',active:true,anchor:'',minimum:'',frequency:{period:'week',target:3}};
+const fixture={user:{id:'fixture',role:'member',email:'fixture@example.test',relationshipVersion:1,coupleId:null},own:[row('profile','me',{name:'Persona',ideal:'',shareSchedule:false,shareNotes:false}),row('habit','listen',habit),row('habit_plan','listen',{versions:[{from:previous+'-01',period:'week',target:3,active:true}]})],shared:[],partner:null,today};
+const writes=[];let fail=false;
+async function request(init){if(init?.method!=='POST')return Response.json(fixture);const p=JSON.parse(init.body);if(fail)return Response.json({error:'No se pudo guardar.'},{status:503});writes.push(p);const record={...row(p.kind,p.key,p.data),version:p.version+1};fixture.own=[...fixture.own.filter(r=>r.kind!==p.kind||r.key!==p.key),record];return Response.json({record});}
+const mount=()=>render(React.createElement(Journal,{dataRequest:request,onSignOut(){}}));
+try{
+ mount();await screen.findByRole('heading',{name:'¿Qué te ayudaría hoy?'});fireEvent.click(screen.getByRole('button',{name:'Explorar mi horario sin elegir todavía'}));
+ fireEvent.pointerDown(screen.getByRole('button',{name:'Opciones: Escuchar con atención'}),{button:0,ctrlKey:false,pointerType:'mouse'});
+ fireEvent.click(await screen.findByRole('menuitem',{name:'Anotar o revisar este compromiso'}));
+ await screen.findByRole('dialog');assert.equal(writes.length,0);assert(!screen.queryByLabelText('Mi valoración de este período'));
+ fireEvent.change(screen.getByLabelText('Qué me ayudó, qué me costó o qué quiero recordar'),{target:{value:'Nota de la semana actual'}});
+ fireEvent.click(screen.getByRole('button',{name:'Guardar',exact:true}));await waitFor(()=>assert(!screen.queryByRole('dialog')));
+ assert.equal(writes.length,1);assert.equal(writes[0].kind,'habit_review');assert.equal(writes[0].data.assessment,'unsure');assert.equal(writes[0].data.nextStep,'keep');
+ assert(!fixture.own.some(r=>r.kind==='checks'));
+ fireEvent.click(screen.getByRole('button',{name:'Mi mes',exact:true}));fireEvent.click(screen.getByText(/^Ver mis compromisos y reflexiones/));
+ fireEvent.click(screen.getAllByRole('button',{name:'Anotar o valorar este período'})[0]);await screen.findByRole('dialog');
+ fireEvent.change(screen.getByLabelText('Qué me ayudó, qué me costó o qué quiero recordar'),{target:{value:'Lo viví aunque olvidé marcarlo'}});
+ fireEvent.change(screen.getByLabelText('Mi valoración de este período'),{target:{value:'met'}});fireEvent.click(screen.getByText('Decidir mi próximo paso (opcional)'));
+ fireEvent.change(screen.getByLabelText('Qué quiero hacer después'),{target:{value:'explore'}});
+ fail=true;fireEvent.click(screen.getByRole('button',{name:'Guardar',exact:true}));await waitFor(()=>assert(screen.getByRole('dialog').textContent.includes('No se pudo guardar.')));
+ assert.equal(writes.length,1);assert.equal(screen.getByLabelText('Mi valoración de este período').value,'met');
+ fail=false;fireEvent.click(screen.getByRole('button',{name:'Guardar',exact:true}));await waitFor(()=>assert(!screen.queryByRole('dialog')));
+ const saved=writes.at(-1);assert.equal(saved.kind,'habit_review');assert.equal(saved.data.start,previous+'-01');assert.equal(saved.data.assessment,'met');
+ assert(!fixture.own.some(r=>r.kind==='checks'));assert.equal(fixture.own.filter(r=>r.kind==='habit').length,1);
+ fireEvent.click(screen.getByRole('button',{name:'Explorar un próximo paso'}));await screen.findByRole('heading',{name:'¿Qué te ayudaría hoy?'});assert.equal(writes.length,2);
+ cleanup();mount();await screen.findByRole('heading',{name:'¿Qué te ayudaría hoy?'});fireEvent.click(screen.getByRole('button',{name:'Explorar mi horario sin elegir todavía'}));fireEvent.click(screen.getByRole('button',{name:'Mi mes',exact:true}));fireEvent.click(screen.getByText(/^Ver mis compromisos y reflexiones/));
+ assert(screen.getByText('Lo viví aunque olvidé marcarlo'));assert(screen.getByText('Según mi revisión, lo cumplí'));assert.equal(writes.length,2);
+ console.log('PASS Period notes survive reload and failed saves; personal assessment never fabricates daily checks; exploration creates no commitment');
+ const week=rangeFor('week',previous+'-08'),draft={habitKey:'listen',period:'week',...week,note:'Conservar al pausar',assessment:'met',nextStep:'keep'};
+ const history=[row('habit','listen',{...habit,active:false}),row('habit_plan','listen',{versions:[{from:month+'-01',period:'month',target:3,active:false}]}),row('habit_review',commitmentReviewKey(draft),draft)];
+ assert.equal(weeklyReviews(history,'listen',previous,today).find(x=>x.draft.start===week.start).draft.note,draft.note);
+ console.log('PASS Saved weekly reviews remain available after cadence changes and pauses');
+}finally{cleanup();dom.window.close();}

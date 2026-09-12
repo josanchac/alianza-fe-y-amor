@@ -35,6 +35,10 @@ Cotejo documental, retirada de ayudas externas, consulta sin ideal personal y di
 
 ## Límites de alcance
 
-Siguen fuera de esta integración las sugerencias graduales de nuevas prácticas, las notas por compromiso, la confirmación de cumplimiento cuando faltan marcas, los estados formativos persistentes del ideal personal. Se incorporaron dieciséis símbolos y una ayuda opcional para continuar sin ideal personal. No hay curso pago ni generación automática de ideales.
+Quedan fuera los estados formativos persistentes del ideal personal y las recomendaciones automáticas. Se integraron notas privadas y valoración personal por semana o mes, además de una invitación voluntaria a explorar otra práctica cuando el usuario lo elige. Se incorporaron dieciséis símbolos y una ayuda opcional para continuar sin ideal personal. No hay curso pago ni generación automática de ideales.
 
 El build conserva una advertencia por tamaño del bloque JavaScript; falta medir su impacto en teléfonos representativos. La prueba sintética no acredita WCAG, ASVS ni otra certificación, ni garantiza resultados espirituales.
+
+## Seguimiento por compromiso
+
+La migración `20260912142635_commitment_reviews.sql` añade el contrato de notas y valoraciones sin reescribir datos anteriores. Debe preceder al nuevo cliente. Cada revisión pertenece a un compromiso propio y a un período completo; los períodos abiertos solo admiten notas. Las notas anteriores continúan disponibles al cambiar frecuencia o pausar. Los asesores locales volvieron a encontrar la instancia desconectada; se mantiene pendiente esa comprobación en el entorno separado. El reinicio protegido debe incluir también los registros `habit_review`.
