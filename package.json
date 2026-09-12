@@ -10,7 +10,8 @@
     "dev": "vite --config vite.github.config.ts",
     "build": "vite build --config vite.github.config.ts",
     "typecheck": "tsc --noEmit",
-    "test": "node tests/password-db.mjs && node tests/multi-couple.mjs && node --experimental-strip-types tests/reports.ts && node --import tsx tests/onboarding.mjs && node --import tsx tests/install-guide.mjs && node tests/admin-activity.mjs && node --import tsx tests/admin-ui.mjs"
+    "verify:methodology": "node scripts/check-methodology.mjs",
+    "test": "node tests/password-db.mjs && node tests/multi-couple.mjs && node --experimental-strip-types tests/reports.ts && node --import tsx tests/onboarding.mjs && node --import tsx tests/install-guide.mjs && node tests/admin-activity.mjs && node --import tsx tests/admin-ui.mjs && node tests/methodology.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "2.116.0",

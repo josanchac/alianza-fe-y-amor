@@ -36,6 +36,10 @@ Los permisos de compartir se evalúan en el servidor. Apagarlos bloquea nuevas c
 
 Solo persisten en el navegador los tokens de autenticación. Los registros se mantienen en memoria durante el uso y en la base de datos. No hay publicidad, analítica ni seguimiento añadido. Es necesario estar conectado para guardar.
 
+## Calidad y revisión de la próxima versión
+
+La navegación propuesta fue probada con usuarios. Su integración y publicación requieren cerrar la [revisión metodológica de Schoenstatt](docs/METHODOLOGY_REVIEW.md) y los [criterios de ingeniería](docs/ENGINEERING_QUALITY.md). La [sección Costa Rica](docs/COSTA_RICA.md) será secundaria. Estos documentos distinguen lo verificado de lo pendiente; no representan certificación ni aval institucional.
+
 ## Desarrollo
 
 Requiere Node.js 22.13 o posterior.

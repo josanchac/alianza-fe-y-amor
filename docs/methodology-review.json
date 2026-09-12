@@ -1,0 +1,19 @@
+{
+  "status": "pending",
+  "approval": null,
+  "approvedContent": {},
+  "items": [
+    {"id":"M01","topic":"Horario espiritual","status":"pending","resolution":"","references":[]},
+    {"id":"M02","topic":"Propósito particular y examen","status":"pending","resolution":"","references":[]},
+    {"id":"M03","topic":"Ejemplos de compromisos","status":"pending","resolution":"","references":[]},
+    {"id":"M04","topic":"Marcas de registro","status":"pending","resolution":"","references":[]},
+    {"id":"M05","topic":"Frecuencias y cálculos","status":"pending","resolution":"","references":[]},
+    {"id":"M06","topic":"Cuatro Rs","status":"pending","resolution":"","references":[]},
+    {"id":"M07","topic":"Ideal personal","status":"pending","resolution":"","references":[]},
+    {"id":"M08","topic":"Ideal matrimonial","status":"pending","resolution":"","references":[]},
+    {"id":"M09","topic":"Revisión de períodos","status":"pending","resolution":"","references":[]},
+    {"id":"M10","topic":"Ayudas externas para hábitos","status":"pending","resolution":"","references":[]},
+    {"id":"M11","topic":"Sugerencias progresivas","status":"pending","resolution":"","references":[]},
+    {"id":"M12","topic":"Acceso directo, repaso y curso","status":"pending","resolution":"","references":[]}
+  ]
+}
