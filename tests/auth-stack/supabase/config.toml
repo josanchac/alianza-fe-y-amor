@@ -24,7 +24,9 @@ site_url = "http://127.0.0.1:3000"
 jwt_expiry = 3600
 enable_signup = false
 [auth.email]
-enable_signup = false
+# CLI maps this switch to GOTRUE_EXTERNAL_EMAIL_ENABLED (email login provider).
+# Global auth.enable_signup above still prevents public registration.
+enable_signup = true
 enable_confirmations = true
 [edge_runtime]
 enabled = false

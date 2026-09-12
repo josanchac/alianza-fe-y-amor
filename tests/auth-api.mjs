@@ -34,6 +34,7 @@ try{
  // Wait for asynchronous schema cache notification, not an arbitrary success delay.
  for(let attempt=0;attempt<50;attempt++){const r=await make().rpc('alianza_data',{payload:null});if(r.error?.code!=='PGRST202')break;if(attempt===49)throw Error('Schema cache did not refresh');await new Promise(r=>setTimeout(r,100));}
  await assert.rejects(()=>rpc(make(),'data'));
+ assert((await make().auth.signUp({email:'public-signup@example.test',password})).error,'Public signup stays disabled');
  const a=await person('owner'),b=await person('partner'),c=await person('outsider');
  await person('unconfirmed',{confirmed:false});const outsider=await person('unenrolled',{enrolled:false});
  assert((await make().auth.signInWithPassword({email:a.email,password:'wrong-password'})).error);
