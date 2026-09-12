@@ -129,3 +129,9 @@ La frecuencia mensual admite 1–28 días: es una restricción inicial del produ
 Verificación: suite automatizada completa, tipos y compilación aprobados; pruebas nuevas de elección y recarga, errores de guardado, separación mensual, borradores, frecuencias, cambios históricos, migración y permisos. La integración actual no ha pasado todavía observación humana en móvil, evaluación completa de accesibilidad ni ensayo en un entorno Supabase de preproducción.
 
 No se aplicó la migración a producción, no se reinició ninguna cuenta y no se publicó esta integración.
+
+## Segunda integración funcional · individual y pareja
+
+Implementados el inicio individual, invitación con aceptación bilateral, desvinculación, archivo del historial para sus participantes originales, permiso independiente de ideal personal y registro opcional de ideal matrimonial con confirmaciones por revisión. Detalle de modelo, migración, pruebas y límites: [BILATERAL_PAIRING.md](BILATERAL_PAIRING.md).
+
+La interfaz permite repasar las 4 Rs mientras se vincula; todavía no ofrece un borrador individual de un encuentro pendiente de pareja. Quedan las sugerencias voluntarias de continuidad, notas por compromiso, confirmación de cumplimiento sin marcas, estados formativos del ideal personal, símbolos ampliados y reinicio individual. La prueba humana sobre estas integraciones y la revisión metodológica siguen pendientes; el juicio favorable anterior corresponde al prototipo.

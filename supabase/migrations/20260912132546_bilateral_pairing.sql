@@ -1,32 +1,5 @@
--- Private data API for individual accounts and consensual couples. Enrolment is administrator-only.
--- No personal identifiers or credentials belong in this file.
 begin;
-create schema if not exists alianza_private;
-revoke all on schema alianza_private from public, anon, authenticated;
-grant usage on schema alianza_private to authenticated;
-create table if not exists alianza_private.couples (
- id uuid primary key default gen_random_uuid(),
- emblem text not null default 'neutral' check(emblem in ('neutral','tree-rosary'))
-);
-create table if not exists alianza_private.members (
- id uuid primary key references auth.users(id) on delete cascade,
- role text not null default 'member',
- name text not null, ideal text not null default '',
- couple_id uuid not null references alianza_private.couples(id) on delete restrict,
- seat smallint not null check(seat in (1,2)),
- symbol text not null default 'heart' check(symbol in ('heart','tree','rosary','cross')),
- unique(couple_id,seat)
-);
-create table if not exists alianza_private.records (
- owner text not null, kind text not null, key text not null,
- data jsonb not null, version integer not null default 1 check(version>0),
- updated timestamptz not null default now(), primary key(owner,kind,key)
-);
-alter table alianza_private.couples enable row level security;
-alter table alianza_private.members enable row level security;
-alter table alianza_private.records enable row level security;
-revoke all on all tables in schema alianza_private from public,anon,authenticated;
-
+lock table alianza_private.members,alianza_private.records,alianza_private.couples in access exclusive mode;
 -- Accounts remain independent; memberships identify only the current couple.
 alter table alianza_private.members alter column couple_id drop not null, alter column seat drop not null;
 alter table alianza_private.members add column relationship_version integer not null default 1 check(relationship_version>0);
@@ -64,23 +37,13 @@ revoke all on alianza_private.couple_participants,alianza_private.pair_invitatio
 create policy deny_clients on alianza_private.couple_participants for all to anon,authenticated using(false) with check(false);
 create policy deny_clients on alianza_private.pair_invitations for all to anon,authenticated using(false) with check(false);
 create policy deny_clients on alianza_private.ideal_confirmations for all to anon,authenticated using(false) with check(false);
-create or replace function alianza_private.ideal_view(cid uuid,uid uuid) returns jsonb
-language sql stable security invoker set search_path='' as $$
- select jsonb_build_object('text',c.ideal_text,'version',c.ideal_version,
- 'confirmations',(select count(*) from alianza_private.ideal_confirmations i where i.couple_id=c.id and i.version=c.ideal_version),
- 'confirmedByMe',exists(select 1 from alianza_private.ideal_confirmations i where i.couple_id=c.id and i.user_id=uid and i.version=c.ideal_version))
- from alianza_private.couples c where c.id=cid;
-$$;
-
-
-create or replace function alianza_private.valid_date(v text) returns boolean
-language plpgsql immutable set search_path='' as $$
-begin
- if v is null or v !~ '^\d{4}-\d{2}-\d{2}$' then return false; end if;
- return to_char(v::date,'YYYY-MM-DD')=v;
-exception when others then return false;
-end $$;
-
+-- Preserve established pilot relationships and their original record owners.
+insert into alianza_private.couple_participants(couple_id,user_id,seat,consent_source)
+select couple_id,id,seat,'existing-pilot' from alianza_private.members where couple_id is not null;
+-- A legacy singleton is not evidence of a bilateral relationship. Archive its
+-- shared space for that original participant and allow an explicit invitation.
+update alianza_private.couples c set archived_at=now() where (select count(*) from alianza_private.members m where m.couple_id=c.id)<2;
+update alianza_private.members set couple_id=null,seat=null,relationship_version=relationship_version+1 where couple_id in(select id from alianza_private.couples where archived_at is not null);
 create or replace function alianza_private.valid_record(k text, ky text, d jsonb) returns boolean
 language plpgsql stable set search_path='' as $$
 declare fields text[]; f text; val jsonb; maxlen int; dt text; expected text;
@@ -137,27 +100,13 @@ begin
  return true;
 end $$;
 
--- Plans are generated only by the server. Clients cannot write habit_plan.
-create or replace function alianza_private.capture_habit_plan() returns trigger
-language plpgsql security invoker set search_path='' as $$
-declare plan jsonb; history jsonb; today text:=to_char(now() at time zone 'America/Costa_Rica','YYYY-MM-DD');
-begin
- if new.kind<>'habit' then return new; end if;
- -- Clients from before this upgrade cannot silently erase a chosen frequency.
- if not(new.data ? 'frequency') then
-  new.data:=new.data||jsonb_build_object('frequency',case when tg_op='UPDATE' then coalesce(old.data->'frequency','{"period":"day","target":1}'::jsonb) else '{"period":"day","target":1}'::jsonb end);
- end if;
- plan:=(new.data->'frequency')||jsonb_build_object('from',today,'active',(new.data->>'active')::boolean);
- select data->'versions' into history from alianza_private.records where owner=new.owner and kind='habit_plan' and key=new.key;
- if history is not null and (history->-1)-'from'=plan-'from' then return new; end if;
- -- Same-day edits supersede that day's plan; earlier dates are immutable.
- select coalesce(jsonb_agg(v order by v->>'from'),'[]'::jsonb) into history from jsonb_array_elements(coalesce(history,'[]'::jsonb)) v where v->>'from'<today;
- insert into alianza_private.records(owner,kind,key,data) values(new.owner,'habit_plan',new.key,jsonb_build_object('versions',history||jsonb_build_array(plan)))
- on conflict(owner,kind,key) do update set data=excluded.data,version=alianza_private.records.version+1,updated=now();
- return new;
-end $$;
-drop trigger if exists capture_habit_plan on alianza_private.records;
-create trigger capture_habit_plan before insert or update on alianza_private.records for each row execute function alianza_private.capture_habit_plan();
+create or replace function alianza_private.ideal_view(cid uuid,uid uuid) returns jsonb
+language sql stable security invoker set search_path='' as $$
+ select jsonb_build_object('text',c.ideal_text,'version',c.ideal_version,
+ 'confirmations',(select count(*) from alianza_private.ideal_confirmations i where i.couple_id=c.id and i.version=c.ideal_version),
+ 'confirmedByMe',exists(select 1 from alianza_private.ideal_confirmations i where i.couple_id=c.id and i.user_id=uid and i.version=c.ideal_version))
+ from alianza_private.couples c where c.id=cid;
+$$;
 
 create or replace function alianza_private.data(payload jsonb default null) returns jsonb
 language plpgsql security definer set search_path='' as $$
@@ -209,17 +158,6 @@ begin
  end if;
  return jsonb_build_object('user',jsonb_build_object('id',uid,'role',member.role,'symbol',member.symbol,'coupleId',member.couple_id,'relationshipVersion',member.relationship_version,'email',(select email from auth.users where id=uid)),'couple',case when member.couple_id is null then null else jsonb_build_object('emblem',(select emblem from alianza_private.couples where id=member.couple_id)) end,'marriageIdeal',alianza_private.ideal_view(member.couple_id,uid),'archives',(select coalesce(jsonb_agg(jsonb_build_object('id',c.id,'archivedAt',c.archived_at) order by c.archived_at desc),'[]'::jsonb) from alianza_private.couple_participants p join alianza_private.couples c on c.id=p.couple_id where p.user_id=uid and c.archived_at is not null),'invitations',(select coalesce(jsonb_agg(jsonb_build_object('id',i.id,'email',i.recipient_email,'expiresAt',i.expires_at) order by i.created_at desc),'[]'::jsonb) from alianza_private.pair_invitations i where i.sender_id=uid and i.status='pending' and i.expires_at>now()),'own',own_rows,'shared',shared_rows,'partner',partner,'today',to_char(now() at time zone 'America/Costa_Rica','YYYY-MM-DD'));
 end $$;
--- The public entry point is an invoker; the narrow privileged function above
--- lives in an unexposed schema and independently checks identity and membership.
-create or replace function public.alianza_data(payload jsonb default null) returns jsonb
-language sql security invoker set search_path='' as $$ select alianza_private.data(payload); $$;
-revoke all on all functions in schema alianza_private from public,anon,authenticated;
-grant execute on function alianza_private.data(jsonb) to authenticated;
-revoke all on function public.alianza_data(jsonb) from public,anon;
-grant execute on function public.alianza_data(jsonb) to authenticated;
-create policy deny_direct_access on alianza_private.couples for all to anon,authenticated using (false) with check (false);
-create policy deny_direct_access on alianza_private.members for all to anon,authenticated using (false) with check (false);
-create policy deny_direct_access on alianza_private.records for all to anon,authenticated using (false) with check (false);
 -- This is the sole pairing API. The invoker wrapper below exposes only this
 -- narrow, identity-checked operation; tables and helper functions stay private.
 create or replace function alianza_private.relationship(payload jsonb) returns jsonb

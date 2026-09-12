@@ -125,3 +125,11 @@
 .month-review .card { display: grid; gap: 14px; }
 .month-review .review-row { display: block; }
 .editor-form select { width: 100%; min-height: 46px; padding: 12px; border: 1px solid #b9c7d5; border-radius: 12px; background: #fff; color: #17324d; font: inherit; }
+
+.pairing-panel form,.marital-ideal form{display:grid;gap:16px;margin-top:18px}
+.pairing-panel label,.marital-ideal label{display:grid;gap:8px;color:#142c46}
+.pairing-panel input:not([type=checkbox]),.pairing-panel textarea,.marital-ideal textarea{width:100%;min-width:0;background:#fff;color:#142c46;border:1px solid #7b8c9f;border-radius:12px;padding:12px;font-size:16px}
+.pairing-panel .consent-row{display:flex;align-items:flex-start;gap:12px;line-height:1.6}
+.consent-row input{width:22px;height:22px;flex-shrink:0;margin-top:3px;accent-color:#142c46}
+.pair-actions{display:grid;gap:12px;margin:20px 0}.pair-preview,.pair-pending{border-top:1px solid #b8c4cf;margin-top:18px;padding-top:18px}
+.pairing-panel button,.marital-ideal button{min-height:44px}.pairing-panel :focus-visible,.marital-ideal :focus-visible{outline:3px solid #326fa3;outline-offset:3px}

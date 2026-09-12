@@ -27,9 +27,9 @@ function Login({client,setupPassword=false,emailRecoveryEnabled=false}:{client:S
   },[client]);
   const request=useMemo(()=>(async(init?:RequestInit)=>{
     const payload=init?.method==='POST'?JSON.parse(String(init.body)):null;
-    const {data,error}=await client.rpc('alianza_data',{payload});
-    if(error){const status=error.code==='PT409'?409:error.code==='42501'?403:error.code==='22023'?400:503;
-      return Response.json({error:status===409?'Este registro cambió en otro celular. Tu texto sigue aquí; actualizá antes de guardar.':status===403?'Tu sesión terminó o esta cuenta no tiene acceso.':status===400?'Revisá los campos y las fechas.':'No se pudo guardar o cargar. Revisá la conexión y volvé a intentar.'},{status});}
+    const {data,error}=await client.rpc(payload?.action?'alianza_relationship':'alianza_data',{payload});
+    if(error){const status=error.code==='PT409'?409:error.code==='42501'?403:error.code==='22023'?400:error.code==='PT429'?429:503;
+      return Response.json({error:status===409?'Este registro cambió en otro celular. Tu texto sigue aquí; actualizá antes de guardar.':status===403?'Tu sesión terminó o esta cuenta no tiene acceso.':status===400?(payload?.action?'La invitación no está disponible o los datos no coinciden. Revisá el código, el correo de tu cuenta y que ambos puedan vincularse.':'Revisá los campos y las fechas.'):status===429?'Esperá un día antes de crear más invitaciones.':'No se pudo guardar o cargar. Revisá la conexión y volvé a intentar.'},{status});}
     return Response.json(data);
   }),[client]);
   async function signOut(){setError('');const {error}=await client.auth.signOut({scope:'local'});if(error)setError('No se pudo cerrar la sesión. Volvé a intentarlo.');}

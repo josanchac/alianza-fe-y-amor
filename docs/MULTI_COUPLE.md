@@ -1,5 +1,7 @@
 # Parejas independientes y continuidad
 
+> Este documento describe el piloto publicado anterior. La evolución preparada en la rama de revisión permite cuentas individuales y exige aceptación de ambos para vínculos nuevos: ver [vinculación bilateral](BILATERAL_PAIRING.md). Aún no se desplegó esa migración.
+
 ## Flujo del piloto
 
 1. El propietario facilita los nombres y correos de las dos personas, indicando que forman pareja. Confirmar esos destinatarios antes de preparar o enviar invitaciones.

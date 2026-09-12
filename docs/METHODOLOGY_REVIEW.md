@@ -111,3 +111,7 @@ Verificación de esta entrega: `typecheck`, compilación, siete escenarios de na
 Se separaron el registro diario y la preparación/revisión mensual, conservando el propósito a la vista en Mi día. Se añadieron metas por días, vigencia de cambios y períodos parciales; sus cálculos tienen pruebas automatizadas. Esto aporta evidencia técnica para M02, M04 y M05, sin resolver por sí mismo la fidelidad metodológica. Las reglas de cómputo y sus límites se detallan en JOURNEY_REVIEW.md.
 
 El propietario pospuso la integración de sus documentos de Dropbox para otra sesión. No se incorporaron ni verificaron esos archivos. La escritura del ideal sigue siendo libre y la ayuda opcional; no se añadió un curso ni una inferencia automática de hábito adquirido. Todas las áreas de la matriz siguen pendientes de revisión sobre el contenido final; no hay aval institucional o pastoral registrado.
+
+## Registro matrimonial y consentimiento
+
+Se integró un registro matrimonial opcional de frase libre, con confirmaciones de ambos usuarios sobre la misma revisión. La interfaz aclara que el acuerdo entre usuarios no acredita discernimiento ni aval espiritual. No se añadieron ejercicios nuevos ni un curso. M08 y M12 conservan estado pendiente hasta revisar el texto exacto y su adecuación local. Los documentos de Dropbox siguen sin integrar por decisión del propietario.

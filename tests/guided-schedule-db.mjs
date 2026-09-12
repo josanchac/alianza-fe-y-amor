@@ -17,7 +17,7 @@ const habit={title:'Ejercicio',moment:'Durante el día',active:true,anchor:'',mi
 await as(a);await call();await call({kind:'habit',key:'exercise',version:0,data:habit});
 await call({kind:'purpose',key:'2026-08',version:0,data:{text:'Propósito anterior',review:'Revisión anterior'}});
 await db.exec('reset role');
-for(const f of files.filter(x=>x>='20260909143538'&&!x.endsWith('_guided_schedule.sql')))await db.exec(await readFile('supabase/migrations/'+f,'utf8'));
+for(const f of files.filter(x=>x>='20260909143538'&&x<'20260912041345'))await db.exec(await readFile('supabase/migrations/'+f,'utf8'));
 await as(a);const before=await call();await db.exec('reset role');
 await db.exec(await readFile('supabase/migrations/'+files.find(x=>x.endsWith('_guided_schedule.sql')),'utf8'));
 await as(a);let state=await call();
