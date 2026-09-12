@@ -3,17 +3,129 @@
   "approval": null,
   "approvedContent": {},
   "items": [
-    {"id":"M01","topic":"Horario espiritual","status":"pending","resolution":"","references":[]},
-    {"id":"M02","topic":"Propósito particular y examen","status":"pending","resolution":"","references":[]},
-    {"id":"M03","topic":"Ejemplos de compromisos","status":"pending","resolution":"","references":[]},
-    {"id":"M04","topic":"Marcas de registro","status":"pending","resolution":"","references":[]},
-    {"id":"M05","topic":"Frecuencias y cálculos","status":"pending","resolution":"","references":[]},
-    {"id":"M06","topic":"Cuatro Rs","status":"pending","resolution":"","references":[]},
-    {"id":"M07","topic":"Ideal personal","status":"pending","resolution":"","references":[]},
-    {"id":"M08","topic":"Ideal matrimonial","status":"pending","resolution":"","references":[]},
-    {"id":"M09","topic":"Revisión de períodos","status":"pending","resolution":"","references":[]},
-    {"id":"M10","topic":"Ayudas externas para hábitos","status":"pending","resolution":"","references":[]},
-    {"id":"M11","topic":"Sugerencias progresivas","status":"pending","resolution":"","references":[]},
-    {"id":"M12","topic":"Acceso directo, repaso y curso","status":"pending","resolution":"","references":[]}
+    {
+      "id": "M01",
+      "topic": "Horario espiritual",
+      "status": "pending",
+      "resolution": "Ayuda breve y opcional con fuente. Pendiente validar alcance local y recorrido completo.",
+      "references": [
+        {
+          "institution": "Rama de Familias de Schoenstatt Chile",
+          "title": "Vivir según nuestro Ideal; CBF tercer año, reunión 9",
+          "edition": "No indicada; consulta 2026-09-12",
+          "locator": "pp. 4–5",
+          "location": "https://ramadefamilias.cl/web2025/wp-content/uploads/2025/10/R9.-Vivir-segun-Nuestro-Ideal.pdf"
+        }
+      ]
+    },
+    {
+      "id": "M02",
+      "topic": "Propósito particular y examen",
+      "status": "pending",
+      "resolution": "Retirada equivalencia no resuelta entre PP y EP; registro mensual diferenciado del cultivo diario. Pendiente cotejo de terminología local y continuidad entre meses.",
+      "references": [
+        {
+          "institution": "Rama de Familias de Schoenstatt Chile",
+          "title": "Vivir según nuestro Ideal; CBF tercer año, reunión 9",
+          "edition": "No indicada; consulta 2026-09-12",
+          "locator": "pp. 4–5",
+          "location": "https://ramadefamilias.cl/web2025/wp-content/uploads/2025/10/R9.-Vivir-segun-Nuestro-Ideal.pdf"
+        }
+      ]
+    },
+    {
+      "id": "M03",
+      "topic": "Ejemplos de compromisos",
+      "status": "pending",
+      "resolution": "Ejemplos concretos sin asignación por roles ni mínimos predefinidos. Pendiente revisión del repertorio.",
+      "references": []
+    },
+    {
+      "id": "M04",
+      "topic": "Marcas de registro",
+      "status": "pending",
+      "resolution": "",
+      "references": []
+    },
+    {
+      "id": "M05",
+      "topic": "Frecuencias y cálculos",
+      "status": "pending",
+      "resolution": "Respaldo para frecuencias diarias, semanales y mensuales. Pendiente integrar metas, historial de cambios y cálculo de semanas parciales.",
+      "references": [
+        {
+          "institution": "Rama de Familias de Schoenstatt Chile",
+          "title": "Vivir según nuestro Ideal; CBF tercer año, reunión 9",
+          "edition": "No indicada; consulta 2026-09-12",
+          "locator": "pp. 4–5",
+          "location": "https://ramadefamilias.cl/web2025/wp-content/uploads/2025/10/R9.-Vivir-segun-Nuestro-Ideal.pdf"
+        }
+      ]
+    },
+    {
+      "id": "M06",
+      "topic": "Cuatro Rs",
+      "status": "pending",
+      "resolution": "Síntesis atribuida y proyecto anual corregidos. Pendiente cotejo local y verificación de recorrido completo.",
+      "references": [
+        {
+          "institution": "Rama de Familias de Schoenstatt Chile",
+          "title": "Las cuatro R",
+          "edition": "No indicada; consulta 2026-09-12",
+          "locator": "pp. 1–5",
+          "location": "https://ramadefamilias.cl/web2025/wp-content/uploads/2025/08/Las-4R.pdf"
+        }
+      ]
+    },
+    {
+      "id": "M07",
+      "topic": "Ideal personal",
+      "status": "pending",
+      "resolution": "",
+      "references": []
+    },
+    {
+      "id": "M08",
+      "topic": "Ideal matrimonial",
+      "status": "pending",
+      "resolution": "Consulta opcional con fuente; las tres preguntas del prototipo no se consideran una metodología validada.",
+      "references": [
+        {
+          "institution": "Rama de Familias de Schoenstatt Chile",
+          "title": "Descubriendo nuestro nombre, nuestro Ideal Matrimonial; CBF tercer año, reunión 8",
+          "edition": "No indicada; consulta 2026-09-12",
+          "locator": "pp. 1–4",
+          "location": "https://ramadefamilias.cl/web2025/wp-content/uploads/2025/10/R8.-Descubriendo-Nuestro-Nombre-nuestro-Ideal-Matrimonial.pdf"
+        }
+      ]
+    },
+    {
+      "id": "M09",
+      "topic": "Revisión de períodos",
+      "status": "pending",
+      "resolution": "Acción renombrada Escribir mi revisión y aclarada su función. Pendiente revisar las preguntas restantes.",
+      "references": []
+    },
+    {
+      "id": "M10",
+      "topic": "Ayudas externas para hábitos",
+      "status": "pending",
+      "resolution": "",
+      "references": []
+    },
+    {
+      "id": "M11",
+      "topic": "Sugerencias progresivas",
+      "status": "pending",
+      "resolution": "",
+      "references": []
+    },
+    {
+      "id": "M12",
+      "topic": "Acceso directo, repaso y curso",
+      "status": "pending",
+      "resolution": "Repaso opcional junto al acceso directo; falta revisión integral. No se incorpora curso pago.",
+      "references": []
+    }
   ]
 }

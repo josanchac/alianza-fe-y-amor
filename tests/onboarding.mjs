@@ -26,6 +26,13 @@ try{
  fireEvent.click(screen.getByRole('button',{name:'Crear mi primer compromiso'}));
  await screen.findByRole('dialog');assert.equal(screen.getByLabelText('¿Qué quiero cultivar?').value,'');
  fireEvent.change(screen.getByLabelText('¿Qué quiero cultivar?'),{target:{value:'Mi paso elegido'}});
+ const guide=screen.getByText('Repasar el sentido del horario espiritual').closest('details');
+ assert.equal(guide.open,false);
+ fireEvent.click(guide.querySelector('summary'));
+ assert.equal(guide.open,true);
+ assert(screen.getByRole('link',{name:/Vivir según nuestro Ideal/}).getAttribute('href').startsWith('https://ramadefamilias.cl/'));
+ assert.equal(screen.getByLabelText('¿Qué quiero cultivar?').value,'Mi paso elegido');
+ assert.equal(writes.length,0);
  fireEvent.click(screen.getByRole('button',{name:'Guardar',exact:true}));
  await screen.findByRole('checkbox',{name:'Mi paso elegido'});
  assert.equal(writes.length,1);assert.equal(writes[0].data.anchor,'');assert.equal(writes[0].data.minimum,'');
@@ -43,6 +50,8 @@ try{
  console.log('PASS Help opens from the app and navigates without writing records');
  fireEvent.click(screen.getAllByRole('button',{name:'Preparar este momento'})[0]);
  await screen.findByRole('dialog');assert.equal(screen.getByText('Ideas y preguntas para este encuentro').closest('details').open,false);
+ fireEvent.click(screen.getByText('Ideas y preguntas para este encuentro'));
+ assert(screen.getByRole('link',{name:/Las cuatro R/}).getAttribute('href').endsWith('Las-4R.pdf'));
  assert.equal(screen.getByLabelText('Día del encuentro (opcional)').value,'');
  assert.equal(screen.getByLabelText('Nuestra reflexión y un acuerdo (opcional)').value,'');
  fireEvent.click(screen.getByRole('button',{name:'Cerrar',exact:true}));
