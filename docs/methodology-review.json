@@ -19,7 +19,7 @@
     "app/formation-guide.tsx": "66f8c2d175dba6e85c267fb6e06c89a97571d52e1b0b53c7b32777b8992b0ddf",
     "app/home.tsx": "f9feb5780fe24a6808a100715f7f2c829d322a4cb7a1cae9f2c4756d9f16347b",
     "app/install-guide.tsx": "00bab2940d281dfd1e7e07ce9ef8f9a3e4464ae9c18f03e9058c3dfe3966b275",
-    "app/journal.tsx": "10799debf7aa9e5041d53ed4c8fb9ab14ca7ab1eabbc6a263326b5655dd1bc42",
+    "app/journal.tsx": "630c35f78c2e42d3ec353f827a5eab29e31a969cdf78012c240e5c84bab27b06",
     "app/month-review.tsx": "868435a186a69a1d9612a31d75ff82420fcad5df6de62226fd039fd7caec8b7e",
     "app/movement-costa-rica.tsx": "62b05210bea82d6d7a969d0f5a98bac4d2fc9d5bceaecabd177b24e29034be76",
     "app/pairing.tsx": "be4f636c5db9cab664b0eb87756496fff654eb1e9904eedde3b9a0ead8023c41",
@@ -56,6 +56,7 @@
     "supabase/migrations/20260912132546_bilateral_pairing.sql": "08e61273652ff531bcdb1e94778b138229042dfab5c36a48b47b8aaef8868f97",
     "supabase/migrations/20260912141154_personal_symbols.sql": "38a8ca7cf68c0de3ce70504390fd984448e31af04fc2b60fb8d8e5c770485562",
     "supabase/migrations/20260912142635_commitment_reviews.sql": "3dcbf1a32dee7ebe3a82d21b73b5142111f9d1c9ced66ebb0526d5e0f427cbff",
+    "supabase/migrations/20260912153148_recoverable_personal_reset.sql": "4025dbd279b7284964dcf8477cf9a886a231aeea686994ab81aa708f518501af",
     "supabase/schema.sql": "c49ebc51f33501e7ff063b3b35d95eb002769653c37452354a1942e3b45044d0",
     "vite.github.config.ts": "4782f41f71503dfadd3a535c60b08794b058d73cb80b9fca09295920361bd26a"
   },

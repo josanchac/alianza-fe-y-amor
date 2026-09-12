@@ -42,3 +42,11 @@ El build conserva una advertencia por tamaño del bloque JavaScript; falta medir
 ## Seguimiento por compromiso
 
 La migración `20260912142635_commitment_reviews.sql` añade el contrato de notas y valoraciones sin reescribir datos anteriores. Debe preceder al nuevo cliente. Cada revisión pertenece a un compromiso propio y a un período completo; los períodos abiertos solo admiten notas. Las notas anteriores continúan disponibles al cambiar frecuencia o pausar. Los asesores locales volvieron a encontrar la instancia desconectada; se mantiene pendiente esa comprobación en el entorno separado. El reinicio protegido debe incluir también los registros `habit_review`.
+
+## 12 septiembre — acceso real y reinicio recuperable
+
+Se agregó un trabajo aislado de CI con Supabase CLI 2.117.0, Auth y PostgREST reales; no utiliza secretos, cuentas ni datos del piloto. Prueba credenciales, confirmación, membresía, permisos, vinculación bilateral, revocación, renovación/cierre de sesión y rechazo de escrituras previas a un reinicio. La migración histórica necesita dos asientos originales: se reproducen con identidades ficticias.
+
+El reinicio de una sola cuenta ya tiene implementación y pruebas locales de restauración, aislamiento y bloqueo de formularios antiguos. Detalle: PERSONAL_RESET.md. El cotejo documental mantiene el mismo alcance espiritual: esta entrega agrega controles técnicos de recuperación y acceso, no contenido formativo nuevo.
+
+Pendientes para producción: resultado final de esta CI, validación visual en celular, comprobaciones del entorno gestionado, respaldo independiente del piloto y ejecución sobre la identidad verificada. La revisión pastoral y Dropbox siguen diferidos, sin bloquear esta etapa documental.

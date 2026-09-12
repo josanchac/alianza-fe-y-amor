@@ -11,7 +11,7 @@
     "build": "vite build --config vite.github.config.ts",
     "typecheck": "tsc --noEmit",
     "verify:methodology": "node scripts/check-methodology.mjs",
-    "test": "node tests/password-db.mjs && node tests/multi-couple.mjs && node --experimental-strip-types tests/reports.ts && node --import tsx tests/onboarding.mjs && node --import tsx tests/install-guide.mjs && node tests/admin-activity.mjs && node --import tsx tests/admin-ui.mjs && node tests/methodology.mjs && node tests/guided-schedule-db.mjs && node --experimental-strip-types tests/schedule.ts && node --import tsx tests/journey.mjs && node --import tsx tests/commitment-review.mjs && node tests/pairing-db.mjs && node --import tsx tests/pairing-ui.mjs"
+    "test": "node tests/password-db.mjs && node tests/multi-couple.mjs && node --experimental-strip-types tests/reports.ts && node --import tsx tests/onboarding.mjs && node --import tsx tests/install-guide.mjs && node tests/admin-activity.mjs && node --import tsx tests/admin-ui.mjs && node tests/methodology.mjs && node tests/guided-schedule-db.mjs && node --experimental-strip-types tests/schedule.ts && node --import tsx tests/journey.mjs && node --import tsx tests/commitment-review.mjs && node --import tsx tests/reset-ui.mjs && node tests/personal-reset.mjs && node tests/pairing-db.mjs && node --import tsx tests/pairing-ui.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "2.116.0",

@@ -21,7 +21,15 @@ async function person(label,{confirmed=true,enrolled=true}={}){
 async function rpc(client,endpoint,payload=null){const {data,error}=await client.rpc(`alianza_${endpoint}`,{payload});if(error)throw Object.assign(Error('RPC '+endpoint+' failed: '+error.code),{code:error.code});return data;}
 try{
  await sql.connect();assert.equal((await sql.query("select to_regnamespace('alianza_private') existing")).rows[0].existing,null,'Refuse existing app schema');
- for(const file of (await readdir('supabase/migrations')).filter(f=>f.endsWith('.sql')).sort())await sql.query(await readFile('supabase/migrations/'+file,'utf8'));
+ const migrations=(await readdir('supabase/migrations')).filter(f=>f.endsWith('.sql')).sort();
+ for(const file of migrations.filter(f=>f<'20260909143538'))await sql.query(await readFile('supabase/migrations/'+file,'utf8'));
+ // The historical migration deliberately requires the two original pilot seats.
+ // Reproduce those seats with synthetic Auth users, never production identities.
+ for(const [label,role] of [['legacy-a','jose'],['legacy-b','neca']]){
+  const r=await operator.auth.admin.createUser({email:label+'@example.test',password,email_confirm:true});assert(!r.error);
+  await sql.query('insert into alianza_private.members values($1,$2,$3,$4)',[r.data.user.id,role,'Persona ficticia','']);
+ }
+ for(const file of migrations.filter(f=>f>='20260909143538'))await sql.query(await readFile('supabase/migrations/'+file,'utf8'));
  await sql.query("notify pgrst, 'reload schema'");
  // Wait for asynchronous schema cache notification, not an arbitrary success delay.
  for(let attempt=0;attempt<50;attempt++){const r=await make().rpc('alianza_data',{payload:null});if(r.error?.code!=='PGRST202')break;if(attempt===49)throw Error('Schema cache did not refresh');await new Promise(r=>setTimeout(r,100));}
@@ -54,7 +62,15 @@ try{
  pass('Bilateral linking verifies recipient; sharing is opt-in, period notes stay private, and revocation applies to existing JWTs');
  const update=await outsider.client.auth.updateUser({data:{role:'admin',is_admin:true}});assert(!update.error);
  await assert.rejects(()=>rpc(outsider.client,'data'),e=>e.code==='42501');
- pass('Editable Auth metadata cannot enroll a user or grant application access');
+ const adminClaim=await outsider.client.rpc('alianza_is_admin');assert(!adminClaim.error);assert.equal(adminClaim.data,false);
+ assert((await outsider.client.rpc('alianza_admin_activity')).error);
+ pass('Editable Auth metadata cannot enroll a user or grant application or admin access');
+ // Existing JWT must be unable to reinsert an old draft after an operator reset.
+ await sql.query('select alianza_private.reset_personal_records($1,$2,1)',[a.id,a.email]);
+ await assert.rejects(()=>rpc(a.client,'data',habit),e=>e.code==='PT409');
+ assert.equal((await rpc(a.client,'data')).user.dataEpoch,2);
+ await rpc(a.client,'data',{...habit,dataEpoch:2});
+ pass('A still-valid Auth session cannot save a pre-reset draft; a refreshed space can start again');
  const refreshed=await a.client.auth.refreshSession();assert(!refreshed.error);assert.equal((await rpc(a.client,'data')).user.id,a.id);
  const refreshToken=refreshed.data.session.refresh_token;assert(!(await a.client.auth.signOut({scope:'global'})).error);
  assert((await make().auth.refreshSession({refresh_token:refreshToken})).error,'Signed-out refresh token rejected');

@@ -92,8 +92,29 @@ pass('Save versus unlink cannot restore old sharing permissions in either orderi
  assert(partner.partner.records.some(r=>r.kind==='habit'));assert(!partner.partner.records.some(r=>r.kind==='habit_review'));
  pass('Concurrent period reviews preserve the first save, remain private despite sharing and never fabricate daily checks');
 }
+for(const resetFirst of [false,true]){
+ const a=await person();const original=await rpc(a.uid,'data',null);
+ const payload={kind:'preferences',key:'experience',version:0,data:{focus:'schedule',lastSeenRelease:''}};
+ if(resetFirst){
+  await admin.query('begin');
+  await admin.query('select alianza_private.reset_personal_records($1,$2,1)',[a.uid,a.email]);
+  const pending=await start(a.uid,'data',payload);await blocked([pending.pid]);await admin.query('commit');
+  const result=await pending.promise;assert.equal(result.ok,false);assert.equal(result.code,'PT409');
+ }else{
+  const held=await clientFor(a.uid);await held.query('select public.alianza_data($1)',[JSON.stringify(payload)]);
+  const operator=new Client({connectionString:url.href});await operator.connect();
+  try{const pid=(await operator.query('select pg_backend_pid() pid')).rows[0].pid;
+   const reset=operator.query('select alianza_private.reset_personal_records($1,$2,1) id',[a.uid,a.email]);
+   await blocked([pid]);await held.query('commit');await close(held);const backup=(await reset).rows[0].id;
+   assert((await admin.query('select records from alianza_private.personal_reset_backups where id=$1',[backup])).rows[0].records.some(r=>r.kind==='preferences'));
+  }finally{await operator.end();}
+ }
+ const fresh=await rpc(a.uid,'data',null);assert.equal(fresh.user.dataEpoch,2);assert(!fresh.own.some(r=>r.kind==='preferences'));
+ assert.equal(fresh.user.id,original.user.id);
+}
+pass('Reset versus save preserves committed work in backup or rejects the stale write in both transaction orders');
 const rls=(await admin.query("select c.relname,c.relrowsecurity from pg_class c join pg_namespace n on n.oid=c.relnamespace where n.nspname='alianza_private' and c.relkind='r'")).rows;assert(rls.every(r=>r.relrowsecurity));
-for(const role of ['anon','authenticated','alianza_metrics'])for(const table of ['records','pair_invitations','couple_participants','ideal_confirmations'])assert.equal((await admin.query('select has_table_privilege($1,$2,$3) ok',[role,'alianza_private.'+table,'SELECT,INSERT,UPDATE,DELETE'])).rows[0].ok,false);
+for(const role of ['anon','authenticated','alianza_metrics'])for(const table of ['records','pair_invitations','couple_participants','ideal_confirmations','personal_reset_backups'])assert.equal((await admin.query('select has_table_privilege($1,$2,$3) ok',[role,'alianza_private.'+table,'SELECT,INSERT,UPDATE,DELETE'])).rows[0].ok,false);
 assert.equal((await admin.query("select count(*)::int n from pg_proc p join pg_namespace n on n.oid=p.pronamespace where n.nspname='public' and p.proname like 'alianza_%' and p.prosecdef")).rows[0].n,0);
 pass('Private tables retain RLS and no content privileges for clients or metrics; public entry points remain invokers');
 await mkdir('test-results',{recursive:true});await writeFile('test-results/postgres-evidence.json',JSON.stringify({database:'isolated synthetic PostgreSQL',serverVersion:(await admin.query('show server_version')).rows[0].server_version,checks:evidence},null,2));
