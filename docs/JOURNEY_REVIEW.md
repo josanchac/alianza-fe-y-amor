@@ -135,3 +135,7 @@ No se aplicó la migración a producción, no se reinició ninguna cuenta y no s
 Implementados el inicio individual, invitación con aceptación bilateral, desvinculación, archivo del historial para sus participantes originales, permiso independiente de ideal personal y registro opcional de ideal matrimonial con confirmaciones por revisión. Detalle de modelo, migración, pruebas y límites: [BILATERAL_PAIRING.md](BILATERAL_PAIRING.md).
 
 La interfaz permite repasar las 4 Rs mientras se vincula; todavía no ofrece un borrador individual de un encuentro pendiente de pareja. Quedan las sugerencias voluntarias de continuidad, notas por compromiso, confirmación de cumplimiento sin marcas, estados formativos del ideal personal, símbolos ampliados y reinicio individual. La prueba humana sobre estas integraciones y la revisión metodológica siguen pendientes; el juicio favorable anterior corresponde al prototipo.
+
+## Actualización de símbolos y ayuda del ideal
+
+Se incorporaron dieciséis símbolos con sus nombres y una ayuda cerrada para continuar sin ideal personal. El registro del ideal sigue siendo libre; no se generan frases. Las guías activas quedaron cotejadas documentalmente en DOCUMENTARY_VERIFICATION.md. La revisión por asesor está diferida y no condiciona esta etapa. Siguen pendientes las notas por compromiso, la confirmación de cumplimiento sin marcas, las sugerencias voluntarias de continuidad y el reinicio individual protegido.

@@ -23,14 +23,18 @@ El flujo guarda únicamente evidencia JSON y destruye el contenedor al terminar.
 | Prueba visual y uso en celular | Pendiente. El navegador del entorno bloqueó tanto el servidor local como la apertura del archivo de prueba; no se insistió mediante otra vía de control. La vista con datos ficticios está preparada en `tests/preview-frame.html`. Observar el recorrido sin explicar antes dónde tocar; verificar legibilidad, teclado, foco y controles táctiles. |
 | Auth y API de Supabase alojados | Pendiente para estas migraciones. Solo existe el proyecto del piloto; no se creó una rama ni un proyecto de pago. Preparar un entorno separado autorizado y ejecutar el recorrido con cuentas sintéticas, JWT y permisos reales. |
 | Asesores de Supabase | Pendientes sobre la versión migrada. La comprobación local anterior no pudo conectar; los controles SQL del CI aportan evidencia específica, pero no sustituyen los asesores del servicio alojado. |
-| Revisión metodológica | Trece áreas pendientes. [Pauta preparada para un padre o asesor](PASTORAL_REVIEW.md), con fuentes y preguntas. Registrar quién revisa, en qué calidad, correcciones y alcance de conformidad sobre la versión exacta. |
+| Revisión metodológica | Cotejo documental cerrado para las guías breves y exclusiones de esta versión; ver [evidencia](DOCUMENTARY_VERIFICATION.md). La revisión por asesor está diferida por decisión del propietario y no es requisito de esta etapa. |
 | Respaldo y recuperación del piloto | Hay ensayo sintético exitoso. Antes de cualquier migración real, preparar y verificar respaldo del entorno real y procedimiento para conservar las escrituras posteriores. |
 | Reinicio individual de la esposa | Pendiente. Confirmar la cuenta objetivo mediante el procedimiento privado, respaldar, conservar Auth e historial matrimonial y añadir protección específica contra escrituras desde sesiones anteriores al reinicio. La versión de vinculación no sustituye ese mecanismo. |
 
 La documentación de Dropbox está pospuesta por indicación del propietario. No se presenta como un bloqueo para programar; tampoco se considera verificada. Las guías no se anuncian como oficiales, aprobadas o completamente fieles sin evidencia que lo sustente.
 
+## Última corrección preparada
+
+Cotejo documental, retirada de ayudas externas, consulta sin ideal personal y dieciséis símbolos. Pasaron TypeScript, la suite completa y la compilación local. La prueba de migración compara registros anteriores y verifica compatibilidad de las opciones visuales con el servidor, sin cambiar permisos o ideales. La migración `20260912141154_personal_symbols.sql` debe aplicarse antes del cliente nuevo, junto con las pendientes anteriores. No se aplicó al piloto.
+
 ## Límites de alcance
 
-Siguen fuera de esta integración las sugerencias graduales de nuevas prácticas, las notas por compromiso, la confirmación de cumplimiento cuando faltan marcas, los estados formativos del ideal personal y la ampliación del repertorio de símbolos. No hay curso pago ni generación automática de ideales.
+Siguen fuera de esta integración las sugerencias graduales de nuevas prácticas, las notas por compromiso, la confirmación de cumplimiento cuando faltan marcas, los estados formativos persistentes del ideal personal. Se incorporaron dieciséis símbolos y una ayuda opcional para continuar sin ideal personal. No hay curso pago ni generación automática de ideales.
 
 El build conserva una advertencia por tamaño del bloque JavaScript; falta medir su impacto en teléfonos representativos. La prueba sintética no acredita WCAG, ASVS ni otra certificación, ni garantiza resultados espirituales.

@@ -6,7 +6,9 @@ import { readFileSync, mkdirSync, copyFileSync, writeFileSync } from 'node:fs';
 export default defineConfig({
   root: path.resolve('github'), base: './', publicDir: false,
   resolve: { alias: { '@': path.resolve('.') }, dedupe: ['react','react-dom'] },
-  plugins: [react(), { name:'public-assets', closeBundle(){
+  plugins: [react(), {name:'exclude-unreviewed-prototype', transform(_code,id){
+    if(id.split('?')[0].startsWith(path.resolve('prototype')+path.sep)) this.error('El prototipo exploratorio no forma parte del contenido cotejado para publicación.');
+  }}, { name:'public-assets', closeBundle(){
     const dir=path.resolve('github-dist'); mkdirSync(dir,{recursive:true});
     for(const f of ['emblem.png','icon.png'])copyFileSync('public/'+f,dir+'/'+f);
     let config={url:'',publishableKey:'',emailRecoveryEnabled:false};

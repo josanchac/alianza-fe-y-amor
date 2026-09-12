@@ -68,7 +68,7 @@ Se ejecutaron `npm test`, `npm run typecheck` y `npm run build`. La compilación
 
 La migración `20260912041345_guided_schedule.sql` debe aplicarse y verificarse antes de activar el cliente nuevo. El cliente anterior puede seguir guardando compromisos después de migrar: el servidor conserva su frecuencia aunque ese cliente no la envíe. El historial lo genera el servidor en la misma transacción del compromiso. No se trasladan registros entre propietarios ni se amplían los permisos de notas; el historial de frecuencias forma parte del permiso existente de horario.
 
-Antes de producción: respaldo y ensayo de restauración; aplicar en preproducción, revisar los asesores de seguridad y probar clientes anterior/nuevo; inspección móvil y aprobación de contenido; luego publicación autorizada y comprobación sintética. Volver al cliente anterior no exige borrar el historial añadido. Una reversión de base de datos requiere un procedimiento ensayado y preservar los registros nuevos; no eliminar tablas o filas como atajo. El reinicio individual requiere además protección contra escrituras desde sesiones anteriores y permanece pendiente.
+Antes de producción: respaldo y ensayo de restauración; aplicar en preproducción, revisar los asesores de seguridad y probar clientes anterior/nuevo; inspección móvil y cotejo documental de contenido; luego publicación autorizada y comprobación sintética. Volver al cliente anterior no exige borrar el historial añadido. Una reversión de base de datos requiere un procedimiento ensayado y preservar los registros nuevos; no eliminar tablas o filas como atajo. El reinicio individual requiere además protección contra escrituras desde sesiones anteriores y permanece pendiente.
 
 ## Evidencia de vinculación bilateral
 
@@ -79,3 +79,7 @@ La segunda integración añade pruebas de migración y autorización para uso in
 La ejecución de revisión [34697732996](https://github.com/josanchac/alianza-fe-y-amor/actions/runs/34697732996), commit `899e649bed5cc591cb2675f0b683a1babb9208c7`, aprobó la suite completa, tipos, build, transacciones concurrentes con conexiones distintas y restauración de datos sintéticos en PostgreSQL 17.11. La dependencia `pg` se añadió exclusivamente para pruebas, con versión exacta y lockfile. El flujo de revisión no dispone de permisos de despliegue ni utiliza credenciales de Supabase.
 
 Las pruebas esperan bloqueos comprobados mediante `pg_stat_activity`, en vez de asumir simultaneidad por una demora fija. Referencias técnicas: [bloqueos de PostgreSQL 17](https://www.postgresql.org/docs/17/explicit-locking.html) y [transacciones con node-postgres](https://node-postgres.com/features/transactions). El estado de cada requisito previo a publicar se resume en [RELEASE_READINESS.md](RELEASE_READINESS.md).
+
+## Criterio documental y símbolos · actualización vigente
+
+La revisión por asesor queda para después por indicación del propietario. El control ahora exige evidencia documental y huellas de contenido y SQL, sin fabricar una aprobación pastoral. Ver DOCUMENTARY_VERIFICATION.md. Los símbolos se amplían a dieciséis con migración aditiva y validación de servidor; no se reinterpretan ideales ni permisos. Los estados anteriores de este documento describen cada entrega histórica.

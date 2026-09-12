@@ -10,7 +10,7 @@ export function StartCard({role,onCreate,onCouple}:{role:string;onCreate:(habit?
   <h2>Empezá con algo pequeño.</h2>
   <p>Tu horario está vacío. Elegí un solo compromiso que tenga sentido para vos. Podés avanzar poco a poco y recomenzar cuando lo necesités.</p>
   <button className="primary" onClick={()=>onCreate()}><Plus size={18}/>Crear mi primer compromiso</button>
-  <details className="optional-details"><summary>Necesito una idea para empezar</summary><p>Son ejemplos de la app para redactar un acto concreto, no puntos obligatorios. Adaptá y guardá solo el que elijás.</p><div className="idea-list">{suggestedHabits(role).map(h=><button className="idea-button" key={h.title} onClick={()=>onCreate(h)}><span>{h.title}</span><ArrowRight size={18}/></button>)}</div></details>
+  <details className="optional-details"><summary>Necesito una idea para empezar</summary><p>Son ejemplos de la app para redactar un acto concreto, no puntos obligatorios. Adaptá y guardá solo el que elijás.</p><p className="form-hint"><a href="https://schoenstatt.org.br/faca-um-planejamento-espiritual/" target="_blank" rel="noreferrer">Consultar la orientación del Movimiento de Schoenstatt Brasil (portugués)</a></p><div className="idea-list">{suggestedHabits(role).map(h=><button className="idea-button" key={h.title} onClick={()=>onCreate(h)}><span>{h.title}</span><ArrowRight size={18}/></button>)}</div></details>
   <button className="text-button" onClick={onCouple}>Prefiero empezar con las 4 Rs <ArrowRight size={16}/></button>
   <p className="start-private"><LockKeyhole size={15}/> Tu horario es personal. Vos decidís si lo compartís.</p>
  </section>;

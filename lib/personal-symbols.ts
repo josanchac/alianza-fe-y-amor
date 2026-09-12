@@ -1,0 +1,2 @@
+export const PERSONAL_SYMBOLS=[['heart','Corazón'],['tree','Árbol'],['rosary','Rosario'],['cross','Cruz'],['flame','Fuego'],['anchor','Ancla'],['mountain','Montaña'],['sun','Sol'],['star','Estrella'],['flower','Flor'],['sprout','Brote'],['bird','Ave'],['church','Iglesia'],['compass','Brújula'],['waves','Agua'],['book','Libro']] as const;
+export type PersonalSymbolId=typeof PERSONAL_SYMBOLS[number][0];

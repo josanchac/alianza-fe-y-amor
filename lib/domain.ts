@@ -1,5 +1,6 @@
+import type {PersonalSymbolId} from './personal-symbols';
 export type Habit = {title:string; moment:'Mañana'|'Durante el día'|'Noche'; active:boolean; anchor:string; minimum:string; frequency?:{period:'day'|'week'|'month';target:number}};
-export type Profile = {name:string; ideal:string; shareSchedule:boolean; shareNotes:boolean;shareIdeal?:boolean; symbol?:'heart'|'tree'|'rosary'|'cross'};
+export type Profile = {name:string; ideal:string; shareSchedule:boolean; shareNotes:boolean;shareIdeal?:boolean; symbol?:PersonalSymbolId};
 export type RecordItem = {owner:string;kind:string;key:string;data:any;version:number;updated:string};
 export const R_TYPES = [
  {id:'rezar', title:'Rezar', rhythm:'Cada día', description:'Orar juntos y abrir nuestra vida a Dios.', prompts:['¿Qué agradecemos y qué necesitamos confiarle a Dios?'], suggestion:'Elegir juntos un momento y lugar para orar.'},

@@ -41,6 +41,8 @@ jobs:
       - run: npm ci
       - run: npm run typecheck
       - run: npm test
+      - name: Verify documentary evidence and reviewed content
+        run: npm run verify:methodology
       - name: Exercise real concurrent transactions
         run: node tests/postgres-concurrency.mjs
       - name: Rehearse backup and restore of synthetic data

@@ -1,12 +1,14 @@
 # Alianza · pauta de revisión pastoral y metodológica
 
-Estado: preparada para revisión; no expresa aprobación. El propósito es comprobar la fidelidad del contenido y del comportamiento de la app a las pautas de Schoenstatt pertinentes para Costa Rica.
+Estado: revisión futura, diferida por decisión del propietario. No es requisito de publicación de esta etapa y no expresa aprobación. El propósito es comprobar la fidelidad del contenido y del comportamiento de la app a las pautas de Schoenstatt pertinentes para Costa Rica.
 
 La navegación fue revisada por el propietario y su esposa. La revisión aquí solicitada es distinta: necesita una persona identificada con formación y autoridad adecuadas para señalar qué corresponde enseñar, qué debe corregirse y qué no debería incorporarse.
 
-## Material que se solicita revisar
+El estado vigente y el cotejo ya realizado están en [DOCUMENTARY_VERIFICATION.md](DOCUMENTARY_VERIFICATION.md). Las preguntas siguientes se conservan para esa conversación futura; no constituyen bloqueos adicionales.
 
-La [matriz metodológica](METHODOLOGY_REVIEW.md) identifica trece áreas y once fuentes. Las guías breves de la app enlazan sus materiales de referencia. El archivo «Universitarias» aportado por el propietario se utiliza con procedencia institucional todavía pendiente de acreditar; sus otros documentos de Dropbox se incorporarán en una sesión posterior.
+## Material para una revisión posterior
+
+La [matriz metodológica](METHODOLOGY_REVIEW.md) identifica trece áreas y once fuentes. Las guías breves de la app enlazan sus materiales de referencia. La pauta del archivo «Universitarias» se retiró de la guía activa, con procedencia institucional todavía pendiente de acreditar; sus otros documentos de Dropbox se incorporarán en una sesión posterior.
 
 Para cada área, indicar **mantener, corregir o excluir**, documento aplicable, edición y página o apartado. Si se propone una corrección, incluir el texto que debería aparecer y si cambia alguna frecuencia, registro o secuencia. Las observaciones se convertirán en cambios verificables antes de pedir aprobación del contenido final.
 

@@ -27,6 +27,7 @@ const singleton=(await db.query('insert into alianza_private.couples default val
 await db.query("insert into alianza_private.members(id,name,couple_id,seat) values($1,'C',$2,1)",[c,singleton]);
 await db.query("insert into alianza_private.records(owner,kind,key,data) values($1,'rs','rezar:2026-08-01',$2)",['couple:'+singleton,JSON.stringify({...rs,note:'Singleton history'})]);
 await db.exec(await readFile('supabase/migrations/'+files.find(x=>x.endsWith('_bilateral_pairing.sql')),'utf8'));
+for(const fn of files.filter(x=>x>'20260912132546_bilateral_pairing.sql'))await db.exec(await readFile('supabase/migrations/'+fn,'utf8'));
 for(const x of [d,e,f])await db.query("insert into alianza_private.members(id,name) values($1,'Individual')",[x]);
 for(const row of original){assert.deepEqual((await db.query('select * from alianza_private.records where owner=$1 and kind=$2 and key=$3',[row.owner,row.kind,row.key])).rows[0],row);}
 await as(c);let cs=await data();assert.equal(cs.user.coupleId,null);assert.equal(cs.user.relationshipVersion,2);assert.equal(cs.archives[0].id,singleton);assert.equal(cs.own.find(r=>r.kind==='profile').data.ideal,'');
@@ -77,5 +78,14 @@ await as(null,'anon');await assert.rejects(()=>pair({action:'create',email:'x@ex
 await db.exec('reset role;set role alianza_metrics');for(const table of ['pair_invitations','couple_participants','ideal_confirmations','records'])await assert.rejects(()=>db.query('select * from alianza_private.'+table),err=>err.code==='42501');
 console.log('PASS Cancellation, rejection, expiration, nonmember denial, nonenumerating creation and metrics isolation');
 await db.exec('reset role');
+const symbols=[...((await readFile('lib/personal-symbols.ts','utf8')).matchAll(/\['([^']+)','[^']+'\]/g))].map(m=>m[1]);
+assert.equal(symbols.length,16);
+for(const symbol of symbols)assert.equal((await db.query("select alianza_private.valid_record('profile','me',$1::jsonb) ok",[JSON.stringify({name:'Fixture',ideal:'',shareSchedule:false,shareNotes:false,symbol})])).rows[0].ok,true,symbol);
+for(const symbol of ['unknown',null,42])assert.equal((await db.query("select alianza_private.valid_record('profile','me',$1::jsonb) ok",[JSON.stringify({name:'Fixture',ideal:'',shareSchedule:false,shareNotes:false,symbol})])).rows[0].ok,false);
+await as(d);const symbolState=await data(),symbolProfile=symbolState.own.find(r=>r.kind==='profile');
+await save('profile','me',{...symbolProfile.data,symbol:'flame'},symbolProfile.version,symbolState.user.relationshipVersion);
+const afterSymbol=await data();assert.deepEqual(afterSymbol.own.find(r=>r.kind==='profile').data,{...symbolProfile.data,symbol:'flame'});assert.deepEqual(afterSymbol.shared,symbolState.shared);
+await db.exec('reset role');
+console.log('PASS Symbol migration preserves records; all UI choices pass server validation; profile round-trip preserves ideal and permissions');
 const acl=(await db.query("select has_function_privilege('anon','public.alianza_relationship(jsonb)','execute') a,has_function_privilege('authenticated','alianza_private.ideal_view(uuid,uuid)','execute') b")).rows[0];assert.deepEqual(acl,{a:false,b:false});
 }catch(error){console.error(error.message,error.code,error.where);process.exitCode=1;}finally{await db.close();}

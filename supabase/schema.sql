@@ -14,7 +14,7 @@ create table if not exists alianza_private.members (
  name text not null, ideal text not null default '',
  couple_id uuid not null references alianza_private.couples(id) on delete restrict,
  seat smallint not null check(seat in (1,2)),
- symbol text not null default 'heart' check(symbol in ('heart','tree','rosary','cross')),
+ symbol text not null default 'heart' check(symbol in ('heart','tree','rosary','cross','flame','anchor','mountain','sun','star','flower','sprout','bird','church','compass','waves','book')),
  unique(couple_id,seat)
 );
 create table if not exists alianza_private.records (
@@ -118,7 +118,7 @@ begin
     end if;
    end loop;
  end if;
- if k='profile' and (ky<>'me' or (d ? 'symbol' and d->>'symbol' not in ('heart','tree','rosary','cross'))) then return false; end if;
+ if k='profile' and (ky<>'me' or (d ? 'symbol' and d->>'symbol' not in ('heart','tree','rosary','cross','flame','anchor','mountain','sun','star','flower','sprout','bird','church','compass','waves','book'))) then return false; end if;
  if k='preferences' and (ky<>'experience' or d->>'focus' not in ('schedule','rs','ideal') or d->>'lastSeenRelease' not in ('','journey-2026-09')) then return false; end if;
  if k='habit' and d->>'moment' not in ('Mañana','Durante el día','Noche') then return false; end if;
  if k in ('checks','journal') and (not alianza_private.valid_date(ky) or ky>today) then return false; end if;
