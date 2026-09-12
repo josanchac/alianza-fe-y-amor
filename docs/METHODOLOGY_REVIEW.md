@@ -115,3 +115,7 @@ El propietario pospuso la integración de sus documentos de Dropbox para otra se
 ## Registro matrimonial y consentimiento
 
 Se integró un registro matrimonial opcional de frase libre, con confirmaciones de ambos usuarios sobre la misma revisión. La interfaz aclara que el acuerdo entre usuarios no acredita discernimiento ni aval espiritual. No se añadieron ejercicios nuevos ni un curso. M08 y M12 conservan estado pendiente hasta revisar el texto exacto y su adecuación local. Los documentos de Dropbox siguen sin integrar por decisión del propietario.
+
+## Material listo para el revisor
+
+Se preparó [PASTORAL_REVIEW.md](PASTORAL_REVIEW.md) con las trece decisiones concretas, las síntesis centrales y los campos para registrar observaciones y alcance. No se asignó un revisor ni se registró una aprobación. El control de publicación conserva su estado pendiente; la validación técnica de PostgreSQL no modifica esa condición.

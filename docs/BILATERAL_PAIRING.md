@@ -53,3 +53,9 @@ Se preparó una vista aislada en `tests/preview-frame.html`, con iframe de 390 �
 Antes de desplegar: respaldo y restauración ensayada; aplicación y asesores en preproducción; pruebas con conexiones concurrentes de aceptar/aceptar, aceptar/cancelar y guardar/desvincular; comprobación móvil, teclado y lector de pantalla; revisión metodológica del contenido exacto. El build mantiene una advertencia de bloque JavaScript superior a 500 kB; su impacto requiere medición.
 
 No revertir la base eliminando participantes, invitaciones o ideales: perdería historia y evidencia. Una vuelta al cliente anterior tiene los límites descritos; una restauración debe conservar escrituras posteriores. El reinicio individual de la cuenta de la esposa sigue pendiente de respaldo y protección propia frente a escrituras antiguas. `relationship_version` no sustituye ese control de reinicio.
+
+## Verificación posterior en PostgreSQL real
+
+La [ejecución 34697732996](https://github.com/josanchac/alianza-fe-y-amor/actions/runs/34697732996) terminó correctamente sobre PostgreSQL 17.11 aislado en GitHub Actions. Se comprobaron aceptaciones duplicadas, invitaciones competidoras, aceptar/cancelar, guardar/desvincular en ambos órdenes, conservación de un encuentro en su archivo y confirmación concurrente del ideal. También pasó un respaldo `pg_dump` y restauración `pg_restore` comparando las tablas de aplicación, identidades sintéticas y funciones.
+
+Esto resuelve el pendiente de concurrencia entre conexiones descrito arriba. No equivale a un ensayo de Auth alojado, una restauración del proyecto real ni una revisión visual. Ver [estado de preparación](RELEASE_READINESS.md).

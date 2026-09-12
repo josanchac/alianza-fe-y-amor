@@ -73,3 +73,9 @@ Antes de producción: respaldo y ensayo de restauración; aplicar en preproducci
 ## Evidencia de vinculación bilateral
 
 La segunda integración añade pruebas de migración y autorización para uso individual, invitaciones y archivos de parejas anteriores; confirma acuerdo sobre la misma revisión del ideal matrimonial y bloquea escrituras con un contexto de relación anterior. Ver [evidencia y límites](BILATERAL_PAIRING.md). La suite completa, tipos y build pasaron. Los intentos de revisión visual y asesores locales quedaron bloqueados por acceso al servidor local y ausencia de una instancia Supabase, respectivamente; no se cuentan como verificaciones aprobadas. El ensayo de concurrencia con conexiones independientes y el reinicio de cuenta siguen pendientes.
+
+## Validación independiente del motor de base de datos
+
+La ejecución de revisión [34697732996](https://github.com/josanchac/alianza-fe-y-amor/actions/runs/34697732996), commit `899e649bed5cc591cb2675f0b683a1babb9208c7`, aprobó la suite completa, tipos, build, transacciones concurrentes con conexiones distintas y restauración de datos sintéticos en PostgreSQL 17.11. La dependencia `pg` se añadió exclusivamente para pruebas, con versión exacta y lockfile. El flujo de revisión no dispone de permisos de despliegue ni utiliza credenciales de Supabase.
+
+Las pruebas esperan bloqueos comprobados mediante `pg_stat_activity`, en vez de asumir simultaneidad por una demora fija. Referencias técnicas: [bloqueos de PostgreSQL 17](https://www.postgresql.org/docs/17/explicit-locking.html) y [transacciones con node-postgres](https://node-postgres.com/features/transactions). El estado de cada requisito previo a publicar se resume en [RELEASE_READINESS.md](RELEASE_READINESS.md).
