@@ -1,6 +1,6 @@
 # Preparación de la nueva experiencia · 12/9/2026
 
-**No publicada.** La rama `review/guided-methodology` contiene una versión verificable. El piloto y sus usuarios siguen intactos. No se reinició la cuenta de la esposa del propietario.
+**No publicada.** La rama `review/guided-methodology` contiene una versión verificable. Los registros de aplicación y las cuentas del piloto siguen intactos. Se agregó un checkpoint privado operativo; ver PILOT_CHECKPOINT.md. No se reinició la cuenta de la esposa del propietario.
 
 ## Evidencia ejecutada
 
