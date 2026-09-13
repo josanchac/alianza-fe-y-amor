@@ -10,7 +10,7 @@ try{
  render(React.createElement(Journal,{dataRequest:request,onSignOut(){}}));await screen.findByRole('heading',{name:'¿Qué te ayudaría hoy?'});
  assert.equal(writes.length,0);assert(!document.body.textContent.includes('Neca'));assert.equal(screen.queryByRole('tab',{name:'Las 4 Rs'}),null);assert.equal(screen.queryByText('Ahora es más fácil empezar'),null);assert.equal(screen.queryByRole('button',{name:/Vivir las 4 Rs/}),null);
  assert(document.querySelector('img[src$="emblem.svg"]'));assert.equal(document.querySelector('.account-pill svg[viewBox="0 0 24 28"]'),null);
- fireEvent.click(screen.getByRole('button',{name:/Escribir mi ideal personal/}));await screen.findByRole('dialog');assert.equal(screen.getByLabelText('Cómo quiero que me llamen').value,'');assert(!screen.getByLabelText('Cómo quiero que me llamen').required);
+ fireEvent.click(screen.getByRole('button',{name:/Escribir mi ideal personal/}));await screen.findByRole('heading',{name:'Mi camino'});fireEvent.click(screen.getByRole('button',{name:'Ya tengo un ideal'}));fireEvent.click(screen.getByRole('button',{name:'Escribir o revisar mi ideal'}));await screen.findByRole('dialog');assert.equal(screen.getByLabelText('Cómo quiero que me llamen').value,'');assert(!screen.getByLabelText('Cómo quiero que me llamen').required);
  fireEvent.click(screen.getByRole('button',{name:'Cerrar',exact:true}));
  fireEvent.mouseDown(screen.getByRole('tab',{name:'Mi espacio'}),{button:0,ctrlKey:false});
  assert.equal(screen.getByText('Usar Alianza en pareja').closest('details').open,false);

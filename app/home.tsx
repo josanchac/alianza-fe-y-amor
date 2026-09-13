@@ -1,6 +1,6 @@
 import {ArrowRight,Sun,Heart,Sprout} from 'lucide-react';
 export type Focus='schedule'|'rs'|'ideal';
-export const RELEASE='simple-2026-09';
+export const RELEASE='community-2026-09';
 const options:[Focus,string,string][]=[['schedule','Cuidar un compromiso','Un paso concreto.'],['rs','Vivir las 4 Rs','Un momento juntos.'],['ideal','Escribir mi ideal personal','Mi frase, cuando esté listo.']];
 export function Home({focus,choosing,existing,busy,linked=false,onChoose,onContinue,onChange,onExplore}:{focus:Focus;choosing:boolean;existing:boolean;busy:boolean;linked?:boolean;onChoose:(f:Focus)=>void;onContinue:()=>void;onChange:()=>void;onExplore:()=>void}){
  return <><div className="page-heading"><div><p className="eyebrow">A TU RITMO</p><h1>{choosing?'¿Qué te ayudaría hoy?':'Tu espacio para continuar'}</h1></div></div><p className="intro">Un solo paso es suficiente.</p>
@@ -8,4 +8,4 @@ export function Home({focus,choosing,existing,busy,linked=false,onChoose,onConti
  {choosing&&<button className="text-button" onClick={onExplore}>Explorar mi horario sin elegir todavía</button>}
  </>;
 }
-export function ReleaseNotes({onDismiss,busy}:{onDismiss?:()=>void;busy?:boolean}){return <section className="card release-note"><h2>Ahora es más fácil empezar</h2><p>Tus registros siguen guardados.</p><details className="optional-details"><summary>Ver novedades</summary><ul className="brief-list"><li>Menos texto y opciones más claras.</li><li>Tu nombre y símbolo, a tu elección.</li><li>Ayuda disponible cuando la necesitás.</li></ul></details>{onDismiss&&<button className="soft-button" disabled={busy} onClick={onDismiss}>Entendido</button>}</section>;}
+export function ReleaseNotes({onDismiss,busy}:{onDismiss?:()=>void;busy?:boolean}){return <section className="card release-note"><h2>Más caminos para vivir la alianza</h2><p>Tus registros siguen guardados.</p><details className="optional-details"><summary>Ver novedades</summary><ul className="brief-list"><li>Rosarios personales, de pareja y de grupo.</li><li>Propósitos y encuentros del curso.</li><li>Mi camino para retomar el ideal a tu ritmo.</li></ul></details>{onDismiss&&<button className="soft-button" disabled={busy} onClick={onDismiss}>Entendido</button>}</section>;}
