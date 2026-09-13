@@ -36,10 +36,10 @@ try{
  const today=localDate();let fixture={user:{id:'one',role:'member',email:'one@example.test',relationshipVersion:1,coupleId:null},own:[{owner:'one',kind:'profile',key:'me',data:{name:'Persona',ideal:'',shareSchedule:false,shareNotes:false},version:1,updated:''}],shared:[],partner:null,archives:[],invitations:[],marriageIdeal:null,today};
  const requests=[];async function request(init){if(init?.method==='POST'){const p=JSON.parse(init.body);requests.push(p);return Response.json({error:'No permitido en esta prueba'},{status:409});}return Response.json(fixture);}
  render(React.createElement(Journal,{dataRequest:request,onSignOut(){}}));await screen.findByRole('heading',{name:'¿Qué te ayudaría hoy?'});
- fireEvent.mouseDown(screen.getByRole('tab',{name:'Las 4 Rs'}),{button:0,ctrlKey:false});await screen.findByRole('heading',{name:'Podés empezar por vos'});assert.equal(screen.queryByRole('button',{name:'Preparar este momento'}),null);
+ assert.equal(screen.queryByRole('tab',{name:'Las 4 Rs'}),null);fireEvent.mouseDown(screen.getByRole('tab',{name:'Mi espacio'}),{button:0,ctrlKey:false});fireEvent.click(screen.getByText('Usar Alianza en pareja'));await screen.findByRole('heading',{name:'Podés empezar por vos'});assert.equal(screen.queryByRole('button',{name:'Preparar este momento'}),null);
  // Receive a linked state from the server, then hold a shared draft through an unlink.
  fixture={...fixture,user:{...fixture.user,coupleId:'pair',relationshipVersion:2},couple:{emblem:'neutral'},partner:{name:'Pareja',ideal:'',shareSchedule:false,shareNotes:false,records:[]},marriageIdeal:{text:'',version:0,confirmations:0,confirmedByMe:false}};
- fireEvent(window,new Event('focus'));await screen.findByText(/Este espacio es compartido con Pareja/);
+ fireEvent(window,new Event('focus'));await screen.findByRole('tab',{name:'Las 4 Rs'});fireEvent.mouseDown(screen.getByRole('tab',{name:'Las 4 Rs'}),{button:0,ctrlKey:false});await screen.findByText(/Este espacio es compartido con Pareja/);
  fireEvent.click(screen.getAllByRole('button',{name:'Preparar este momento'})[0]);await screen.findByRole('dialog');
  fixture={...fixture,user:{...fixture.user,coupleId:null,relationshipVersion:3},partner:null,couple:null,marriageIdeal:null};fireEvent(window,new Event('focus'));
  await screen.findByText(/La vinculación cambió. Tu borrador sigue aquí/);fireEvent.click(screen.getByRole('button',{name:'Guardar',exact:true}));await screen.findByText(/Cerrá este formulario y revisá tu espacio actualizado/);assert.equal(requests.length,0);
