@@ -3,6 +3,7 @@ import { Heart, Copy } from "lucide-react";
 import {
   Dialog,
   DialogContent,
+  DialogTrigger,
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
@@ -18,12 +19,11 @@ export function Donation() {
     }
   }
   return (
-    <>
-      <button className="donate-button" onClick={() => setOpen(true)}>
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild><button className="donate-button" onClick={() => setOpen(true)}>
         <Heart size={18} />
         Donar
-      </button>
-      <Dialog open={open} onOpenChange={setOpen}>
+      </button></DialogTrigger>
         <DialogContent className="editor-dialog donation-dialog">
           <img className="dialog-emblem" src="./emblem.svg" alt="Alianza" />
           <DialogTitle>Un aporte libre para el Movimiento</DialogTitle>
@@ -78,7 +78,6 @@ export function Donation() {
             transferencias.
           </p>
         </DialogContent>
-      </Dialog>
-    </>
+    </Dialog>
   );
 }

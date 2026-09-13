@@ -104,3 +104,9 @@ Se detiene el RPC de actividad obligatoria de la versión anterior y se reemplaz
 6. Ante fallo, volver al cliente anterior conservando las tablas añadidas. La escritura de preferencias acepta identificadores anteriores. No borrar las tablas nuevas ni revertir datos como atajo. El panel antiguo no es compatible con la nueva respuesta agregada; si se revierte cliente, ocultar su entrada administrativa, sin restaurar el detalle por cuenta.
 
 Pendientes de ampliación: apostolado, fechas significativas, curso guiado del ideal comunitario, recordatorios push y bibliotecas extensas. Se conserva la importación voluntaria de recordatorios de calendario existente; no se anuncian notificaciones automáticas nuevas.
+
+## Revisión visual en entorno separado · 13/9/2026
+
+La vista previa independiente en Sites usa la misma interfaz, con datos ficticios y transporte en memoria; no contiene conexiones ni credenciales del piloto. Se revisaron Inicio, Grupos, propósito, rosario, Donar y Mi camino en un marco de 320/390 px. Se observaron y corrigieron: desbordamiento del encabezado a 320 px (ancho desplazable 316 frente a 303 disponibles; después ambos 303) y falta de retorno del foco al cerrar Donar (comprobado después de usar DialogTrigger). Se comprobaron contador de propósito 1→2, rosario 1→2 decenas y conservación del borrador al salir y volver.
+
+Esta inspección permite revisar la interfaz; no es una prueba en un iPhone físico, una auditoría completa de WCAG, una medición de rendimiento móvil ni una validación del backend mediante la demo. Las pruebas de autorización y concurrencia corresponden a CI. La vista previa se publica separadamente para revisión del propietario; la app de GitHub Pages y sus migraciones continúan pendientes de entrega.
