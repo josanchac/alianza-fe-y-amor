@@ -21,6 +21,6 @@ export function PurposeGuide(){return <details className="optional-details"><sum
 
 export function PersonalIdealGuide(){return <details className="optional-details"><summary>¿Y si todavía no tengo ideal personal?</summary><p>Podés dejar este campo vacío y continuar con tu horario. Cuando quieras, volvé para escribir tu frase.</p><p>Para trabajar su discernimiento, buscá los materiales y el acompañamiento de tu rama del Movimiento. Esta versión permite registrar tu ideal; todavía no incluye un curso para descubrirlo.</p></details>;}
 
-export function RsGuide(){return <><p>{R_TYPES.map(r=>`${r.title} (${r.rhythm.toLowerCase()}): ${r.description}`).join(' ')}</p><FormationSource topic="rs"/></>;}
+export function RsGuide(){return <><ul className="brief-list">{R_TYPES.map(r=><li key={r.id}><strong>{r.title} · {r.rhythm}</strong><span>{r.description}</span></li>)}</ul><FormationSource topic="rs"/></>;}
 
 export function MarriageIdealGuide(){return <details className="optional-details"><summary>¿Y si todavía no tenemos ideal matrimonial?</summary><p>No necesitan inventar una frase para poder comenzar a usar la app. Pueden dejar su ideal pendiente y buscar acompañamiento en el Movimiento.</p><p>El material de la Rama de Familias sitúa su formulación dentro de un proceso previo: reconocer la historia del matrimonio y escuchar las voces del tiempo, del ser y del alma. Propone recoger ese trabajo con el apoyo del asesor.</p><p>Esta explicación orienta la consulta; no reemplaza ese proceso formativo.</p><FormationSource topic="marriage"/></details>;}

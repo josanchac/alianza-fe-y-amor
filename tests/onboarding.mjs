@@ -21,7 +21,7 @@ try{
  fireEvent.click(screen.getByRole('button',{name:'Ofrecer mi día a la Mater'}));
  const suggestion=await screen.findByRole('dialog');
  assert.equal(screen.getByLabelText('¿Qué quiero cultivar?').value,'Ofrecer mi día a la Mater');
- assert.equal(screen.getByText('Más opciones (opcional)').closest('details').open,false);
+ assert.equal(screen.queryByRole('group',{name:'¿Con qué frecuencia?'}),null);
  fireEvent.click(screen.getByRole('button',{name:'Cerrar',exact:true}));
  await waitFor(()=>assert.equal(screen.queryByRole('dialog'),null));assert.equal(writes.length,0);
  console.log('PASS Opening and cancelling a suggested commitment does not add it');
@@ -35,7 +35,7 @@ try{
  assert(screen.getByRole('link',{name:/Vivir según nuestro Ideal/}).getAttribute('href').startsWith('https://ramadefamilias.cl/'));
  assert.equal(screen.getByLabelText('¿Qué quiero cultivar?').value,'Mi paso elegido');
  assert.equal(writes.length,0);
- fireEvent.click(screen.getByRole('button',{name:'Guardar',exact:true}));
+ fireEvent.click(screen.getByRole('button',{name:'Continuar',exact:true}));fireEvent.click(screen.getByRole('button',{name:'Guardar',exact:true}));
  await screen.findByRole('checkbox',{name:'Mi paso elegido'});
  assert.equal(writes.length,1);assert.equal(writes[0].data.anchor,'');assert.equal(writes[0].data.minimum,'');
  assert.equal(screen.queryByRole('heading',{name:'Empezá con algo pequeño.'}),null);
