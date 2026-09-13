@@ -58,7 +58,9 @@ try {
   await waitFor(() => assert.equal(calls.at(-1).amount, 1));
   assert.equal(calls.at(-1).version, 0);
   assert.equal(calls.at(-1).day, today);
+  fireEvent.click(screen.getByRole("button", { name: /Compartir mi aporte al total/ }));
   assert.equal(screen.getByRole("checkbox").checked, false);
+  fireEvent.click(screen.getByRole("button", { name: "Cerrar panel" }));
   cleanup();
   const r = {
     id: "r",

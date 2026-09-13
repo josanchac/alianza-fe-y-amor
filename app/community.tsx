@@ -1,4 +1,6 @@
 import { useState, useRef } from "react";
+import {QuietProgress} from "./quiet-progress";
+import {AppPanel} from "./app-panel";
 import {
   Heart,
   Plus,
@@ -138,26 +140,25 @@ export function PurposeCard({
   compact?: boolean;
 }) {
   const [day, setDay] = useState(localDate()),
-    [error, setError] = useState("");
+    [error, setError] = useState(""), [feedback,setFeedback]=useState(""), [dateOpen,setDateOpen]=useState(false);
+  const sending=useRef(false);
   const log = p.logs.find((l) => l.day === day);
   const current = localDate() >= p.start && localDate() <= p.end;
   async function send(v: Record<string, unknown>) {
-    setError("");
+    if(sending.current)return; sending.current=true;setError("");setFeedback("");
     try {
       await act({ ...v, id: p.id, groupId: group.id });
+      if(v.action==="purpose_log")setFeedback("Registro actualizado");
     } catch (e) {
       setError((e as Error).message);
-    }
+    } finally {sending.current=false;}
   }
   return (
     <section className="card purpose-card">
       <p className="eyebrow">{compact ? group.name : "NUESTRO PROPÓSITO"}</p>
       <h3>{p.title}</h3>
-      <p className="muted">
-        {p.start} — {p.end} · {p.target} ocasiones por{" "}
-        {p.unit === "couple" ? "matrimonio" : "persona"}
-      </p>
-      {p.reason && <p>{p.reason}</p>}
+      <div className="purpose-meta"><span><CalendarDays size={14}/>{new Date(p.start+'T12:00:00').toLocaleDateString('es-CR',{day:'numeric',month:'short'})}{p.start!==p.end?' – '+new Date(p.end+'T12:00:00').toLocaleDateString('es-CR',{day:'numeric',month:'short'}):''}</span><span>{p.unit==='couple'?'En matrimonio':'Personal'}</span></div>
+      {p.reason && <p className="purpose-intention">{p.reason}</p>}
       {!p.joined ? (
         <>
           <button
@@ -178,31 +179,23 @@ export function PurposeCard({
         </>
       ) : (
         <>
-          <p role="status">
-            <strong>
-              {personalProgress(p)} de {p.target}
-            </strong>{" "}
-            ocasiones registradas
-          </p>
-          <progress
-            value={personalProgress(p)}
-            max={p.target}
-            aria-label="Mi avance del propósito"
-          />
+          <QuietProgress value={personalProgress(p)} total={p.target} label="Mi avance del propósito"/>
           <div className="purpose-register">
-            <label>
-              Día
+            <div className="purpose-day"><span>{day===localDate()?'Hoy':new Date(day+'T12:00:00').toLocaleDateString('es-CR',{day:'numeric',month:'long'})}</span><button className="text-button" onClick={()=>setDateOpen(!dateOpen)} aria-expanded={dateOpen}>Cambiar día</button></div>
+            {dateOpen&&<label className="purpose-date-field">
+              Elegir día
               <input
                 aria-label={"Día para " + p.title}
                 type="date"
                 min={p.start}
                 max={p.end < localDate() ? p.end : localDate()}
                 value={day}
-                onChange={(e) => setDay(e.target.value)}
+                onChange={(e) => {setDay(e.target.value);setFeedback("");}}
               />
-            </label>
+            </label>}
             <button
-              className="soft-button"
+              className="primary purpose-action"
+              aria-label="Registrar una ocasión"
               disabled={
                 busy ||
                 day < p.start ||
@@ -220,7 +213,7 @@ export function PurposeCard({
               }
             >
               <Plus size={16} />
-              Registrar una ocasión
+              Lo viví {day===localDate()?'hoy':'ese día'}
             </button>
             {log && (
               <button
@@ -239,20 +232,16 @@ export function PurposeCard({
               </button>
             )}
           </div>
-          <p className="muted">
-            {log
-              ? `${log.amount} ocasiones registradas este día.`
-              : "Sin registro este día."}{" "}
-            La ausencia de registro no significa incumplimiento.
-          </p>
+          <p className="purpose-day-note">{log ? `${log.amount} ${log.amount===1?'ocasión registrada':'ocasiones registradas'} este día.` : "Sin registro este día."}</p>
+          {feedback&&<p className="quiet-feedback" role="status"><Check size={16}/>{feedback}</p>}
           {p.unit === "couple" && (
             <p className="form-hint">
               El registro es común para ambos cónyuges que acepten este
               propósito.
             </p>
           )}
-          <details className="optional-details">
-            <summary>Compartir mi aporte al total</summary>
+          <AppPanel title="Compartir mi aporte al total" hint={p.share?"Incluido en el resumen del grupo":"Solo para mí"} icon="privacy">
+            {error&&<p role="alert" className="form-error">{error}</p>}
             <label className="consent-label">
               <input
                 type="checkbox"
@@ -269,7 +258,7 @@ export function PurposeCard({
               grupo pequeño puede permitir deducciones; por eso algunos
               resultados se ocultan.
             </p>
-          </details>
+          </AppPanel>
         </>
       )}
       {!compact && (
@@ -433,6 +422,7 @@ export function RosaryCard({
   habits?: { key: string; data: { title: string; active: boolean } }[];
   onLinked?: () => void;
 }) {
+  const [focus,setFocus]=useState(()=>r.slots.find(s=>s.userId===userId&&!s.done)?.decade??[1,2,3,4,5].find(n=>!r.slots.some(s=>s.decade===n&&s.done))??1);
   const [selected, setSelected] = useState<number | null>(null),
     [bead, setBead] = useState(0),
     [error, setError] = useState(""),
@@ -469,23 +459,12 @@ export function RosaryCard({
             ? "Completamos juntos este rosario"
             : `${count} de 5 decenas completadas`}
       </p>
-      <div className="rosary-progress" aria-hidden="true">
-        {[1, 2, 3, 4, 5].map((n) => (
-          <span
-            key={n}
-            className={
-              r.slots.find((s) => s.decade === n)?.done ? "filled" : ""
-            }
-          >
-            {n}
-          </span>
-        ))}
+      <div className="rosary-choices" role="group" aria-label="Elegir mi decena">
+        {[1,2,3,4,5].map(n=>{const done=r.slots.some(s=>s.decade===n&&s.done);return <button key={n} aria-pressed={focus===n} aria-label={`Decena ${n}: ${MYSTERIES[r.mystery].items[n-1]}${done?', completada':''}`} onClick={()=>setFocus(n)} className={done?'decade-done':''}><span>{done?<Check size={18}/>:n}</span><small>{done?'Rezada':`${n}ª`}</small></button>;})}
       </div>
-      <details className="optional-details" open={count < 5 && !r.cancelled}>
-        <summary>
-          {count === 5 ? "Ver aportes y acompañar" : "Elegir mi decena"}
-        </summary>
+      <div className="rosary-focus">
         {MYSTERIES[r.mystery].items.map((title, i) => {
+          if(i+1!==focus)return null;
           const n = i + 1,
             s = r.slots.find((s) => s.decade === n),
             mine = r.mine.some((c) => c.decade === n),
@@ -541,14 +520,8 @@ export function RosaryCard({
             </div>
           );
         })}
-        <p className="form-hint">
-          Pueden participar más de cinco personas acompañando decenas
-          completadas; el avance común cuenta cada decena una sola vez.{" "}
-          {r.mode === "sequential"
-            ? "Las confirmaciones siguen el orden de los misterios."
-            : ""}
-        </p>
-      </details>
+      </div>
+      <AppPanel title="Cómo rezamos juntos" hint={r.mode==='sequential'?'Una decena después de otra':'Cada persona elige su aporte'} icon="heart"><p>Pueden participar más de cinco personas acompañando decenas completadas. El avance común cuenta cada decena una sola vez.</p>{r.mode==='sequential'&&<p>Las confirmaciones siguen el orden de los misterios.</p>}</AppPanel>
       {r.mine.length > 0 && (
         <p>
           Tu aporte: {r.mine.length}{" "}
