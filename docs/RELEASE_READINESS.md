@@ -1,58 +1,40 @@
-# Preparación de la nueva experiencia · 12/9/2026
+# Publicación de la nueva experiencia · 13/9/2026
 
-**No publicada.** La rama `review/guided-methodology` contiene una versión verificable. Los registros de aplicación y las cuentas del piloto siguen intactos. Se agregó un checkpoint privado operativo; ver PILOT_CHECKPOINT.md. No se reinició la cuenta de la esposa del propietario.
+**Publicada.** La [PR 1](https://github.com/josanchac/alianza-fe-y-amor/pull/1) se integró como `c515e917b7da43232940a5ebf3852fe977305eb0`. La [ejecución 34731324548](https://github.com/josanchac/alianza-fe-y-amor/actions/runs/34731324548) aprobó pruebas, TypeScript, cotejo documental, compilación y publicación de GitHub Pages.
 
-## Evidencia ejecutada
+Aplicación: https://josanchac.github.io/alianza-fe-y-amor/
 
-La [ejecución 34703016860](https://github.com/josanchac/alianza-fe-y-amor/actions/runs/34703016860) terminó con ambos trabajos aprobados para `92ea2ea5dfc42b51b9d2b1373d80ba61a4f8cc19`: suite completa, TypeScript, compilación, cotejo documental, concurrencia PostgreSQL, restauración, Auth real, API real y asesor local de seguridad con fallo ante errores. Los artefactos contienen exclusivamente resultados sintéticos; las credenciales y copias de base no se publican. El asesor local aprobado no implica ausencia de todas las advertencias ni certificación del piloto.
+Comprobación HTTP posterior: página, JavaScript `index-DE5Xb9kf.js` y CSS `index-BU300EB6.css` respondieron 200. El JavaScript publicado contiene `journey-2026-09`. Esto verifica entrega de recursos, no sustituye una prueba visual ni una sesión del usuario.
 
-Casos nuevos verificados: credenciales/confirmación/membresía; rechazo de registro público; aislamiento y escritura desactualizada por API; consentimiento bilateral y destinatario exacto; revocación con JWT vigente; notas por compromiso siempre privadas; metadatos editables sin privilegios; renovación y cierre de sesión; reinicio frente a guardados concurrentes en ambos órdenes; recuperación personal preservando Auth, historia compartida y el trabajo posterior mediante otra copia.
+## Base de datos y conservación
 
-La [ejecución 34697732996 de GitHub Actions](https://github.com/josanchac/alianza-fe-y-amor/actions/runs/34697732996) concluyó con éxito para el commit `899e649bed5cc591cb2675f0b683a1babb9208c7`:
+Se renovó el checkpoint privado con `20260913014430_refresh_private_release_checkpoint`. Luego se aplicó `20260913014437_guided_journey_reviewed_release`, que reúne, en este orden, las cinco migraciones revisadas:
 
-- Instalación con lockfile, TypeScript, suite completa y compilación.
-- Todas las migraciones incrementales sobre PostgreSQL 17.11, con conservación de los registros personales originales de prueba.
-- Conexiones independientes compitiendo por aceptar una invitación, aceptar invitaciones distintas y aceptar/cancelar.
-- Guardado/desvinculación en ambos órdenes: sin reactivación de permisos antiguos. Un encuentro cuyo guardado ya había comenzado permanece en el archivo de sus participantes.
-- Confirmación y revisión simultáneas del ideal: la frase nueva no hereda confirmaciones anteriores.
-- RLS activo en tablas privadas; denegación de contenido a clientes y métricas; entradas públicas con seguridad del invocador.
-- Respaldo y restauración con herramientas de PostgreSQL en otra base del mismo contenedor. Coincidieron tablas de aplicación, identidades sintéticas y definiciones de funciones. No se exportó ningún dato real ni se subió el respaldo como artefacto.
+- `20260912041345_guided_schedule.sql`
+- `20260912132546_bilateral_pairing.sql`
+- `20260912141154_personal_symbols.sql`
+- `20260912142635_commitment_reviews.sql`
+- `20260912153148_recoverable_personal_reset.sql`
 
-El flujo guarda únicamente evidencia JSON y destruye el contenedor al terminar. Sus permisos son de lectura de código; no puede desplegar ni acceder al proyecto de Supabase. El código de pruebas rechaza direcciones de bases remotas y exige una base vacía llamada `alianza_ci` en localhost.
+Se conservaron las sentencias originales, retirando sus BEGIN/COMMIT exteriores para ejecutarlas en una sola transacción. Se usaron límites de espera y ejecución, bloqueos y una comparación de todos los registros originales antes de confirmar. La comparación posterior con el checkpoint devolvió cero registros originales alterados. Permanecieron cuatro miembros y dos parejas; los once registros originales pasaron a catorce por las tres filas iniciales de historial de compromisos.
 
-## Pendientes para publicar
+Las entradas públicas siguen usando seguridad del invocador. Los clientes no pueden ejecutar las funciones anteriores al reinicio ni la operación privada de reinicio; tampoco consultar sus copias. Los RPC de datos y vínculo rechazaron peticiones anónimas por HTTP con 401.
 
-| Requisito | Estado y siguiente acción concreta |
-|---|---|
-| Prueba visual y uso en celular | Pendiente. El navegador del entorno bloqueó tanto el servidor local como la apertura del archivo de prueba; no se insistió mediante otra vía de control. La vista con datos ficticios está preparada en `tests/preview-frame.html`. Observar el recorrido sin explicar antes dónde tocar; verificar legibilidad, teclado, foco y controles táctiles. |
-| Auth y API | Aprobados con GoTrue, JWT y PostgREST reales en Supabase desechable. Queda comprobar configuración del servicio alojado al desplegar. No se creó ningún proyecto de pago. |
-| Asesores de Supabase | Asesor local de seguridad ejecutado en CI sobre todas las migraciones; superó el umbral de errores. Consulta del piloto actual: advertencia de contraseñas filtradas desactivadas. Repetir sobre el piloto después del despliegue. |
-| Revisión metodológica | Cotejo documental cerrado para las guías breves y exclusiones de esta versión; ver [evidencia](DOCUMENTARY_VERIFICATION.md). La revisión por asesor está diferida por decisión del propietario y no es requisito de esta etapa. |
-| Respaldo y recuperación del piloto | Hay ensayo sintético exitoso. Antes de cualquier migración real, preparar y verificar respaldo del entorno real y procedimiento para conservar las escrituras posteriores. |
-| Reinicio individual de la esposa | Mecanismo implementado y probado con copia privada, recuperación y versión independiente del vínculo. Pendiente de ejecución real tras verificar identidad, respaldo y publicación. Ver PERSONAL_RESET.md. |
+## Reinicio individual
 
-La documentación de Dropbox está pospuesta por indicación del propietario. No se presenta como un bloqueo para programar; tampoco se considera verificada. Las guías no se anuncian como oficiales, aprobadas o completamente fieles sin evidencia que lo sustente.
+Tras la publicación se verificó la identidad objetivo con UUID, nombre, rol, correo confirmado y versión. El reinicio autorizado se completó a las 01:47 UTC: cuatro registros propios respaldados, versión del espacio de 1 a 2. La transacción comparó íntegramente la copia propia, registros ajenos, identidades, parejas y la cuenta Auth; fallaría si hubiera un cambio no previsto. La cuenta objetivo quedó sin registros personales y lista para el primer comienzo al volver a entrar. El acceso, el vínculo y los datos matrimoniales permanecen. No se publican identificadores personales ni contenido espiritual. Detalle operativo en PERSONAL_RESET.md.
 
-## Última corrección preparada
+## Evidencia previa
 
-Cotejo documental, retirada de ayudas externas, consulta sin ideal personal y dieciséis símbolos. Pasaron TypeScript, la suite completa y la compilación local. La prueba de migración compara registros anteriores y verifica compatibilidad de las opciones visuales con el servidor, sin cambiar permisos o ideales. La migración `20260912141154_personal_symbols.sql` debe aplicarse antes del cliente nuevo, junto con las pendientes anteriores. No se aplicó al piloto.
+La [ejecución 34703652703](https://github.com/josanchac/alianza-fe-y-amor/actions/runs/34703652703), correspondiente a `a85fc628ddf58c7cc5d0a781af2abd7ad6da1efb`, aprobó la suite, concurrencia PostgreSQL, restauración sintética y Auth/API reales en un entorno desechable. Incluye aislamiento, consentimiento bilateral, revocación, notas privadas, renovación de sesión y bloqueo de escrituras anteriores al reinicio. Sus artefactos contienen solo resultados sintéticos.
 
-## Límites de alcance
+El propietario completó un respaldo local cifrado de PostgreSQL: el archivo fue leído con pg_restore y el descifrado coincidió con el original mediante SHA-256. No se exportaron datos reales a GitHub ni se solicitó la contraseña al asistente. Esa comprobación no equivale a restaurar el respaldo real en una base nueva; el ensayo completo realizado fue con datos sintéticos. El dump tampoco equivale a clonar todos los servicios y archivos de Supabase.
 
-Quedan fuera los estados formativos persistentes del ideal personal y las recomendaciones automáticas. Se integraron notas privadas y valoración personal por semana o mes, además de una invitación voluntaria a explorar otra práctica cuando el usuario lo elige. Se incorporaron dieciséis símbolos y una ayuda opcional para continuar sin ideal personal. No hay curso pago ni generación automática de ideales.
+## Límites y seguimiento
 
-El build conserva una advertencia por tamaño del bloque JavaScript; falta medir su impacto en teléfonos representativos. La prueba sintética no acredita WCAG, ASVS ni otra certificación, ni garantiza resultados espirituales.
-
-## Seguimiento por compromiso
-
-La migración `20260912142635_commitment_reviews.sql` añade el contrato de notas y valoraciones sin reescribir datos anteriores. Debe preceder al nuevo cliente. Cada revisión pertenece a un compromiso propio y a un período completo; los períodos abiertos solo admiten notas. Las notas anteriores continúan disponibles al cambiar frecuencia o pausar. Los asesores locales volvieron a encontrar la instancia desconectada; se mantiene pendiente esa comprobación en el entorno separado. El reinicio protegido debe incluir también los registros `habit_review`.
-
-## 12 septiembre — acceso real y reinicio recuperable
-
-Se agregó un trabajo aislado de CI con Supabase CLI 2.117.0, Auth y PostgREST reales; no utiliza secretos, cuentas ni datos del piloto. Prueba credenciales, confirmación, membresía, permisos, vinculación bilateral, revocación, renovación/cierre de sesión y rechazo de escrituras previas a un reinicio. La migración histórica necesita dos asientos originales: se reproducen con identidades ficticias.
-
-El reinicio de una sola cuenta ya tiene implementación y pruebas locales de restauración, aislamiento y bloqueo de formularios antiguos. Detalle: PERSONAL_RESET.md. El cotejo documental mantiene el mismo alcance espiritual: esta entrega agrega controles técnicos de recuperación y acceso, no contenido formativo nuevo.
-
-Pendientes para producción: validación visual en celular, comprobaciones del entorno gestionado, respaldo independiente del piloto y ejecución sobre la identidad verificada. La revisión pastoral y Dropbox siguen diferidos, sin bloquear esta etapa documental.
-
-Consulta de solo lectura del piloto (12 septiembre): el asesor gestionado de seguridad informa una advertencia de protección de contraseñas filtradas desactivada, sin otros hallazgos devueltos. Referencia: https://supabase.com/docs/guides/auth/password-security#password-strength-and-leaked-password-protection. No se cambió configuración ni plan. Este resultado corresponde al esquema actualmente publicado, no certifica las migraciones de revisión. La CI incorpora además el asesor sobre la base desechable ya migrada, con fallo ante errores.
+- Prueba visual en celulares pendiente. El navegador del entorno había rechazado la vista local y no se eludió esa restricción. Verificar recorrido, legibilidad, teclado, foco y controles táctiles con los usuarios.
+- La comprobación de Auth/API con sesiones reales fue en Supabase desechable. En producción se comprobaron permisos y rechazo anónimo; la navegación autenticada completa queda para los usuarios.
+- Cotejo documental de las guías breves cerrado dentro de su alcance; ver DOCUMENTARY_VERIFICATION.md. La revisión pastoral y Dropbox siguen diferidos por decisión del propietario. No se anuncia aprobación oficial ni certificación espiritual.
+- El asesor gestionado posterior a la migración no devolvió errores. Informó [protección de contraseñas filtradas desactivada](https://supabase.com/docs/guides/auth/password-security#password-strength-and-leaked-password-protection) y [RLS sin política](https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy) en la tabla privada de copias de reinicio. Esta tabla tiene RLS activo y carece de permisos para clientes y métricas; su denegación por defecto fue verificada. No se cambió el plan del proyecto.
+- El bloque JavaScript conserva una advertencia de tamaño; falta medir el impacto en teléfonos representativos. No se afirma certificación WCAG o ASVS.
+- Quedan fuera el curso pago, generación automática de ideales, estados formativos persistentes y recomendaciones automáticas de hábitos. Se ofrece una invitación voluntaria a explorar otra práctica.

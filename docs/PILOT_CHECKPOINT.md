@@ -1,3 +1,11 @@
+# Estado actualizado · 13/9/2026
+
+El propietario completó un respaldo local cifrado, verificado mediante lectura de pg_restore y comparación SHA-256 tras descifrar. No fue un ensayo completo de restauración real. Se renovó el checkpoint privado antes de aplicar la versión y se verificó que los registros originales no cambiaran. La publicación y el reinicio individual terminaron; el resultado vigente está en RELEASE_READINESS.md.
+
+## Antecedente histórico · 12/9/2026
+
+Lo siguiente registra el estado anterior; sus pendientes de respaldo y publicación quedaron sustituidos por el estado actualizado de arriba.
+
 # Control previo a publicación
 
 Se comprobó la versión de revisión `1ddd2bf38ef0447478e736570ee2adeffb057953`: GitHub Actions 34703158058 terminó con éxito, incluidos PostgreSQL, Auth, API, recuperación y asesor de seguridad del entorno desechable.

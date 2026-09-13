@@ -1,6 +1,6 @@
 # Reinicio personal recuperable
 
-Implementado para revisión y pruebas sintéticas. No ejecutado sobre ninguna cuenta del piloto.
+Implementado, probado y publicado. El 13/9/2026 se ejecutó únicamente sobre la cuenta autorizada del piloto, tras verificar su identidad: cuatro registros propios respaldados y versión de 1 a 2. Las comparaciones transaccionales confirmaron conservación de registros ajenos, identidad, Auth y matrimonio. Ver RELEASE_READINESS.md.
 
 La operación privada `alianza_private.reset_personal_records(uuid,email,epoch,backup?)` requiere privilegios de operador; no existe un botón administrativo ni un RPC público de reinicio. Verifica UUID, correo confirmado y versión actual antes de modificar nada. Los administradores de actividad no pueden leer las copias.
 
