@@ -6,3 +6,9 @@ supabase/.temp/
 supabase/.branches/
 *.tsbuildinfo
 *.log
+
+/tests/preview-dist/
+/test-results/
+
+/tests/auth-stack/supabase/.temp/
+/tests/auth-stack/supabase/.branches/

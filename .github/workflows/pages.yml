@@ -21,8 +21,11 @@ jobs:
       - run: npm ci
       - run: npm run typecheck
       - run: npm test
+      - name: Require documented Schoenstatt methodology review before publication
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        run: npm run verify:methodology
       - name: Require public deployment configuration
-        if: github.event_name != 'pull_request'
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
         env:
           SUPABASE_URL: ${{ vars.SUPABASE_URL }}
           SUPABASE_PUBLISHABLE_KEY: ${{ vars.SUPABASE_PUBLISHABLE_KEY }}
@@ -39,11 +42,11 @@ jobs:
           JS
       - run: npm run build
       - uses: actions/upload-pages-artifact@v3
-        if: github.event_name != 'pull_request'
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
         with:
           path: github-dist
   deploy:
-    if: github.event_name != 'pull_request'
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
     needs: verify
     runs-on: ubuntu-latest
     permissions:

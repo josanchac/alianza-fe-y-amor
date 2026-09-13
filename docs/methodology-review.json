@@ -1,0 +1,272 @@
+{
+  "kind": "documentary",
+  "status": "documented",
+  "scope": "Guías breves y comportamiento de la aplicación compilada desde github/main.tsx. Síntesis atribuidas, no curso completo ni formato nacional costarricense. El prototipo exploratorio está excluido de publicación. No acredita aval institucional ni pastoral. Incluye notas privadas por compromiso y valoración personal por período; invitación voluntaria a explorar basada únicamente en la elección del usuario.",
+  "verification": {
+    "performedBy": "Codex — cotejo documental asistido, no representante del Movimiento",
+    "date": "2026-09-12",
+    "criteria": "Fuentes institucionales íntegramente consultadas; ficha y procedencia identificables; correspondencia de cada área; reglas de producto separadas; exclusión explícita de enseñanzas sin respaldo.",
+    "evidence": "docs/DOCUMENTARY_VERIFICATION.md"
+  },
+  "pastoralReview": {
+    "status": "deferred",
+    "requiredForThisStage": false,
+    "evidence": null
+  },
+  "reviewedContent": {
+    "app/commitment-review.tsx": "69a77c528a3754e99c73a4cd68fdbb41d11ac538f5101d6f4a7d3acfddfb9fa0",
+    "app/confession-guide.tsx": "22e7cf6d2fb52021e38a78a5144a10049c916eb2a0c6cdbfb417a995b54469b9",
+    "app/formation-guide.tsx": "66f8c2d175dba6e85c267fb6e06c89a97571d52e1b0b53c7b32777b8992b0ddf",
+    "app/home.tsx": "f9feb5780fe24a6808a100715f7f2c829d322a4cb7a1cae9f2c4756d9f16347b",
+    "app/install-guide.tsx": "00bab2940d281dfd1e7e07ce9ef8f9a3e4464ae9c18f03e9058c3dfe3966b275",
+    "app/journal.tsx": "630c35f78c2e42d3ec353f827a5eab29e31a969cdf78012c240e5c84bab27b06",
+    "app/month-review.tsx": "868435a186a69a1d9612a31d75ff82420fcad5df6de62226fd039fd7caec8b7e",
+    "app/movement-costa-rica.tsx": "62b05210bea82d6d7a969d0f5a98bac4d2fc9d5bceaecabd177b24e29034be76",
+    "app/pairing.tsx": "be4f636c5db9cab664b0eb87756496fff654eb1e9904eedde3b9a0ead8023c41",
+    "app/personal-symbol.tsx": "011b3ae16097f602154dc6cce66b3c9654102750c847ad54a86bb5a7f61a5951",
+    "app/reports.tsx": "bc00d3e531a5a5bcf4c29e481b6b3696633e154f007aa463c4658219c69ffe38",
+    "app/start-guide.tsx": "aa414666bcca30e579cfb8b53d797ed0cbf785ac66f5d17e3e1e37390e14740b",
+    "components/ui/alert-dialog.tsx": "9a8d950f2b9b4352d5ebb762fb44d5c28c2d353aa29712071973656a8736e311",
+    "components/ui/button.tsx": "cc36af0f8b5019c33cc039fbf03bb952a513072b15b55b53c592b78af3e5f4c4",
+    "components/ui/checkbox.tsx": "b23ab9d4deeedf2ac8f512c368361ede681aa383437ef48563a6f9b7dbe95f27",
+    "components/ui/dialog.tsx": "dce39c6adc47d997bd2567f8b7a72f466b0134715105cd42f9194007b8ecdb14",
+    "components/ui/dropdown-menu.tsx": "98f0dcdae38225b73734aceeb9213dd751fea2c72ea520df31003cd133deac8a",
+    "components/ui/select.tsx": "0b796a108a4eb5ba52d9ad938b7aea36dc56ae66c703a6d0a23dbc24f96daff3",
+    "components/ui/switch.tsx": "386d4d4deb39f34126f9700fe9bf5393d238485dd94018bba9d154dda84c62ae",
+    "components/ui/table.tsx": "20e5a7f224959c6b75802995706a97e9da171f693d4b6b1b436388fcd9df96f3",
+    "components/ui/tabs.tsx": "865d0194331b9b2be36723fa79d3575dc83078b4cb941cafee87cb72fc2cff46",
+    "github/admin.tsx": "75320c2ff546c20ef4bc0d24827eaae329502a313633faaa0422b4d85068b6e1",
+    "github/config.public.json": "a6b4b267682dd075b4a9986f61f1308ff2269e21a24dd21935265d92dd8b0774",
+    "github/index.html": "fd340334f04792bf4791ef681c18b315489b93cc2f613536ad807d4a92905862",
+    "github/main.tsx": "d6c65e493a4edf725f310f2fb55fde101cb8bf5c9e6c3f4874b26c534d5d756f",
+    "lib/commitment-review.ts": "0793538ad22268549c4964794923a1f0bfebc5837e3897a496d1945cdf26d57c",
+    "lib/domain.ts": "66813a4434e337225bda8977fb24030d96a0eac2e1ef4b20c1ef0bb96d6603e6",
+    "lib/personal-symbols.ts": "bdee26342e7e07d8b3439ce93c8bc4ad66f5b2947b896316e2dcb7d6d433550d",
+    "lib/reports.ts": "836c317694854fdbdbc0259d928c61123ece5b4a0e2215341220cc1355c47fd7",
+    "lib/schedule.ts": "03a4b90a94537d7a187c913e7b8d3f9209e32f140afd6074134dd7f400b37f92",
+    "lib/utils.ts": "53f3d3d070f0a9082934da25b875f9499855c2b0693868dd28be8c23d8730f68",
+    "prototype/journey.tsx": "df7f392a416c76373a120a3f725a58c81f3206a5af0827d73802a7413d967d51",
+    "supabase/migrations/20260909120832_initial_alianza.sql": "7adcefad25ecab31caf42e2daab945623bace24d41a45dcf4324a4368a86f6fe",
+    "supabase/migrations/20260909124756_explicit_private_table_denial.sql": "20f1a227e9c11fb03d775bbbc05567fad73e61c9eda06f694d80ed9ee3529564",
+    "supabase/migrations/20260909133151_optional_starter_habits.sql": "3e7ea028d0656aa358bbf9232e50284345d2cf51965a53787dd0bc721bba9bb7",
+    "supabase/migrations/20260909143538_multi_couple_isolation.sql": "aa85a1c76382dc6f71a32a28e5fabcffa84a2899b71d7e7a5734aabffd401f10",
+    "supabase/migrations/20260911210520_private_admin_activity.sql": "7ba38ca97b4bed27c9cabbdd3619e9cf201b2d9da2cdb5d3871dce2654d8e831",
+    "supabase/migrations/20260911210958_metrics_auth_boundary.sql": "900b3a51b3f403785b86d24588da9c97aa34d1486b9f2fa7b122c4b4be72ca86",
+    "supabase/migrations/20260912041345_guided_schedule.sql": "f6353014a4afa9b69d03aba5e9bb125a8a20c902445591acc1ed88f87c3a47ed",
+    "supabase/migrations/20260912132546_bilateral_pairing.sql": "08e61273652ff531bcdb1e94778b138229042dfab5c36a48b47b8aaef8868f97",
+    "supabase/migrations/20260912141154_personal_symbols.sql": "38a8ca7cf68c0de3ce70504390fd984448e31af04fc2b60fb8d8e5c770485562",
+    "supabase/migrations/20260912142635_commitment_reviews.sql": "3dcbf1a32dee7ebe3a82d21b73b5142111f9d1c9ced66ebb0526d5e0f427cbff",
+    "supabase/migrations/20260912153148_recoverable_personal_reset.sql": "4025dbd279b7284964dcf8477cf9a886a231aeea686994ab81aa708f518501af",
+    "supabase/schema.sql": "c49ebc51f33501e7ff063b3b35d95eb002769653c37452354a1942e3b45044d0",
+    "vite.github.config.ts": "4782f41f71503dfadd3a535c60b08794b058d73cb80b9fca09295920361bd26a"
+  },
+  "items": [
+    {
+      "id": "M01",
+      "topic": "Horario espiritual",
+      "status": "verified",
+      "resolution": "Síntesis breve atribuida. No se presenta como manual exhaustivo ni formato oficial de Costa Rica.",
+      "evidence": "app/formation-guide.tsx: ScheduleGuide; app/start-guide.tsx: consulta voluntaria.",
+      "references": [
+        {
+          "institution": "Rama de Familias de Schoenstatt Chile",
+          "title": "Vivir según nuestro Ideal; CBF tercer año, reunión 9",
+          "edition": "Edición no indicada; PDF consultado el 2026-09-12",
+          "locator": "pp. 3–5",
+          "location": "https://ramadefamilias.cl/web2025/wp-content/uploads/2025/10/R9.-Vivir-segun-Nuestro-Ideal.pdf",
+          "provenance": "PDF enlazado desde la ficha de la biblioteca institucional: https://ramadefamilias.cl/document/vivir-segun-nuestro-ideal/",
+          "correspondence": "pp. 3–5: autoformación, Capital de Gracias y concreción personal del horario."
+        },
+        {
+          "institution": "Central Nacional de Assessores del Movimiento de Schoenstatt Brasil",
+          "title": "Como montar seu Horário Espiritual? — Karen Bueno; explicaciones del P. Ottomar Schneider",
+          "edition": "Web consultada 2026-09-12; página fechada 2/1/2026, con nota de publicación original 21/8/2016",
+          "locator": "Monte o seu Horário Espiritual; nota sobre marcas; Algumas dicas",
+          "location": "https://schoenstatt.org.br/faca-um-planejamento-espiritual/",
+          "provenance": "Publicación del portal nacional, cuyo pie identifica la Central Nacional de Assessores.",
+          "correspondence": "Apartados sobre horario y propósito: las cuatro vinculaciones y ofrecimiento."
+        }
+      ]
+    },
+    {
+      "id": "M02",
+      "topic": "Propósito particular y examen",
+      "status": "verified",
+      "resolution": "Se sustituye la pauta de tres A no acreditada por la orientación de S7. La app no define EP como sinónimo de PP. El mes organiza notas; no obliga a cambiar el propósito.",
+      "evidence": "app/formation-guide.tsx: PurposeGuide; app/month-review.tsx; tests/journey.mjs: borrador anterior sin sobrescritura.",
+      "references": [
+        {
+          "institution": "Rama de Familias de Schoenstatt Chile",
+          "title": "Vivir según nuestro Ideal; CBF tercer año, reunión 9",
+          "edition": "Edición no indicada; PDF consultado el 2026-09-12",
+          "locator": "pp. 4–5",
+          "location": "https://ramadefamilias.cl/web2025/wp-content/uploads/2025/10/R9.-Vivir-segun-Nuestro-Ideal.pdf",
+          "provenance": "PDF enlazado desde la ficha de la biblioteca institucional: https://ramadefamilias.cl/document/vivir-segun-nuestro-ideal/",
+          "correspondence": "p. 5: actitud, objetivo, concreción y revisión cotidiana; el formulario permite anotarlos libremente."
+        }
+      ]
+    },
+    {
+      "id": "M03",
+      "topic": "Ejemplos de compromisos",
+      "status": "verified",
+      "resolution": "Ejemplos adaptables redactados para la app. Ninguno se asigna automáticamente; tiempos y palabras elegidos no se atribuyen al documento.",
+      "evidence": "lib/domain.ts: suggestedHabits; app/start-guide.tsx; tests/onboarding.mjs: solo se guarda lo elegido.",
+      "references": [
+        {
+          "institution": "Central Nacional de Assessores del Movimiento de Schoenstatt Brasil",
+          "title": "Como montar seu Horário Espiritual? — Karen Bueno; explicaciones del P. Ottomar Schneider",
+          "edition": "Web consultada 2026-09-12; página fechada 2/1/2026, con nota de publicación original 21/8/2016",
+          "locator": "Monte o seu Horário Espiritual; nota sobre marcas; Algumas dicas",
+          "location": "https://schoenstatt.org.br/faca-um-planejamento-espiritual/",
+          "provenance": "Publicación del portal nacional, cuyo pie identifica la Central Nacional de Assessores.",
+          "correspondence": "Ejemplos de escucha, movimiento y registro; ofrecimiento al Capital de Gracias. Los ejemplos propios no son prescripciones."
+        }
+      ]
+    },
+    {
+      "id": "M04",
+      "topic": "Marcas de registro",
+      "status": "verified",
+      "resolution": "Marcas elegidas por la persona. Casilla vacía significa desconocido; «Me costó» no certifica una realización parcial. No se inventa una escala oficial. La valoración personal por período se guarda aparte y nunca crea marcas ni modifica los recuentos.",
+      "evidence": "app/journal.tsx: labels y mark; lib/schedule.ts; tests/schedule.ts. app/commitment-review.tsx; tests/commitment-review.mjs y tests/pairing-db.mjs.",
+      "references": [
+        {
+          "institution": "Central Nacional de Assessores del Movimiento de Schoenstatt Brasil",
+          "title": "Como montar seu Horário Espiritual? — Karen Bueno; explicaciones del P. Ottomar Schneider",
+          "edition": "Web consultada 2026-09-12; página fechada 2/1/2026, con nota de publicación original 21/8/2016",
+          "locator": "Monte o seu Horário Espiritual; nota sobre marcas; Algumas dicas",
+          "location": "https://schoenstatt.org.br/faca-um-planejamento-espiritual/",
+          "provenance": "Publicación del portal nacional, cuyo pie identifica la Central Nacional de Assessores.",
+          "correspondence": "Nota posterior a los ejemplos: el modo de marcar queda a la evaluación personal."
+        }
+      ]
+    },
+    {
+      "id": "M05",
+      "topic": "Frecuencias y cálculos",
+      "status": "verified",
+      "resolution": "Frecuencias documentadas; días por período, límites, cortes y porcentajes son reglas explícitas del producto, no calificaciones espirituales.",
+      "evidence": "lib/schedule.ts; tests/schedule.ts; tests/guided-schedule-db.mjs; docs/JOURNEY_REVIEW.md.",
+      "references": [
+        {
+          "institution": "Rama de Familias de Schoenstatt Chile",
+          "title": "Vivir según nuestro Ideal; CBF tercer año, reunión 9",
+          "edition": "Edición no indicada; PDF consultado el 2026-09-12",
+          "locator": "pp. 4–5",
+          "location": "https://ramadefamilias.cl/web2025/wp-content/uploads/2025/10/R9.-Vivir-segun-Nuestro-Ideal.pdf",
+          "provenance": "PDF enlazado desde la ficha de la biblioteca institucional: https://ramadefamilias.cl/document/vivir-segun-nuestro-ideal/",
+          "correspondence": "p. 4: puntos diarios, semanales y mensuales; no establece los algoritmos de la app."
+        }
+      ]
+    },
+    {
+      "id": "M06",
+      "topic": "Cuatro Rs",
+      "status": "verified",
+      "resolution": "Una sola pauta para las cuatro Rs: S6. Preguntas resumidas, atribuidas y opcionales; no se mezcla la variante de renovación de S7.",
+      "evidence": "lib/domain.ts: R_TYPES; app/formation-guide.tsx: RsGuide; app/journal.tsx: formulario compartido; tests/onboarding.mjs.",
+      "references": [
+        {
+          "institution": "Rama de Familias de Schoenstatt Chile",
+          "title": "Las cuatro R",
+          "edition": "Edición no indicada; PDF consultado el 2026-09-12",
+          "locator": "pp. 1–5",
+          "location": "https://ramadefamilias.cl/web2025/wp-content/uploads/2025/08/Las-4R.pdf",
+          "provenance": "PDF enlazado desde la ficha de la biblioteca institucional: https://ramadefamilias.cl/document/las-cuatro-r/",
+          "correspondence": "pp. 1–5: cadencias, oración, encuentro, revisión y proyecto anual. El repaso remite al documento completo."
+        }
+      ]
+    },
+    {
+      "id": "M07",
+      "topic": "Ideal personal",
+      "status": "product-rule",
+      "resolution": "Campo libre, vacío permitido y ayuda para volver después. Sin ejercicios de descubrimiento ni ideal asignado.",
+      "evidence": "app/formation-guide.tsx: PersonalIdealGuide; app/journal.tsx: profile; tests/onboarding.mjs; tests/journey.mjs.",
+      "references": [],
+      "boundary": "Registrar texto elegido y explicar dónde editarlo son funciones de la app. El curso de ideal no está incluido."
+    },
+    {
+      "id": "M08",
+      "topic": "Ideal matrimonial",
+      "status": "verified",
+      "resolution": "Consulta breve del proceso; escribir y confirmar una frase son decisiones de usuarios. No se certifica un ideal.",
+      "evidence": "app/formation-guide.tsx: MarriageIdealGuide; app/pairing.tsx: MaritalIdeal; tests/pairing-ui.mjs y tests/pairing-db.mjs.",
+      "references": [
+        {
+          "institution": "Rama de Familias de Schoenstatt Chile",
+          "title": "Descubriendo nuestro nombre, nuestro Ideal Matrimonial; CBF tercer año, reunión 8",
+          "edition": "Edición no indicada; PDF consultado el 2026-09-12",
+          "locator": "pp. 1–4",
+          "location": "https://ramadefamilias.cl/web2025/wp-content/uploads/2025/10/R8.-Descubriendo-Nuestro-Nombre-nuestro-Ideal-Matrimonial.pdf",
+          "provenance": "PDF enlazado desde la ficha de la biblioteca institucional: https://ramadefamilias.cl/document/descubriendo-nuestro-nombre-nuestro-ideal-matrimonial/",
+          "correspondence": "pp. 1–2: recorrido previo y apoyo de asesor; la app remite a esa formación sin sustituirla."
+        }
+      ]
+    },
+    {
+      "id": "M09",
+      "topic": "Revisión de períodos",
+      "status": "product-rule",
+      "resolution": "Notas por compromiso y período, junto con revisiones generales. Etiquetas propias de la app; valoración declarada por el usuario, no inferida. Semanas o meses en curso admiten notas; su valoración se habilita al cerrar el período.",
+      "evidence": "app/commitment-review.tsx; app/month-review.tsx; lib/commitment-review.ts; tests/commitment-review.mjs; tests/pairing-db.mjs; tests/postgres-concurrency.mjs.",
+      "references": [],
+      "boundary": "Los resúmenes muestran registros y ofrecen espacio de escritura; no infieren estado espiritual ni dificultades."
+    },
+    {
+      "id": "M10",
+      "topic": "Ayudas externas para hábitos",
+      "status": "excluded",
+      "resolution": "Retiradas recomendaciones de Gollwitzer, Fogg y Lally de la formación espiritual.",
+      "evidence": "app/journal.tsx: explicación metodológica y edición de compromiso; docs/ENGINEERING_QUALITY.md conserva los fundamentos de ingeniería.",
+      "references": [],
+      "exclusion": "Se eliminan recomendaciones de señal y versión mínima. Los campos históricos anchor y minimum siguen como recordatorio y nota personal, sin reinterpretar sus valores ni cambiar el cumplimiento."
+    },
+    {
+      "id": "M11",
+      "topic": "Sugerencias progresivas",
+      "status": "product-rule",
+      "resolution": "La persona elige continuar, ajustar o explorar después de su revisión. Explorar abre la elección de comienzo, sin guardar una nueva práctica. No se deduce hábito adquirido ni avance espiritual por marcas o plazos.",
+      "evidence": "app/commitment-review.tsx; app/journal.tsx; tests/commitment-review.mjs: explorar sin escrituras ni compromisos añadidos.",
+      "references": [],
+      "boundary": "Preferencia explícita de navegación y disposición declarada por el usuario. Sin recomendación automática por plazo, sin presión ni progreso espiritual calculado."
+    },
+    {
+      "id": "M12",
+      "topic": "Acceso directo, repaso y curso",
+      "status": "product-rule",
+      "resolution": "Entrada directa y repaso opcional del mismo contenido. No hay curso pago en esta versión.",
+      "evidence": "app/start-guide.tsx; app/home.tsx; tests/onboarding.mjs: consulta sin escrituras y borrador preservado.",
+      "references": [],
+      "boundary": "La cantidad de ayuda visible es una decisión de navegación; no cambia el método ni condiciona la fidelidad al pago."
+    },
+    {
+      "id": "M13",
+      "topic": "Examen de conciencia para preparar la confesión",
+      "status": "verified",
+      "resolution": "Preparación breve con preguntas propias atribuidas, no examen exhaustivo ni rito sacramental. Revisión por asesor diferida.",
+      "evidence": "app/confession-guide.tsx; tests/onboarding.mjs: sin campos, escrituras, almacenamiento ni telemetría.",
+      "references": [
+        {
+          "institution": "Santa Sede",
+          "title": "Catecismo de la Iglesia Católica",
+          "edition": "Versión web española consultada 2026-09-12",
+          "locator": "1451–1460",
+          "location": "https://www.vatican.va/archive/catechism_sp/p2s2c2a4_sp.html",
+          "provenance": "Texto íntegro en el archivo oficial de la Santa Sede.",
+          "correspondence": "1451–1460: contrición, examen, confesión ante el sacerdote y reparación."
+        },
+        {
+          "institution": "Santa Sede",
+          "title": "Catecismo de la Iglesia Católica, Los diez mandamientos",
+          "edition": "Versión web española consultada 2026-09-12",
+          "locator": "2052–2055",
+          "location": "https://www.vatican.va/archive/catechism_sp/p3s2_sp.html",
+          "provenance": "Texto íntegro en el archivo oficial de la Santa Sede.",
+          "correspondence": "2052–2055: amor a Dios y al prójimo y mandamientos como base de preguntas iniciales propias."
+        }
+      ]
+    }
+  ]
+}

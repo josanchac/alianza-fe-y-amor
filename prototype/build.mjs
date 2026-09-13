@@ -1,0 +1,11 @@
+import {build} from 'esbuild';
+import {readFile,writeFile,mkdir} from 'node:fs/promises';
+const result=await build({entryPoints:['prototype/journey.tsx'],bundle:true,write:false,minify:true,jsx:'automatic',define:{'process.env.NODE_ENV':'"production"'},format:'iife'});
+const css=await readFile('prototype/journey.css','utf8');
+const logo=await readFile('prototype/alianza-emblema.svg','utf8');
+const js=result.outputFiles[0].text.replaceAll('__EMBLEM_DATA__','data:image/svg+xml;base64,'+Buffer.from(logo).toString('base64')).replaceAll('</script','<\\/script');
+const fragment=`<div id="alianza-journey-root"></div>\n<style>${css}</style>\n<script>${js}</script>\n`;
+await writeFile('/workspace/alianza-recorrido-contraste.html',fragment);
+await mkdir('prototype/dist',{recursive:true});
+await writeFile('prototype/dist/alianza-prototipo.html',`<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Alianza · Prueba del nuevo recorrido</title><style>body{margin:0;padding:12px;background:#eef2f7}</style></head><body>${fragment}</body></html>`);
+console.log('Built self-contained prototype and inline preview. No network calls or storage.');
