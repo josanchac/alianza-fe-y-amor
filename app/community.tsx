@@ -339,6 +339,9 @@ export function CreateRosary({
   onCreated?: () => void;
 }) {
   const [scope, setScope] = useState(groupId ? "group" : "personal");
+  const today=localDate(), suggested=mysteriesFor(today);
+  const [chosenMystery,setChosenMystery]=useState<Mystery|null>(null);
+  const weekday=new Date(today+"T12:00:00").toLocaleDateString("es-CR",{weekday:"long"});
   const [id, setId] = useState(() => crypto.randomUUID());
   return (
     <Form
@@ -349,7 +352,7 @@ export function CreateRosary({
         await act({
           action: "rosary_create",
           id,
-          scope,
+          scope: groupId ? "group" : f.get("scope") || "personal",
           ...(groupId ? { groupId } : {}),
           mystery: f.get("mystery"),
           mode: f.get("mode"),
@@ -363,18 +366,19 @@ export function CreateRosary({
       {!groupId && (
         <label>
           ¿Con quién?
-          <select value={scope} onChange={(e) => setScope(e.target.value)}>
+          <select name="scope" value={scope} onChange={(e) => setScope(e.target.value)}>
             <option value="personal">Personal</option>
             {coupleId && <option value="couple">Con mi pareja</option>}
           </select>
         </label>
       )}
+      <div className="rosary-suggestion"><CalendarDays size={20} aria-hidden="true"/><div><strong>Hoy, {weekday}: {MYSTERIES[suggested].name.toLowerCase()}</strong><p>Sugeridos para hoy. Podés elegir otros.</p></div></div>
       <label>
         Misterios
-        <select name="mystery" defaultValue={mysteriesFor(localDate())}>
+        <select name="mystery" value={chosenMystery??suggested} onChange={e=>setChosenMystery(e.target.value as Mystery)}>
           {Object.entries(MYSTERIES).map(([id, m]) => (
             <option value={id} key={id}>
-              {m.name}
+              {m.name}{id===suggested?" · sugeridos hoy":""}
             </option>
           ))}
         </select>
