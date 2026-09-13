@@ -10,7 +10,7 @@ export default defineConfig({
     if(id.split('?')[0].startsWith(path.resolve('prototype')+path.sep)) this.error('El prototipo exploratorio no forma parte del contenido cotejado para publicación.');
   }}, { name:'public-assets', closeBundle(){
     const dir=path.resolve('github-dist'); mkdirSync(dir,{recursive:true});
-    for(const f of ['emblem.png','icon.png'])copyFileSync('public/'+f,dir+'/'+f);
+    for(const f of ['emblem.svg','emblem.png','icon.png'])copyFileSync('public/'+f,dir+'/'+f);
     let config={url:'',publishableKey:'',emailRecoveryEnabled:false};
     try{config=JSON.parse(readFileSync('github/config.public.json','utf8'));}catch{}
     try{config=JSON.parse(readFileSync('github/config.local.json','utf8'));}catch{}
