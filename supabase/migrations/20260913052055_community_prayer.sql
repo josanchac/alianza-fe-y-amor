@@ -88,7 +88,7 @@ create function alianza_private.community(payload jsonb default '{}'::jsonb) ret
 declare u uuid:=auth.uid(); m alianza_private.members; a text:=coalesce(payload->>'action','snapshot'); g uuid; new_id uuid; id_partner uuid;
  gr alianza_private.groups; p alianza_private.group_purposes; r alianza_private.rosaries; slot alianza_private.rosary_slots;
  unit_id_v text; token text; result jsonb:='{}'; v integer; n integer; dt date; d jsonb; ck alianza_private.records;
- today date:=(now() at time zone 'America/Costa_Rica')::date;
+ today date:=(now() at time zone 'America/Costa_Rica')::date; created_v boolean;
 begin
  if u is null or not exists(select 1 from auth.users where auth.users.id=u and email_confirmed_at is not null) then raise insufficient_privilege;end if;
  if payload is null or jsonb_typeof(payload)<>'object' or octet_length(payload::text)>12000 then raise invalid_parameter_value;end if;
@@ -167,6 +167,7 @@ begin
  elsif a='meeting_save' then
   if g is null or gr.owner_id<>u then raise insufficient_privilege;end if;
   d:=payload->'data';
+  if jsonb_typeof(d) is distinct from 'object' then raise invalid_parameter_value;end if;
   if not(d ?& array['date','time','place','material','question','roles']) or d-array['date','time','place','material','question','roles']<>'{}'::jsonb or exists(select 1 from jsonb_each(d) e where jsonb_typeof(e.value)<>'string') or not alianza_private.valid_date(d->>'date') or d->>'time'!~'^([01][0-9]|2[0-3]):[0-5][0-9]$' or length(d->>'place')>300 or length(d->>'question')>500 or length(d->>'roles')>500 or length(d->>'material')>1000 or (d->>'material'<>'' and d->>'material'!~'^https://[^[:space:]]+$') then raise invalid_parameter_value;end if;
   if (payload->>'version')::int=0 then insert into alianza_private.group_meetings(group_id,data) values(g,d) on conflict do nothing;
   else update alianza_private.group_meetings set data=d,version=version+1 where group_id=g and version=(payload->>'version')::int;end if;
@@ -177,11 +178,17 @@ begin
  elsif a='rosary_create' then
   new_id:=(payload->>'id')::uuid;
   if (select count(*) from alianza_private.rosaries where owner_id=u and created_at>now()-interval '1 day')>=30 then raise invalid_parameter_value;end if;
-  if payload->>'scope' not in ('personal','couple','group') or (payload->>'scope'='couple' and m.couple_id is null) or (payload->>'scope'='group' and g is null) then raise invalid_parameter_value;end if;
+  if coalesce(payload->>'scope','') not in ('personal','couple','group') or (payload->>'scope'='couple' and m.couple_id is null) or (payload->>'scope'='group' and g is null) then raise invalid_parameter_value;end if;
   insert into alianza_private.rosaries(id,owner_id,group_id,couple_id,mystery,mode,intention) values(new_id,u,case when payload->>'scope'='group' then g end,case when payload->>'scope'='couple' then m.couple_id end,payload->>'mystery',payload->>'mode',coalesce(payload->>'intention','')) on conflict do nothing;
-  if not found and not exists(select 1 from alianza_private.rosaries rr where rr.id=new_id and rr.owner_id=u) then raise insufficient_privilege;end if;
-  if payload->>'scope'='couple' and payload->>'mode'='sequential' then
-   if payload->>'startsWith' not in ('me','partner') then raise invalid_parameter_value;end if;
+  created_v:=found;
+  if not created_v then
+   select * into r from alianza_private.rosaries rr where rr.id=new_id and rr.owner_id=u;
+   if r.id is null or not alianza_private.can_pray(r,u) then raise insufficient_privilege;end if;
+   if r.group_id is distinct from (case when payload->>'scope'='group' then g end) or r.couple_id is distinct from (case when payload->>'scope'='couple' then m.couple_id end) or r.mode is distinct from payload->>'mode' or r.mystery is distinct from payload->>'mystery' or r.intention is distinct from coalesce(payload->>'intention','') then raise exception using errcode='PT409',message='El rosario ya existe con otra configuración. Actualizá.';end if;
+  end if;
+  -- A replay never recreates reservations that participants have released.
+  if created_v and payload->>'scope'='couple' and payload->>'mode'='sequential' then
+   if coalesce(payload->>'startsWith','') not in ('me','partner') then raise invalid_parameter_value;end if;
    select mm.id into id_partner from alianza_private.members mm where mm.couple_id=m.couple_id and mm.id<>u;
    if id_partner is null then raise invalid_parameter_value;end if;
    insert into alianza_private.rosary_slots(rosary_id,decade,user_id)
@@ -195,7 +202,7 @@ begin
    update alianza_private.rosaries set cancelled=true where rosaries.id=r.id;
   elsif a='rosary_link' then
    select count(*) into n from alianza_private.rosary_contributions where rosary_id=r.id and user_id=u and day=today;
-   if payload->>'kind' not in ('full','decade','community') or n=0 or (payload->>'kind'='full' and n<5) or (payload->>'kind'='community' and r.group_id is null and r.couple_id is null) then raise invalid_parameter_value;end if;
+   if coalesce(payload->>'kind','') not in ('full','decade','community') or n=0 or (payload->>'kind'='full' and n<5) or (payload->>'kind'='community' and r.group_id is null and r.couple_id is null) then raise invalid_parameter_value;end if;
    if not exists(select 1 from alianza_private.records where owner=u::text and kind='habit' and key=payload->>'habitKey' and (data->>'active')::boolean) then raise invalid_parameter_value;end if;
    select * into ck from alianza_private.records where owner=u::text and kind='checks' and key=today::text;
    perform alianza_private.data(jsonb_build_object('kind','checks','key',today::text,'version',coalesce(ck.version,0),'dataEpoch',m.data_epoch,'relationshipVersion',m.relationship_version,'data',coalesce(ck.data,'{}'::jsonb)||jsonb_build_object(payload->>'habitKey','done')));

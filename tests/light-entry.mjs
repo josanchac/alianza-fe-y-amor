@@ -12,6 +12,12 @@ try{
  assert(document.querySelector('img[src$="emblem.svg"]'));assert.equal(document.querySelector('.account-pill svg[viewBox="0 0 24 28"]'),null);
  fireEvent.click(screen.getByRole('button',{name:/Escribir mi ideal personal/}));await screen.findByRole('heading',{name:'Mi camino'});fireEvent.click(screen.getByRole('button',{name:'Ya tengo un ideal'}));fireEvent.click(screen.getByRole('button',{name:'Escribir o revisar mi ideal'}));await screen.findByRole('dialog');assert.equal(screen.getByLabelText('Cómo quiero que me llamen').value,'');assert(!screen.getByLabelText('Cómo quiero que me llamen').required);
  fireEvent.click(screen.getByRole('button',{name:'Cerrar',exact:true}));
+ fireEvent.click(screen.getByRole('button',{name:'Estoy descubriéndolo'}));
+ fireEvent.change(screen.getByLabelText('Mi borrador privado'),{target:{value:'Borrador que debe sobrevivir la navegación'}});
+ const leaving=new dom.window.Event('beforeunload',{cancelable:true});window.dispatchEvent(leaving);assert(leaving.defaultPrevented);
+ fireEvent.mouseDown(screen.getByRole('tab',{name:'Mi espacio'}),{button:0,ctrlKey:false});
+ fireEvent.click(screen.getByRole('button',{name:'Mi camino y mi ideal'}));
+ assert.equal(screen.getByLabelText('Mi borrador privado').value,'Borrador que debe sobrevivir la navegación');
  fireEvent.mouseDown(screen.getByRole('tab',{name:'Mi espacio'}),{button:0,ctrlKey:false});
  assert.equal(screen.getByText('Usar Alianza en pareja').closest('details').open,false);
  fireEvent.click(screen.getByRole('button',{name:'Elegir mi símbolo'}));await screen.findByRole('dialog');

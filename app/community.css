@@ -293,3 +293,8 @@ summary:focus-visible {
     transform: none;
   }
 }
+
+/* Preserve the private notebook in memory while another tab is visible. */
+.pane[hidden] {
+  display: none;
+}

@@ -124,6 +124,51 @@ try {
     null,
   );
   cleanup();
+  let finishSave;
+  let saves = 0;
+  render(
+    React.createElement(MyPath, {
+      initialVersion: 0,
+      draft: { stage: "discover", notes: "" },
+      ideal: "",
+      busy: false,
+      onSave: () => {
+        saves++;
+        return new Promise((resolve) => {
+          finishSave = resolve;
+        });
+      },
+      onEditIdeal() {},
+    }),
+  );
+  fireEvent.change(screen.getByRole("textbox"), {
+    target: { value: "Borrador pendiente" },
+  });
+  fireEvent.click(
+    screen.getByRole("button", { name: "Guardar y continuar otro día" }),
+  );
+  fireEvent.click(
+    screen.getByRole("button", { name: "Guardar y continuar otro día" }),
+  );
+  assert.equal(saves, 1);
+  assert(screen.getByRole("textbox").disabled);
+  finishSave(true);
+  await screen.findByText("Guardado para retomarlo cuando quieras.");
+  const leaving = new dom.window.Event("beforeunload", { cancelable: true });
+  window.dispatchEvent(leaving);
+  assert.equal(
+    leaving.defaultPrevented,
+    false,
+    "Saved drafts do not warn on exit",
+  );
+  fireEvent.change(screen.getByRole("textbox"), {
+    target: { value: "Nueva edición sin guardar" },
+  });
+  assert.equal(
+    screen.queryByText("Guardado para retomarlo cuando quieras."),
+    null,
+  );
+  cleanup();
   render(
     React.createElement(CommunityPanel, {
       state: { groups: [group], rosaries: [] },

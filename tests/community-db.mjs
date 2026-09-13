@@ -191,6 +191,17 @@ try {
   );
   // Sequential prayer, reservations and idempotent confirmations.
   await as(ids[0]);
+  for (const invalid of [null, {}, [], { date: today }]) {
+    await assert.rejects(() =>
+      act({
+        action: "meeting_save",
+        groupId: group.id,
+        version: 0,
+        data: invalid,
+      }),
+    );
+  }
+  assert.equal((await act()).groups[0].meeting, null);
   const rid = "10000000-0000-4000-8000-000000000001";
   await act({
     action: "rosary_create",
@@ -200,6 +211,23 @@ try {
     mystery: "joyful",
     mode: "sequential",
   });
+  await assert.rejects(
+    () =>
+      act({
+        action: "rosary_create",
+        id: rid,
+        scope: "couple",
+        mode: "sequential",
+        mystery: "joyful",
+        startsWith: "partner",
+      }),
+    (e) => e.code === "PT409",
+  );
+  assert.equal(
+    (await act()).rosaries[0].slots.length,
+    0,
+    "A conflicting replay cannot assign a different audience's slots",
+  );
   await assert.rejects(() =>
     act({ action: "rosary_complete", id: rid, decade: 2 }),
   );
@@ -332,6 +360,34 @@ try {
   await db.exec("reset role;set role anon");
   await assert.rejects(() => act());
   await as(ids[0]);
+  const coupleRosaryId = "20000000-0000-4000-8000-000000000001";
+  const coupleCreation = {
+    action: "rosary_create",
+    id: coupleRosaryId,
+    scope: "couple",
+    mystery: "joyful",
+    mode: "sequential",
+    startsWith: "me",
+  };
+  await act(coupleCreation);
+  await act({ action: "rosary_release", id: coupleRosaryId, decade: 1 });
+  await act(coupleCreation);
+  assert.equal(
+    (await act()).rosaries.find((r) => r.id === coupleRosaryId).slots.length,
+    4,
+    "An exact replay does not restore released reservations",
+  );
+  await assert.rejects(() =>
+    act({
+      action: "rosary_create",
+      id: "20000000-0000-4000-8000-000000000002",
+      mode: "free",
+      mystery: "joyful",
+    }),
+  );
+  await assert.rejects(() =>
+    act({ action: "rosary_link", id: rid, habitKey: "rosary-habit" }),
+  );
   await assert.rejects(
     () =>
       act({

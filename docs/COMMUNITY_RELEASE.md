@@ -3,6 +3,17 @@
 Estado: candidata en rama de trabajo. No aplicada a la base del piloto ni publicada.
 Alcance autorizado en la conversación: etapas 1–4, incluida identidad visual y animaciones sobrias. La revisión pastoral continúa diferida conforme a DOCUMENTARY_VERIFICATION.md; no se afirma aval institucional.
 
+## Segunda revisión técnica · 13/9/2026
+
+Realizada por Codex sobre la candidata de PR #4, después de la autorización de continuar. Es una segunda pasada del mismo autor, no una revisión independiente ni una certificación. Se revisaron autorización por pertenencia, llamadas repetidas, validación de entrada, estados de guardado, privacidad del cuaderno y métricas agregadas. GitHub no tenía revisiones externas registradas al consultar la PR.
+
+- **Corregido:** una repetición de `rosary_create` con el identificador de un rosario existente podía añadir reservas de pareja a un rosario creado con otro ámbito, o restaurar reservas liberadas. Ahora se compara la configuración persistida, se rechaza un cambio de ámbito y únicamente la creación inicial asigna decenas. La prueba reprodujo el fallo antes de corregirlo.
+- **Corregido:** las notas no guardadas del ideal se perdían al cambiar de pestaña. El cuaderno permanece en memoria, oculto mientras se consulta otra sección; un reinicio de datos cambia su clave y descarta el contexto anterior. Advierte al cerrar la página con cambios pendientes, bloquea envíos repetidos y retira la confirmación de guardado al editar de nuevo. No se escribe texto privado en almacenamiento local ni telemetría. El aviso de cierre depende del navegador y no sustituye guardar, especialmente en móvil.
+- **Refuerzo:** se rechazan explícitamente ámbitos o tipos de aporte ausentes y datos de encuentro que no sean objetos. Las entradas incompletas de encuentro ya eran rechazadas por el validador anterior; las pruebas confirmaron esa protección.
+- **Evidencia previa:** [CI PostgreSQL/Auth 34741399893](https://github.com/josanchac/alianza-fe-y-amor/actions/runs/34741399893) y [CI de aplicación 34741399788](https://github.com/josanchac/alianza-fe-y-amor/actions/runs/34741399788) aprobaron la candidata inicial. Las correcciones requieren su nueva ejecución CI; no se atribuyen a esa evidencia previa.
+
+Continúa pendiente la inspección visual de la candidata. El navegador remoto disponible carece de acceso a localhost; no se cambió la ruta de red ni se empleó otro navegador para eludir el bloqueo. La fixture `tests/community-preview.html` permite revisar con datos sintéticos: Inicio → Mi camino → escribir notas → cambiar de sección y volver; Grupos → Curso de prueba → propósito/rosario; Donar → lectura/copia. Revisar a 320 y 390 px, ampliación, teclado, contraste, foco y movimiento reducido. No usar cuentas reales como sustituto del entorno de prueba. Mantener la PR en borrador hasta cerrar estas puertas; no aplicar migraciones a producción como medio de obtener una vista previa.
+
 ## Aplicación de metodologías reconocidas
 
 | Referencia | Decisión aplicada | Evidencia y límite |

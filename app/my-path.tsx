@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { PersonalIdealGuide, FormationSource } from "./formation-guide";
 export function MyPath({
   draft,
@@ -19,9 +19,28 @@ export function MyPath({
   busy: boolean;
 }) {
   const [version, setVersion] = useState(initialVersion);
+  const savingRef = useRef(false);
+  const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(
+    JSON.stringify({
+      stage: draft?.stage || "learn",
+      notes: draft?.notes || "",
+    }),
+  );
   const [stage, setStage] = useState(draft?.stage || "learn"),
     [notes, setNotes] = useState(draft?.notes || ""),
     [message, setMessage] = useState("");
+  const dirty = saved !== JSON.stringify({ stage, notes });
+  useEffect(() => {
+    const guard = (event: BeforeUnloadEvent) => {
+      if (dirty) {
+        event.preventDefault();
+        event.returnValue = "";
+      }
+    };
+    window.addEventListener("beforeunload", guard);
+    return () => window.removeEventListener("beforeunload", guard);
+  }, [dirty]);
   return (
     <section className="card">
       <p className="eyebrow">MI CAMINO</p>
@@ -41,14 +60,18 @@ export function MyPath({
             key={id}
             className="soft-button"
             aria-pressed={stage === id}
-            onClick={() => setStage(id)}
+            disabled={saving}
+            onClick={() => {
+              setStage(id);
+              setMessage("");
+            }}
           >
             {label}
           </button>
         ))}
       </div>
       {stage === "ready" ? (
-        <button className="primary" onClick={onEditIdeal}>
+        <button className="primary" disabled={saving} onClick={onEditIdeal}>
           Escribir o revisar mi ideal
         </button>
       ) : (
@@ -73,7 +96,11 @@ export function MyPath({
                   rows={5}
                   maxLength={4000}
                   value={notes}
-                  onChange={(e) => setNotes(e.target.value)}
+                  disabled={saving}
+                  onChange={(e) => {
+                    setNotes(e.target.value);
+                    setMessage("");
+                  }}
                   placeholder="Mis notas para retomar el discernimiento…"
                 />
               </label>
@@ -83,11 +110,28 @@ export function MyPath({
       )}
       <button
         className="soft-button"
-        disabled={busy}
+        disabled={busy || saving}
         onClick={async () => {
-          if (await onSave({ stage, notes }, version)) {
-            setVersion((v) => v + 1);
-            setMessage("Guardado para retomarlo cuando quieras.");
+          if (savingRef.current) return;
+          savingRef.current = true;
+          setSaving(true);
+          setMessage("");
+          try {
+            if (await onSave({ stage, notes }, version)) {
+              setVersion((v) => v + 1);
+              setSaved(JSON.stringify({ stage, notes }));
+              setMessage("Guardado para retomarlo cuando quieras.");
+            } else
+              setMessage(
+                "No se guardó. Tu borrador sigue aquí para reintentarlo.",
+              );
+          } catch {
+            setMessage(
+              "No se guardó. Tu borrador sigue aquí para reintentarlo.",
+            );
+          } finally {
+            savingRef.current = false;
+            setSaving(false);
           }
         }}
       >
