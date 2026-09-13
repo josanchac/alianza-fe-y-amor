@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import {AppPanel} from "./app-panel";
 import { PersonalIdealGuide, FormationSource } from "./formation-guide";
 export function MyPath({
   draft,
@@ -42,7 +43,7 @@ export function MyPath({
     return () => window.removeEventListener("beforeunload", guard);
   }, [dirty]);
   return (
-    <section className="card">
+    <section className="card task-card ideal-workspace">
       <p className="eyebrow">MI CAMINO</p>
       <h2>Mi ideal personal</h2>
       {ideal && <p className="ideal-line">{ideal}</p>}
@@ -81,15 +82,10 @@ export function MyPath({
             continuar usando Alianza mientras lo discernís, sin apurar una
             frase.
           </p>
-          <FormationSource topic="schedule" />
-          <PersonalIdealGuide />
+          <AppPanel title="Orientación para mi ideal" hint="Fuentes y acompañamiento del Movimiento" icon="book"><FormationSource topic="schedule"/><PersonalIdealGuide/></AppPanel>
           {stage === "discover" && (
             <>
-              <p>
-                Consultá los materiales de tu rama y anotá lo que quieras llevar
-                a una conversación con quien te acompaña. Este cuaderno no
-                asigna ni certifica un ideal.
-              </p>
+              <p>Anotá lo que quieras conversar con quien te acompaña.</p>
               <label>
                 Mi borrador privado
                 <textarea

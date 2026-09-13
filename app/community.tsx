@@ -45,7 +45,9 @@ function Form({
   children,
   submit,
   busy,
+  submitLabel="Guardar",
 }: {
+  submitLabel?:string;
   title: string;
   children: React.ReactNode;
   submit: (f: FormData) => Promise<unknown>;
@@ -87,7 +89,7 @@ function Form({
         </p>
       )}
       <button className="primary" disabled={busy || saved} type="submit">
-        {saved ? "Guardado" : "Guardar"}
+        {saved ? "Guardado" : submitLabel}
       </button>
       {saved && <p role="status">Guardado correctamente.</p>}
     </form>
@@ -141,6 +143,7 @@ export function PurposeCard({
 }) {
   const [day, setDay] = useState(localDate()),
     [error, setError] = useState(""), [feedback,setFeedback]=useState(""), [dateOpen,setDateOpen]=useState(false);
+  const [expanded,setExpanded]=useState(false);
   const sending=useRef(false);
   const log = p.logs.find((l) => l.day === day);
   const current = localDate() >= p.start && localDate() <= p.end;
@@ -153,8 +156,10 @@ export function PurposeCard({
       setError((e as Error).message);
     } finally {sending.current=false;}
   }
+  if(compact&&!expanded){const todayLog=p.logs.find(l=>l.day===localDate());return <section className="card purpose-quick"><div><p className="eyebrow">{group.name}</p><h3>{p.title}</h3><p>{personalProgress(p)} de {p.target} ocasiones</p></div><button className="quick-mark" aria-label={'Registrar ocasión: '+p.title} disabled={busy||!p.joined||(todayLog?.amount??0)>=20||!current} onClick={()=>send({action:'purpose_log',day:localDate(),amount:(todayLog?.amount??0)+1,version:todayLog?.version??0})}><Plus size={22}/></button><button className="text-button purpose-detail" onClick={()=>setExpanded(true)}>Ver o corregir<ArrowRight size={16}/></button>{feedback&&<p className="quiet-feedback" role="status">{feedback}</p>}{error&&<p role="alert">{error}</p>}</section>;}
   return (
     <section className="card purpose-card">
+      {compact&&<button className="text-button" onClick={()=>setExpanded(false)}>Cerrar detalle</button>}
       <p className="eyebrow">{compact ? group.name : "NUESTRO PROPÓSITO"}</p>
       <h3>{p.title}</h3>
       <div className="purpose-meta"><span><CalendarDays size={14}/>{new Date(p.start+'T12:00:00').toLocaleDateString('es-CR',{day:'numeric',month:'short'})}{p.start!==p.end?' – '+new Date(p.end+'T12:00:00').toLocaleDateString('es-CR',{day:'numeric',month:'short'}):''}</span><span>{p.unit==='couple'?'En matrimonio':'Personal'}</span></div>
@@ -337,7 +342,8 @@ export function CreateRosary({
   const [id, setId] = useState(() => crypto.randomUUID());
   return (
     <Form
-      title="Un rosario para compartir"
+      title="Preparar mi rosario"
+      submitLabel="Comenzar el rosario"
       busy={busy}
       submit={async (f) => {
         await act({
@@ -373,7 +379,7 @@ export function CreateRosary({
           ))}
         </select>
       </label>
-      <label>
+      <div hidden={scope==='personal'}><label>
         Forma de rezarlo
         <select name="mode">
           <option value="free">Repartir las decenas libremente</option>
@@ -391,7 +397,7 @@ export function CreateRosary({
           </select>
         </label>
       )}
-      <Input label="Intención (opcional)" name="intention" max={500} />
+      </div><Input label="Intención (opcional)" name="intention" max={500} />
       <p className="form-hint">
         {groupId
           ? "La intención y las reservas serán visibles en este grupo."
@@ -695,6 +701,7 @@ export function CommunityPanel({
 }: Props) {
   const [createGroupId, setCreateGroupId] = useState(() => crypto.randomUUID()),
     [createPurposeId, setCreatePurposeId] = useState(() => crypto.randomUUID());
+  const [groupView,setGroupView]=useState("now");
   const [groupId, setGroupId] = useState(""),
     [create, setCreate] = useState(false),
     [joinToken, setJoinToken] = useState(
@@ -745,7 +752,7 @@ export function CommunityPanel({
             <button
               key={g.id}
               className="card home-option"
-              onClick={() => setGroupId(g.id)}
+              onClick={() => {setGroupId(g.id);setGroupView("now");}}
             >
               <strong>{g.name}</strong>
               <span>{g.motto || "Abrir nuestro espacio"}</span>
@@ -857,8 +864,9 @@ export function CommunityPanel({
             ← Todos mis grupos
           </button>
           {group.motto && <p className="intro">{group.motto}</p>}
+          <div className="view-switch group-views" role="group" aria-label="Secciones del grupo">{[['now','Propósito'],['prayer','Rosario'],['meeting','Encuentro'],['manage',owner?'Organizar':'Integrantes']].map(([v,label])=><button key={v} aria-pressed={groupView===v} onClick={()=>setGroupView(v)}>{label}</button>)}</div>
           <div className="group-active">
-            {group.purposes
+            <div hidden={groupView!=="now"}>{!group.purposes.some(p=>p.start<=localDate()&&p.end>=localDate())&&<p className="empty-text">Cuando acuerden un propósito aparecerá aquí.</p>}{group.purposes
               .filter((p) => p.start <= localDate() && p.end >= localDate())
               .slice(0, 1)
               .map((p) => (
@@ -872,7 +880,7 @@ export function CommunityPanel({
                   busy={busy}
                 />
               ))}
-            {state.rosaries
+            </div><div hidden={groupView!=="prayer"}>{state.rosaries
               .filter(
                 (r) =>
                   r.groupId === group.id &&
@@ -891,7 +899,7 @@ export function CommunityPanel({
                   canManage={owner}
                 />
               ))}
-            {group.meeting && (
+            </div><div hidden={groupView!=="meeting"}>{!group.meeting&&<p className="empty-text">Todavía no hay un encuentro preparado.</p>}{group.meeting && (
               <section className="card">
                 <p className="eyebrow">PRÓXIMO ENCUENTRO</p>
                 <h3>
@@ -946,14 +954,14 @@ export function CommunityPanel({
                 </details>
               </section>
             )}
-          </div>
-          <details className="card optional-details">
+          </div></div>
+          <div hidden={groupView!=="prayer"}><details className="card optional-details">
             <summary>Iniciar un rosario</summary>
             <CreateRosary act={act} busy={busy} groupId={group.id} />
-          </details>
-          {owner && (
-            <details className="card optional-details">
-              <summary>Preparar propósito o encuentro</summary>
+          </details></div>
+          <div hidden={groupView!=="manage"}>{owner && (
+            <div><details className="card optional-details">
+              <summary>Proponer un propósito</summary>
               <Form
                 title="Nuestro próximo propósito"
                 busy={busy}
@@ -1018,7 +1026,7 @@ export function CommunityPanel({
                   historial.
                 </p>
               </Form>
-              <Form
+              </details><details className="card optional-details"><summary>Preparar un encuentro</summary><Form
                 title="Próximo encuentro"
                 busy={busy}
                 submit={(f) =>
@@ -1072,9 +1080,9 @@ export function CommunityPanel({
                   Al cambiar el encuentro se solicitan nuevas confirmaciones.
                 </p>
               </Form>
-            </details>
+            </details></div>
           )}
-          <details className="card optional-details">
+          <details className="card optional-details" open>
             <summary>Identidad e integrantes</summary>
             {group.ideal && <p className="preserve">{group.ideal}</p>}
             {group.members.map((m) => (
@@ -1236,8 +1244,8 @@ export function CommunityPanel({
               </button>
             )}
           </details>
-          <details className="card optional-details">
-            <summary>Todos los propósitos y rosarios</summary>
+          </div><div hidden={groupView!=="now"}><details className="card optional-details">
+            <summary>Historial del grupo</summary>
             {group.purposes.map((p) => (
               <PurposeCard
                 key={p.id}
@@ -1262,7 +1270,7 @@ export function CommunityPanel({
                   canManage={owner}
                 />
               ))}
-          </details>
+          </details></div><div hidden={groupView!=="manage"}>
           <p className="form-hint">
             <a
               href="https://www.santuariovallehermoso.cl/familias/material/cam/cam_3_cursos_programa_anual.pdf"
@@ -1273,7 +1281,7 @@ export function CommunityPanel({
             </a>
             . Organización y conteos propios de Alianza; no califican
             crecimiento espiritual.
-          </p>
+          </p></div>
         </>
       )}
     </>

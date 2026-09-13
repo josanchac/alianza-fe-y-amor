@@ -8,13 +8,13 @@ const fixture=()=>({user:{id:'fixture',role:'member',email:'fixture@example.test
 async function request(init){if(init?.method==='POST'){writes.push(JSON.parse(init.body));return Response.json({error:'Unexpected write'},{status:409});}return Response.json(fixture());}
 try{
  render(React.createElement(Journal,{dataRequest:request,onSignOut(){}}));
- await screen.findByRole('heading',{name:'¿Qué te ayudaría hoy?'});
+ await screen.findByRole('heading',{name:'Mi día'});
  epoch=2;fireEvent(window,new Event('focus'));
  await screen.findByRole('heading',{name:'Tu espacio está listo para comenzar de nuevo'});
- assert(!screen.queryByRole('heading',{name:'¿Qué te ayudaría hoy?'}));
+ assert(!screen.queryByRole('heading',{name:'Mi día'}));
  assert.equal(writes.length,0);
  cleanup();render(React.createElement(Journal,{dataRequest:request,onSignOut(){}}));
- await screen.findByRole('heading',{name:'¿Qué te ayudaría hoy?'});
+ await screen.findByRole('heading',{name:'Mi día'});
  assert(!screen.queryByRole('heading',{name:'Tu espacio está listo para comenzar de nuevo'}));
  console.log('PASS Reset epoch removes stale controls without writes; new mount can begin the experience');
 }finally{cleanup();dom.window.close();}

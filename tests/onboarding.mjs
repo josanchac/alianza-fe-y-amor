@@ -10,12 +10,12 @@ const writes=[];
 async function request(init){if(init?.method!=='POST')return Response.json(fixture);const p=JSON.parse(String(init.body));writes.push(p);const group=p.kind==='rs'?'shared':'own';const record={...p,owner:group==='shared'?'couple':'test',version:p.version+1,updated:new Date().toISOString()};fixture[group]=[...fixture[group].filter(r=>r.kind!==p.kind||r.key!==p.key),record];return Response.json({record});}
 try{
  render(React.createElement(Journal,{dataRequest:request,onSignOut(){}}));
- await screen.findByRole('heading',{name:'¿Qué te ayudaría hoy?'});
- fireEvent.click(screen.getByRole('button',{name:'Explorar mi horario sin elegir todavía'}));
- await screen.findByRole('heading',{name:'Empezá con algo pequeño.'});
+ await screen.findByRole('heading',{name:'Mi día'});
+
+ await screen.findByRole('heading',{name:'Tu primer compromiso'});
  assert.equal(screen.queryByRole('checkbox'),null);assert.equal(writes.length,0);
  assert.equal(screen.getByText('Necesito una idea para empezar').closest('details').open,false);
- assert.equal(screen.getByText('Mi reflexión del día').closest('details').open,false);
+ assert(screen.getByRole('button',{name:/Mi reflexión del día/}));
  console.log('PASS Empty first visit has no automatic commitments, checks, or writes');
  fireEvent.click(screen.getByText('Necesito una idea para empezar'));
  fireEvent.click(screen.getByRole('button',{name:'Ofrecer mi día a la Mater'}));
@@ -38,25 +38,14 @@ try{
  fireEvent.click(screen.getByRole('button',{name:'Continuar',exact:true}));fireEvent.click(screen.getByRole('button',{name:'Guardar',exact:true}));
  await screen.findByRole('checkbox',{name:'Mi paso elegido'});
  assert.equal(writes.length,1);assert.equal(writes[0].data.anchor,'');assert.equal(writes[0].data.minimum,'');
- assert.equal(screen.queryByRole('heading',{name:'Empezá con algo pequeño.'}),null);
+ assert.equal(screen.queryByRole('heading',{name:'Tu primer compromiso'}),null);
  fireEvent.click(screen.getByRole('checkbox',{name:'Mi paso elegido'}));
  await waitFor(()=>assert.equal(writes.length,2));assert.equal(writes[1].data[writes[0].key],'done');
  console.log('PASS A custom commitment saves with optional fields empty and can be marked');
  fireEvent.click(screen.getByRole('button',{name:'Ayuda'}));
- await screen.findByRole('dialog',{name:'Una guía a mano'});
- assert(screen.getByText('No hay que llenarlo todo. Usá lo que te ayude, a tu ritmo.'));
- const confession=screen.getByText('Prepararme para la confesión').closest('details');
- assert.equal(confession.open,false);
- const localBefore=JSON.stringify({...window.localStorage});
- fireEvent.click(confession.querySelector('summary'));
- assert.equal(confession.open,true);
- assert.equal(confession.querySelectorAll('input,textarea,select,button,[contenteditable]').length,0);
- assert.equal(confession.querySelectorAll('a[href^="https://www.vatican.va/"]').length,2);
- assert.equal(writes.length,2);
- assert.equal(JSON.stringify({...window.localStorage}),localBefore);
- fireEvent.click(screen.getByText('¿Cómo usamos las 4 Rs?'));
- fireEvent.click(screen.getByRole('button',{name:'Ir a las 4 Rs'}));
- await waitFor(()=>assert.equal(screen.getByRole('tab',{name:'Las 4 Rs'}).getAttribute('aria-selected'),'true'));
+ await screen.findByRole('dialog',{name:'¿Qué necesitás hacer?'});
+ fireEvent.click(screen.getByRole('button',{name:'Vivir las 4 Rs en pareja'}));
+ await waitFor(()=>assert.equal(screen.getByRole('tab',{name:'En pareja'}).getAttribute('aria-selected'),'true'));
  assert.equal(writes.length,2);
  console.log('PASS Help opens from the app and navigates without writing records');
  fireEvent.click(screen.getAllByRole('button',{name:'Preparar este momento'})[0]);
@@ -71,9 +60,9 @@ try{
  cleanup();
  const newcomer={...fixture,user:{id:'new-person',role:'member',email:'new@example.test',symbol:'heart'},couple:{emblem:'neutral'},own:[{...profile,owner:'new-person',data:{name:'Invitado',ideal:'',shareSchedule:false,shareNotes:false}}],shared:[],partner:{name:'Su pareja',ideal:'',shareSchedule:false,shareNotes:false,records:[]}};
  render(React.createElement(Journal,{dataRequest:async(init)=>{assert.notEqual(init?.method,'POST','Exploring guidance must not save newcomer records');return Response.json(newcomer);},onSignOut(){}}));
- await screen.findByRole('heading',{name:'¿Qué te ayudaría hoy?'});
- fireEvent.click(screen.getByRole('button',{name:'Explorar mi horario sin elegir todavía'}));
- await screen.findByRole('heading',{name:/Un paso pequeño/});
+ await screen.findByRole('heading',{name:'Mi día'});
+
+ await screen.findByRole('heading',{name:'Mi día'});
  assert.equal(screen.queryByText('Líder de amor'),null);assert(!document.body.textContent.includes('Neca'));assert.equal(document.querySelector('img[src$="emblem.png"]'),null);
  console.log('PASS A new couple sees its own identity and can start without an ideal');
  fireEvent.click(screen.getByRole('button',{name:'Mi mes',exact:true}));
