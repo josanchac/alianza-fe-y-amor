@@ -62,7 +62,7 @@
     "supabase/migrations/20260912153148_recoverable_personal_reset.sql": "4025dbd279b7284964dcf8477cf9a886a231aeea686994ab81aa708f518501af",
     "supabase/migrations/20260913044134_voluntary_personalization.sql": "51c52696d7d4137811b323cb038ea60cb9f7ea475de9bec8e89f4026af4cb5d8",
     "supabase/schema.sql": "c49ebc51f33501e7ff063b3b35d95eb002769653c37452354a1942e3b45044d0",
-    "vite.github.config.ts": "4782f41f71503dfadd3a535c60b08794b058d73cb80b9fca09295920361bd26a"
+    "vite.github.config.ts": "384ffa9e0b1fe188e48038b906445d0b8539c74ebda3a96a8d036ddf02805352"
   },
   "items": [
     {
