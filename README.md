@@ -12,6 +12,10 @@ La base admite varias parejas aisladas. Las dos cuentas originales y su historia
 
 [Guía interactiva para agregar Alianza a la pantalla de inicio](https://josanchac.github.io/alianza-fe-y-amor/?guia=instalar), disponible sin iniciar sesión y también desde Ayuda y Ajustes.
 
+## Versión comunitaria en revisión
+
+La rama de revisión incorpora cursos, propósitos compartidos, rosarios individuales y comunitarios, Mi camino, donaciones, identidad visual y medición agregada voluntaria. No está publicada. Alcance, metodologías aplicadas, migraciones y pendientes en [COMMUNITY_RELEASE.md](docs/COMMUNITY_RELEASE.md).
+
 ## Funciones
 
 - Inicio sin compromisos precargados. Ideas opcionales, formulario breve y ayuda consultable desde cualquier sección. Los ejemplos solo se agregan al elegirlos y guardarlos.

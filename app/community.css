@@ -1,0 +1,306 @@
+/* Product motion: orientation and feedback, never required to complete a task. */
+:root {
+  --motion-fast: 140ms;
+  --motion-page: 220ms;
+  --motion-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.pane[data-state="active"] {
+  animation: alianza-enter var(--motion-page) var(--motion-ease);
+}
+@keyframes alianza-enter {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+button,
+a,
+input,
+select,
+textarea {
+  touch-action: manipulation;
+}
+button {
+  transition:
+    background-color var(--motion-fast),
+    border-color var(--motion-fast),
+    box-shadow var(--motion-fast);
+}
+button:active:not(:disabled) {
+  transform: translateY(1px);
+}
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+summary:focus-visible {
+  outline: 3px solid #896822;
+  outline-offset: 3px;
+}
+.community-nav {
+  display: flex !important;
+  justify-content: space-around !important;
+}
+.community-nav [role="tab"] {
+  flex: 1;
+  min-width: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+.home-brand {
+  display: flex;
+  justify-content: center;
+  margin: 0 0 18px;
+}
+.home-brand img {
+  width: 104px;
+  height: 104px;
+  object-fit: contain;
+}
+.topbar .brand-link img {
+  width: 52px;
+  height: 52px;
+  object-fit: contain;
+}
+.desktop-brand > img {
+  max-width: 210px;
+}
+.auth-emblem {
+  width: 138px !important;
+  height: 138px !important;
+}
+.dialog-emblem {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  margin: auto;
+}
+.home-shortcuts,
+.choice-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: 18px 0;
+}
+.choice-row button[aria-pressed="true"] {
+  background: #e9f0ed;
+  border-color: #547262;
+  color: #173c2b;
+}
+.donate-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 8px;
+  color: #765b26;
+  font-weight: 600;
+  border-radius: 12px;
+}
+.donation-account {
+  display: grid;
+  gap: 8px;
+  padding: 14px;
+  border: 1px solid #d7d5cd;
+  border-radius: 14px;
+}
+.donation-account span {
+  overflow-wrap: anywhere;
+  font-variant-numeric: tabular-nums;
+}
+.group-active {
+  display: grid;
+  gap: 16px;
+}
+.group-active > .card {
+  margin: 0;
+}
+.purpose-card {
+  margin: 16px 0;
+}
+.purpose-card h3,
+.rosary-card h3 {
+  font-size: 22px;
+  line-height: 1.35;
+}
+.purpose-card progress {
+  width: 100%;
+  height: 10px;
+  accent-color: #547262;
+}
+.purpose-register {
+  display: flex;
+  gap: 10px;
+  align-items: end;
+  flex-wrap: wrap;
+  margin: 16px 0;
+}
+.purpose-register label {
+  display: grid;
+  gap: 5px;
+}
+.purpose-register input,
+.editor-form select,
+.optional-details > label > input {
+  border: 1px solid #a5b1bc;
+  border-radius: 10px;
+  padding: 10px;
+  min-height: 44px;
+  background: white;
+  font-size: 16px;
+  max-width: 100%;
+}
+.consent-label {
+  display: flex !important;
+  align-items: start;
+  gap: 12px;
+  margin: 16px 0;
+}
+.consent-label input {
+  width: 22px !important;
+  min-width: 22px;
+  height: 22px;
+  margin-top: 2px;
+}
+.rosary-card {
+  margin: 16px 0;
+}
+.rosary-progress {
+  display: flex;
+  gap: 12px;
+  padding: 12px 0;
+}
+.rosary-progress span {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid #b0a284;
+  color: #765b26;
+  transition: background-color 180ms;
+}
+.rosary-progress .filled {
+  background: #547262;
+  color: white;
+  border-color: #547262;
+}
+.rosary-finished {
+  border-color: #547262;
+  background: linear-gradient(145deg, #f8faf5, white);
+}
+.decade-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  border-bottom: 1px solid #e4e2da;
+  padding: 16px 0;
+}
+.decade-row > div {
+  flex: 1;
+  min-width: 160px;
+}
+.decade-row p {
+  margin: 6px 0;
+}
+.prayer-beads {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  padding: 12px;
+}
+.prayer-beads button {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid #a48b58;
+  border-radius: 50%;
+}
+.prayer-beads button[aria-pressed="true"] {
+  background: #547262;
+  color: white;
+}
+.invitation-code input {
+  width: 100%;
+  font-size: 16px;
+  padding: 12px;
+  border: 1px solid #a5b1bc;
+  border-radius: 10px;
+}
+.home-option {
+  width: 100%;
+  text-align: left;
+}
+.admin-stats small {
+  display: block;
+  margin-top: 8px;
+}
+.editor-form h3 {
+  margin-top: 20px;
+}
+@media (max-width: 600px) {
+  .topbar .account-pill {
+    display: none;
+  }
+  .topbar-actions {
+    gap: 2px;
+  }
+  .topbar .brand-link img {
+    width: 44px;
+    height: 44px;
+  }
+  .topbar .brand-word {
+    font-size: 26px;
+  }
+  .topbar .help-button {
+    padding: 8px;
+  }
+  .community-nav [role="tab"] span {
+    font-size: 11px;
+  }
+  .home-brand img {
+    width: 90px;
+    height: 90px;
+  }
+  .home-brand {
+    margin-top: 4px;
+  }
+  .donate-button {
+    font-size: 14px;
+  }
+  .group-active .card {
+    padding: 18px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  button:active:not(:disabled) {
+    transform: none;
+  }
+}
+
+/* Preserve the private notebook in memory while another tab is visible. */
+.pane[hidden] {
+  display: none;
+}
+
+/* Keep the brand and actions readable on compact phones. */
+@media (max-width: 360px) {
+  .workspace .topbar { flex-wrap: wrap; row-gap: 8px; }
+  .workspace .topbar-actions { width: 100%; justify-content: flex-end; }
+}

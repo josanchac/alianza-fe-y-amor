@@ -1,4 +1,7 @@
-import React, {useEffect,useMemo,useState} from 'react';
+import {LogoViewer} from '../app/logo-viewer';
+import {MaintenanceBoundary} from './maintenance';
+import {APP_VERSION} from '../app/version';
+import React, {useEffect,useMemo,useState,useRef} from 'react';
 import {createRoot} from 'react-dom/client';
 import {createClient,type SupabaseClient,type Session} from '@supabase/supabase-js';
 import {Eye,EyeOff,LockKeyhole,LoaderCircle} from 'lucide-react';
@@ -12,6 +15,7 @@ import './password.css';
 function pendingSetup(userId?:string|null){try{if(userId===null)sessionStorage.removeItem('alianza-password-setup');else if(userId)sessionStorage.setItem('alianza-password-setup',userId);return sessionStorage.getItem('alianza-password-setup');}catch{return null;}}
 
 function Login({client,setupPassword=false,emailRecoveryEnabled=false}:{client:SupabaseClient;setupPassword?:boolean;emailRecoveryEnabled?:boolean}){
+  const metricsEnabled=useRef(false);
   const [session,setSession]=useState<Session|null>(null),[ready,setReady]=useState(false);
   const [mode,setMode]=useState<'login'|'recover'|'password'>(setupPassword?'password':'login');
   const [email,setEmail]=useState(''),[password,setPassword]=useState(''),[repeat,setRepeat]=useState('');
@@ -21,17 +25,25 @@ function Login({client,setupPassword=false,emailRecoveryEnabled=false}:{client:S
     const {data:{subscription}}=client.auth.onAuthStateChange((event,next)=>{
       setSession(next);setReady(true);
       if(next&&(event==='PASSWORD_RECOVERY'||(setupPassword&&event==='INITIAL_SESSION')||pendingSetup()===next.user.id)){pendingSetup(next.user.id);setMode('password');}
-      if(event==='SIGNED_OUT'){pendingSetup(null);setPassword('');setRepeat('');setMode('login');}
+      if(event==='SIGNED_OUT'){metricsEnabled.current=false;pendingSetup(null);setPassword('');setRepeat('');setMode('login');}
     });
     return()=>subscription.unsubscribe();
   },[client]);
   const request=useMemo(()=>(async(init?:RequestInit)=>{
     const payload=init?.method==='POST'?JSON.parse(String(init.body)):null;
-    const {data,error}=await client.rpc(payload?.action?'alianza_relationship':'alianza_data',{payload});
+    const started=performance.now();
+    const rpc=payload?.community?'alianza_community':payload?.action?'alianza_relationship':'alianza_data';
+    const outgoing=payload?.community?Object.fromEntries(Object.entries(payload).filter(([key])=>key!=='community')):payload;
+    const {data,error}=await client.rpc(rpc,{payload:outgoing});
+    // Fixed technical categories only: no route, record kind, text, ID or duration payload.
+    const write=!!payload&&payload.action!=='snapshot'&&payload.action!=='invite_preview';
+    if(metricsEnabled.current)void client.rpc('alianza_product_metrics',{payload:{action:'event',event:write?(error?'save_error':'save_ok'):(error?'load_error':'load_ok')}}).then(()=>{});
+    if(metricsEnabled.current&&!write&&performance.now()-started>3000)void client.rpc('alianza_product_metrics',{payload:{action:'event',event:'slow_load'}}).then(()=>{});
     if(error){const status=error.code==='PT409'?409:error.code==='42501'?403:error.code==='22023'?400:error.code==='PT429'?429:503;
-      return Response.json({error:status===409?'Este registro cambió en otro celular. Tu texto sigue aquí; actualizá antes de guardar.':status===403?'Tu sesión terminó o esta cuenta no tiene acceso.':status===400?(payload?.action?'La invitación no está disponible o los datos no coinciden. Revisá el código, el correo de tu cuenta y que ambos puedan vincularse.':'Revisá los campos y las fechas.'):status===429?'Esperá un día antes de crear más invitaciones.':'No se pudo guardar o cargar. Revisá la conexión y volvé a intentar.'},{status});}
+      return Response.json({error:status===409?'Este registro cambió en otro celular. Tu texto sigue aquí; actualizá antes de guardar.':status===403?'Tu sesión terminó o esta cuenta no tiene acceso.':status===400?(payload?.community?'Revisá los datos y las fechas. La invitación debe seguir vigente y las decenas secuenciales se completan en orden.':payload?.action?'La invitación no está disponible o los datos no coinciden. Revisá el código, el correo de tu cuenta y que ambos puedan vincularse.':'Revisá los campos y las fechas.'):status===429?'Esperá un día antes de crear más invitaciones.':'No se pudo guardar o cargar. Revisá la conexión y volvé a intentar.'},{status});}
     return Response.json(data);
   }),[client]);
+  const communityTransport=useMemo(()=>((payload:Record<string,unknown>)=>request({method:'POST',body:JSON.stringify({...payload,community:true})})),[request]);
   async function signOut(){setError('');const {error}=await client.auth.signOut({scope:'local'});if(error)setError('No se pudo cerrar la sesión. Volvé a intentarlo.');}
   async function submit(e:React.FormEvent){e.preventDefault();if(busy)return;setBusy(true);setError('');setMessage('');
     try{
@@ -52,9 +64,9 @@ function Login({client,setupPassword=false,emailRecoveryEnabled=false}:{client:S
     }catch(e){setError((e as Error).message);}finally{setBusy(false);}
   }
   if(!ready)return <main className="gate"><LoaderCircle className="spin"/><p>Abriendo tu espacio…</p></main>;
-  if(session&&mode!=='password')return <UserEnvironment key={session.user.id} client={client} userId={session.user.id}><Journal key={session.user.id} dataRequest={request} onSignOut={signOut} assetBase="./"/>{error&&<p className="auth-alert" role="alert">{error}</p>}<button className="change-password" onClick={()=>{setMode('password');setError('');setMessage('');}}>Cambiar mi contraseña</button></UserEnvironment>;
+  if(session&&mode!=='password')return <UserEnvironment key={session.user.id} client={client} userId={session.user.id} onConsentChange={enabled=>{metricsEnabled.current=enabled;}}><Journal key={session.user.id} dataRequest={request} communityTransport={communityTransport} onSignOut={signOut} assetBase="./"/>{error&&<p className="auth-alert" role="alert">{error}</p>}<button className="change-password" onClick={()=>{setMode('password');setError('');setMessage('');}}>Cambiar mi contraseña</button></UserEnvironment>;
   if(mode==='recover'&&!emailRecoveryEnabled)return <main className="auth-page"><section className="auth-card"><LockKeyhole size={32}/><h1>Recuperar mi acceso</h1><p>La recuperación automática por correo todavía no está activada.</p><p>Si todavía podés entrar, usá «Cambiar mi contraseña» dentro de tu espacio.</p><p>Si no podés entrar, pedí a quien administra Alianza un nuevo enlace privado para tu correo. Nunca compartás tu contraseña.</p><button className="primary" onClick={()=>setMode('login')}>Volver a entrar</button></section></main>;
-  return <main className="auth-page"><section className="auth-card"><img className="auth-emblem" src="./emblem.svg" alt="Árbol y rosario entrelazados"/><div className="brand-word">Alianza<span>FE Y AMOR</span></div><p className="auth-intro">Un camino compartido.<br/>Una entrega personal.</p><h1>{mode==='login'?'Tu espacio de fe y amor':mode==='recover'?'Recuperar mi acceso':'Elegir mi contraseña'}</h1>{mode==='password'&&session&&<><p className="auth-step">PASO 2 DE 2 · ELEGÍ Y GUARDÁ</p><div className="auth-account"><span>Tu usuario es tu correo electrónico</span><strong>{session.user.email}</strong><p>Usá este correo y tu contraseña para entrar la próxima vez.</p></div></>}<form onSubmit={submit}>
+  return <main className="auth-page"><section className="auth-card"><LogoViewer><img className="auth-emblem" src="./emblem.svg" alt="Árbol y rosario entrelazados"/></LogoViewer><div className="brand-word">Alianza<span>FE Y AMOR</span></div><p className="auth-intro">Un camino compartido.<br/>Una entrega personal.</p><h1>{mode==='login'?'Tu espacio de fe y amor':mode==='recover'?'Recuperar mi acceso':'Elegir mi contraseña'}</h1>{mode==='password'&&session&&<><p className="auth-step">PASO 2 DE 2 · ELEGÍ Y GUARDÁ</p><div className="auth-account"><span>Tu usuario es tu correo electrónico</span><strong>{session.user.email}</strong><p>Usá este correo y tu contraseña para entrar la próxima vez.</p></div></>}<form onSubmit={submit}>
     {mode!=='password'&&<label>Correo electrónico (tu usuario)<input type="email" autoComplete="username" value={email} onChange={e=>setEmail(e.target.value)} required autoCapitalize="none" spellCheck={false}/></label>}
     {mode!=='recover'&&<><label>Tu contraseña<div className="password-field"><input aria-describedby={mode==='password'?'password-help':undefined} type={visible?'text':'password'} autoComplete={mode==='password'?'new-password':'current-password'} value={password} onChange={e=>setPassword(e.target.value)} required minLength={mode==='password'?6:undefined}/><button type="button" aria-label={visible?'Ocultar contraseña':'Mostrar contraseña'} onClick={()=>setVisible(v=>!v)}>{visible?<EyeOff size={20}/>:<Eye size={20}/>}</button></div></label>{mode==='password'&&<><p id="password-help" className="muted">Usá al menos 6 caracteres. No necesitás símbolos ni mayúsculas.</p><label>Repetí tu contraseña<input type={visible?'text':'password'} autoComplete="new-password" value={repeat} onChange={e=>setRepeat(e.target.value)} required minLength={6}/></label></>}</>}
     {error&&<p className="notice" role="alert">{error}</p>}{message&&<p className="auth-success" role="status">{message}</p>}
@@ -65,16 +77,15 @@ function Invitation({client,token,type,emailRecoveryEnabled}:{client:SupabaseCli
  const [busy,setBusy]=useState(false),[activated,setActivated]=useState(false),[error,setError]=useState('');
  async function activate(){if(busy)return;setBusy(true);setError('');try{const {data,error}=await client.auth.verifyOtp({token_hash:token,type});if(error)throw error;pendingSetup(data.user?.id);history.replaceState(null,'',new URL('./',location.href));setActivated(true);}catch{setError('Este enlace venció o ya se utilizó. Si ya elegiste tu contraseña, entrá normalmente; si no, solicitá un enlace nuevo.');}finally{setBusy(false);}}
  if(activated)return <Login client={client} setupPassword emailRecoveryEnabled={emailRecoveryEnabled}/>;
- return <main className="auth-page"><section className="auth-card"><img className="auth-emblem" src="./emblem.svg" alt="Árbol y rosario"/><div className="brand-word">Alianza<span>FE Y AMOR</span></div><p className="auth-step">PASO 1 DE 2</p><h1>Tu acceso personal</h1><p>Este enlace te permite elegir tu contraseña. Después entrás con tu correo electrónico.</p><p>No necesitás completar un horario ahora: podés empezar con un solo compromiso o explorar.</p>{error&&<p role="alert" className="notice">{error}</p>}<button className="primary" disabled={busy} onClick={activate}>{busy?'Un momento…':'Continuar y elegir contraseña'}</button><p className="muted">El enlace es privado, vence y se usa una sola vez.</p><a className="text-button" href="./">Ya tengo contraseña</a></section></main>;
+ return <main className="auth-page"><section className="auth-card"><LogoViewer><img className="auth-emblem" src="./emblem.svg" alt="Árbol y rosario"/></LogoViewer><div className="brand-word">Alianza<span>FE Y AMOR</span></div><p className="auth-step">PASO 1 DE 2</p><h1>Tu acceso personal</h1><p>Este enlace te permite elegir tu contraseña. Después entrás con tu correo electrónico.</p><p>No necesitás completar un horario ahora: podés empezar con un solo compromiso o explorar.</p>{error&&<p role="alert" className="notice">{error}</p>}<button className="primary" disabled={busy} onClick={activate}>{busy?'Un momento…':'Continuar y elegir contraseña'}</button><p className="muted">El enlace es privado, vence y se usa una sola vez.</p><a className="text-button" href="./">Ya tengo contraseña</a></section></main>;
 }
 async function start(){const root=createRoot(document.getElementById('root')!);if(new URLSearchParams(location.search).get('guia')==='instalar'){root.render(<InstallPage/>);return;}try{
   const r=await fetch('./config.json',{cache:'no-store'});const c:any=await r.json();
   if(!/^https:\/\/[a-z0-9-]+\.supabase\.co$/.test(c.url)||!c.publishableKey?.startsWith('sb_publishable_'))throw new Error('Esta versión todavía está en preparación. El acceso se habilitará al completar la publicación.');
   // Only authentication tokens persist on this device; records stay in Postgres.
   const setupPassword=['invite','recovery'].includes(new URLSearchParams(location.hash.slice(1)).get('type')||'');
-  const client=createClient(c.url,c.publishableKey,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,storageKey:'alianza-auth'}});
+  const client=createClient(c.url,c.publishableKey,{global:{headers:{'X-Client-Info':'alianza/'+APP_VERSION}},auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,storageKey:'alianza-auth'}});
   const hash=new URLSearchParams(location.hash.slice(1));const token=hash.get('token_hash');const type=hash.get('type');
-  if(token&&(type==='invite'||type==='recovery'))root.render(<Invitation client={client} token={token} type={type} emailRecoveryEnabled={!!c.emailRecoveryEnabled}/>);
-  else root.render(<Login client={client} setupPassword={setupPassword} emailRecoveryEnabled={!!c.emailRecoveryEnabled}/>);
+  root.render(<MaintenanceBoundary client={client} initialActive={!!c.maintenance}>{token&&(type==='invite'||type==='recovery')?<Invitation client={client} token={token} type={type} emailRecoveryEnabled={!!c.emailRecoveryEnabled}/>:<Login client={client} setupPassword={setupPassword} emailRecoveryEnabled={!!c.emailRecoveryEnabled}/>}</MaintenanceBoundary>);
 }catch(e){root.render(<main className="gate"><LockKeyhole size={36}/><h1>Alianza · Fe y Amor</h1><p>{(e as Error).message}</p><button className="primary" onClick={()=>location.reload()}>Volver a intentar</button></main>);}}
 void start();

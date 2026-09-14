@@ -3,12 +3,12 @@ import {PersonalSymbol,PERSONAL_SYMBOLS} from './personal-symbol';
 export type Appearance={symbol:string;image:string};
 export const emptyAppearance:Appearance={symbol:'',image:''};
 // Only a re-encoded thumbnail is stored, not the original file or metadata.
-export async function prepareSymbol(file:File):Promise<string>{
+export async function prepareSymbol(file:File,photo=false):Promise<string>{
  if(!['image/png','image/jpeg','image/webp'].includes(file.type)||file.size>5*1024*1024)throw new Error('Elegí un JPG, PNG o WebP de hasta 5 MB.');
  const url=URL.createObjectURL(file);
  try{const img=new Image();img.src=url;await img.decode();if(!img.naturalWidth||img.naturalWidth*img.naturalHeight>24000000)throw new Error('Esta imagen es demasiado grande. Elegí una más pequeña.');
- const c=document.createElement('canvas');c.width=c.height=192;const ctx=c.getContext('2d');if(!ctx)throw new Error('No pudimos preparar la imagen.');ctx.fillStyle='#fff';ctx.fillRect(0,0,192,192);const ratio=Math.min(192/img.naturalWidth,192/img.naturalHeight);const w=img.naturalWidth*ratio,h=img.naturalHeight*ratio;ctx.drawImage(img,(192-w)/2,(192-h)/2,w,h);
- const image=c.toDataURL('image/jpeg',.7);if(image.length>30000||!image.startsWith('data:image/jpeg;base64,/9j/'))throw new Error('Probá con una imagen más sencilla.');return image;
+ const c=document.createElement('canvas');const width=photo?800:192,height=photo?450:192;c.width=width;c.height=height;const ctx=c.getContext('2d');if(!ctx)throw new Error('No pudimos preparar la imagen.');ctx.fillStyle='#fff';ctx.fillRect(0,0,width,height);const ratio=Math.min(width/img.naturalWidth,height/img.naturalHeight);const w=img.naturalWidth*ratio,h=img.naturalHeight*ratio;ctx.drawImage(img,(width-w)/2,(height-h)/2,w,h);
+ const image=c.toDataURL('image/jpeg',.7);if(image.length>(photo?180000:30000)||!image.startsWith('data:image/jpeg;base64,/9j/'))throw new Error('Probá con una imagen más sencilla.');return image;
  }finally{URL.revokeObjectURL(url);}
 }
 export function SymbolPicker({value,onChange,onBusy}:{value:Appearance;onChange:(v:Appearance)=>void;onBusy:(b:boolean)=>void}){

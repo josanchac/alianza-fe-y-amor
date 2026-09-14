@@ -113,8 +113,44 @@ for(const resetFirst of [false,true]){
  assert.equal(fresh.user.id,original.user.id);
 }
 pass('Reset versus save preserves committed work in backup or rejects the stale write in both transaction orders');
+{
+ const a=await person(),b=await person();
+ const group=(await rpc(a.uid,'community',{action:'group_create',name:'Curso concurrente',displayName:'A',dataEpoch:1})).groups[0];
+ const invitation=await rpc(a.uid,'community',{action:'invite_create',groupId:group.id,dataEpoch:1});
+ await rpc(b.uid,'community',{action:'invite_join',token:invitation.token,displayName:'B',dataEpoch:1});
+ const rid=id(counter++);
+ await rpc(a.uid,'community',{action:'rosary_create',id:rid,scope:'group',groupId:group.id,mystery:'joyful',mode:'free',dataEpoch:1});
+ const reserve={action:'rosary_reserve',id:rid,decade:1,dataEpoch:1};
+ const reservations=await simultaneous([[a.uid,'community',reserve],[b.uid,'community',reserve]]);
+ assert.equal(reservations.filter(r=>r.ok).length,1);assert.equal(reservations.find(r=>!r.ok).code,'PT409');
+ const winner=reservations[0].ok?a:b;
+ const confirm={action:'rosary_complete',id:rid,decade:1,dataEpoch:1};
+ const confirmations=await simultaneous([[winner.uid,'community',confirm],[winner.uid,'community',confirm]]);
+ assert(confirmations.every(r=>r.ok));
+ assert.equal((await admin.query('select count(*)::int n from alianza_private.rosary_contributions where rosary_id=$1',[rid])).rows[0].n,1);
+ pass('Concurrent reservations have one winner; repeated simultaneous confirmations produce exactly one contribution');
+ const p=(await rpc(a.uid,'community',{action:'purpose_create',groupId:group.id,title:'Práctica sintética',start:'2020-01-01',end:'2020-01-07',target:3,unit:'person',dataEpoch:1})).groups[0].purposes[0];
+ await rpc(a.uid,'community',{action:'purpose_join',groupId:group.id,id:p.id,share:false,dataEpoch:1});
+ const log={action:'purpose_log',groupId:group.id,id:p.id,day:'2020-01-01',amount:1,version:0,dataEpoch:1};
+ const writes=await simultaneous([[a.uid,'community',log],[a.uid,'community',log]]);
+ assert.equal(writes.filter(r=>r.ok).length,1);assert.equal(writes.find(r=>!r.ok).code,'PT409');
+ pass('Concurrent purpose records reject the stale version instead of double-counting');
+}
+{
+ const a=await person(),held=await clientFor(a.uid),operator=new Client({connectionString:url.href});await operator.connect();
+ try{
+  await held.query('select public.alianza_data($1)',[JSON.stringify({kind:'purpose',key:'2020-01',data:{text:'Borrador sintético en curso',review:''},version:0,dataEpoch:1})]);
+  const pid=(await operator.query('select pg_backend_pid() pid')).rows[0].pid;
+  const closing=operator.query('begin;select pg_advisory_xact_lock(8254,42);update public.alianza_service_status set active=true;commit');
+  await blocked([pid]);await held.query('commit');await closing;
+  assert.equal((await admin.query("select count(*)::int n from alianza_private.records where owner=$1 and kind='purpose' and key='2020-01'",[a.uid])).rows[0].n,1);
+  await assert.rejects(()=>rpc(a.uid,'data',{kind:'purpose',key:'2020-02',data:{text:'Escritura durante cierre',review:''},version:0,dataEpoch:1}),e=>e.code==='PT503');
+  await operator.query('begin;select pg_advisory_xact_lock(8254,42);update public.alianza_service_status set active=false;commit');
+  pass('Maintenance waits for an in-flight write to commit, preserves it and rejects subsequent writes');
+ }finally{await held.query('rollback');await close(held);await operator.end();}
+}
 const rls=(await admin.query("select c.relname,c.relrowsecurity from pg_class c join pg_namespace n on n.oid=c.relnamespace where n.nspname='alianza_private' and c.relkind='r'")).rows;assert(rls.every(r=>r.relrowsecurity));
-for(const role of ['anon','authenticated','alianza_metrics'])for(const table of ['records','pair_invitations','couple_participants','ideal_confirmations','personal_reset_backups'])assert.equal((await admin.query('select has_table_privilege($1,$2,$3) ok',[role,'alianza_private.'+table,'SELECT,INSERT,UPDATE,DELETE'])).rows[0].ok,false);
+for(const role of ['anon','authenticated','alianza_metrics'])for(const table of ['records','pair_invitations','couple_participants','ideal_confirmations','personal_reset_backups','groups','group_members','purpose_logs','rosary_contributions'])assert.equal((await admin.query('select has_table_privilege($1,$2,$3) ok',[role,'alianza_private.'+table,'SELECT,INSERT,UPDATE,DELETE'])).rows[0].ok,false);
 assert.equal((await admin.query("select count(*)::int n from pg_proc p join pg_namespace n on n.oid=p.pronamespace where n.nspname='public' and p.proname like 'alianza_%' and p.prosecdef")).rows[0].n,0);
 pass('Private tables retain RLS and no content privileges for clients or metrics; public entry points remain invokers');
 await mkdir('test-results',{recursive:true});await writeFile('test-results/postgres-evidence.json',JSON.stringify({database:'isolated synthetic PostgreSQL',serverVersion:(await admin.query('show server_version')).rows[0].server_version,checks:evidence},null,2));
