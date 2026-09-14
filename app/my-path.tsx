@@ -19,6 +19,7 @@ export function MyPath({
   ideal: string;
   busy: boolean;
 }) {
+  const [choosing,setChoosing]=useState(!draft&&!ideal);
   const [version, setVersion] = useState(initialVersion);
   const savingRef = useRef(false);
   const [saving, setSaving] = useState(false);
@@ -47,7 +48,8 @@ export function MyPath({
       <p className="eyebrow">MI CAMINO</p>
       <h2>Mi ideal personal</h2>
       {ideal && <p className="ideal-line">{ideal}</p>}
-      <div
+      {!choosing&&<button className="text-button" onClick={()=>setChoosing(true)}>Cambiar mi punto de partida</button>}
+      {choosing&&<div
         className="choice-row"
         role="group"
         aria-label="Mi camino con el ideal"
@@ -63,29 +65,27 @@ export function MyPath({
             aria-pressed={stage === id}
             disabled={saving}
             onClick={() => {
-              setStage(id);
+              setStage(id);setChoosing(false);
               setMessage("");
             }}
           >
             {label}
           </button>
         ))}
-      </div>
-      {stage === "ready" ? (
+      </div>}
+      {!choosing&&<>{stage === "ready" ? (
         <button className="primary" disabled={saving} onClick={onEditIdeal}>
           Escribir o revisar mi ideal
         </button>
       ) : (
         <>
           <p>
-            El ideal orienta tu vida y los actos concretos de tu horario. Podés
-            continuar usando Alianza mientras lo discernís, sin apurar una
-            frase.
+            Tu ideal expresa quién estás llamado a ser. Podés ir descubriéndolo con acompañamiento.
           </p>
           <AppPanel title="Orientación para mi ideal" hint="Fuentes y acompañamiento del Movimiento" icon="book"><FormationSource topic="schedule"/><PersonalIdealGuide/></AppPanel>
           {stage === "discover" && (
             <>
-              <p>Anotá lo que quieras conversar con quien te acompaña.</p>
+              <p>¿Qué querés retomar con tu asesor?</p>
               <label>
                 Mi borrador privado
                 <textarea
@@ -133,6 +133,7 @@ export function MyPath({
       >
         Guardar y continuar otro día
       </button>
+      </>}
       {message && <p role="status">{message}</p>}
       <p className="form-hint">
         Estas notas permanecen privadas, incluso si compartís tu ideal o tu

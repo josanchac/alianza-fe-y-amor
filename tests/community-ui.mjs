@@ -53,7 +53,7 @@ try {
   );
   assert(screen.getByText("Sin registro este día.", { exact: false }));
   fireEvent.click(
-    screen.getByRole("button", { name: "Registrar una ocasión" }),
+    screen.getByRole("button", { name: /Lo viví hoy/ }),
   );
   await waitFor(() => assert.equal(calls.at(-1).amount, 1));
   assert.equal(calls.at(-1).version, 0);
@@ -182,7 +182,7 @@ try {
   );
   fireEvent.click(screen.getByRole("button", { name: /Curso sintético/ }));
   assert.equal(screen.queryByText("PRIVATE DRAFT"), null);
-  assert(screen.getByText("Identidad e integrantes"));
+  assert(screen.getByText("Integrantes"));
   cleanup();
   console.log(
     "PASS community UI: absent data, explicit logs, private consent, partial prayer linking, beads without writes, and failed-save draft preservation",

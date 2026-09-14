@@ -15,11 +15,7 @@ export function MovementCostaRica({open,onOpenChange}:{open:boolean;onOpenChange
   <MapPin className="gold-icon" size={28}/>
   <DialogTitle className="dialog-title">Schoenstatt en Costa Rica</DialogTitle>
   <DialogDescription>Un espacio para conocer el Movimiento, sus comunidades y su vida en nuestro país.</DialogDescription>
-  <details><summary>Nuestra historia</summary><p>Conocé los orígenes del Movimiento y su camino en Costa Rica a través de sus publicaciones.</p><SourceLink href={portal+'schoenstatt-2/'}>¿Qué es Schoenstatt?</SourceLink><SourceLink href={portal}>Explorar el sitio de Costa Rica</SourceLink></details>
-  <details><summary>Ramas y comunidades</summary><p>Consultá la sección «Comunidades» del sitio nacional para conocer los distintos espacios de pertenencia y sus canales de contacto.</p><SourceLink href={portal}>Conocer las comunidades</SourceLink><SourceLink href={portal+'rama-femenina/'}>Rama Femenina</SourceLink></details>
-  <details><summary>Noticias recientes</summary><p>Consultá las publicaciones del Movimiento y la fecha de cada noticia en su página de origen.</p><SourceLink href={portal+'noticias/'}>Ver noticias de Costa Rica</SourceLink></details>
-  <details><summary>Proyectos y planes de desarrollo</summary><p>Todavía no hay un plan de desarrollo verificado disponible en esta sección. Podés consultar los anuncios del Movimiento en su sitio nacional.</p><SourceLink href={portal}>Consultar anuncios del Movimiento</SourceLink></details>
-  <p className="muted">Los enlaces abren el sitio de Schoenstatt Costa Rica. Si no está disponible, podés volver a intentarlo más tarde.</p>
+  <div className="movement-links"><SourceLink href="https://schoenstatt.com/es/acerca-de-nosotros/santuario/">El Santuario</SourceLink><SourceLink href="https://schoenstatt.com/es/acerca-de-nosotros/devocion-mariana/">La Mater</SourceLink><SourceLink href="https://schoenstatt.com/es/acerca-de-nosotros/fundador/">Padre Kentenich</SourceLink><SourceLink href={portal}>Comunidades en Costa Rica</SourceLink><SourceLink href={portal+'noticias/'}>Noticias de Costa Rica</SourceLink></div>
   <button className="primary" onClick={()=>onOpenChange(false)}>Volver a mi espacio</button>
  </DialogContent></Dialog>;
 }

@@ -1,0 +1,25 @@
+import {reportFonts} from './report-font';
+type Report={start:string;end:string;ideal:string;purposes:string[];habits:{title:string;frequency:string;target:number|null;knownTarget?:number;done:number;missed:number;skip:number}[];notes:{date:string;text:string}[];moments:{date:string;text:string}[]};
+// Standard PDF fonts use WinAnsi; escaped octal bytes preserve Spanish accents.
+const pdfText=(text:string)=>text.replace(/[\u2018\u2019]/g,"'").replace(/[\u201c\u201d]/g,'"').replace(/[\u2013\u2014]/g,'-').replace(/[^\x20-\xff]/g,' ').replace(/[\\()]/g,'\\$&').replace(/[\x80-\xff]/g,c=>'\\'+c.charCodeAt(0).toString(8).padStart(3,'0'));
+export function reportPDF(report:Report){
+ const pages:string[]=[];let content='',y=790;
+ const page=()=>{if(content)pages.push(content);content='';y=790;};
+ const line=(text:string,size=11,x=48,bold=false)=>{if(y<60)page();content+=`BT /${bold?'F2':'F1'} ${size} Tf 0.10 0.20 0.27 rg ${x} ${y} Td (${pdfText(text)}) Tj ET\n`;y-=size+7;};
+ const paragraph=(text:string,size=11,bold=false)=>{const max=Math.floor(490/(size*.56));for(const raw of text.split('\n')){let chunk='';for(const word of raw.split(/\s+/)){if(chunk.length+word.length+1>max){line(chunk,size,48,bold);chunk='';}for(let i=0;i<word.length;i+=max){const part=word.slice(i,i+max);if(i+max<word.length){if(chunk){line(chunk,size,48,bold);chunk='';}line(part,size,48,bold);}else chunk+=(chunk?' ':'')+part;}}if(chunk)line(chunk,size,48,bold);}y-=5;};
+ paragraph('ALIANZA · MI RECORRIDO',20,true);paragraph(`${report.start} al ${report.end}`,12);if(report.ideal){paragraph('Mi ideal',13,true);paragraph(report.ideal);}if(report.purposes.length){paragraph('Mi propósito',13,true);report.purposes.forEach(p=>paragraph(p));}
+ paragraph('Mis compromisos',15,true);
+ for(const h of report.habits){if(y<150)page();paragraph(h.title,12,true);paragraph(h.frequency,10);const rowY=y;line('Previstos',10,48,true);y=rowY;line('Registrados',10,185,true);y=rowY;line('Me costó',10,320,true);y=rowY;line('No aplicaba',10,435,true);const numberY=y;line(h.target===null?(h.knownTarget?h.knownTarget+' + parcial':'Parcial'):String(h.target),12,48);y=numberY;line(String(h.done),12,185);y=numberY;line(String(h.missed),12,320);y=numberY;line(String(h.skip),12,435);y-=10;}
+ paragraph('Parcial: período en curso, cambios de frecuencia o historia insuficiente. Los días sin registro no se cuentan como faltas.',9);
+ if(report.notes.length){paragraph('Notas para conversar',15,true);for(const n of report.notes){paragraph(n.date,10,true);paragraph(n.text);}}
+ if(report.moments.length){paragraph('Registros matrimoniales seleccionados',15,true);for(const n of report.moments){paragraph(n.date,10,true);paragraph(n.text);}}
+ page();
+ const objects:string[]=['<< /Type /Catalog /Pages 2 0 R >>','', '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>','<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>'];const pageIds:number[]=[];
+ pages.forEach((stream,i)=>{const id=objects.length+1;pageIds.push(id);const footer=`BT /F1 9 Tf 48 30 Td (Alianza - ${i+1} / ${pages.length}) Tj ET\n`;const full=stream+footer;objects.push(`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents ${id+1} 0 R >>`,`<< /Length ${full.length} >>\nstream\n${full}endstream`);});
+ objects[1]=`<< /Type /Pages /Kids [${pageIds.map(id=>id+' 0 R').join(' ')}] /Count ${pages.length} >>`;
+  // Embedded fonts preserve spacing across mobile PDF readers and exports.
+ for(const [index,key] of [[2,'regular'],[3,'bold']] as const){const font=reportFonts[key],bytes=atob(font.base64),fontId=objects.length+1,descriptorId=fontId+1;objects.push(`<< /Length ${bytes.length} /Length1 ${bytes.length} >>\nstream\n${bytes}\nendstream`,`<< /Type /FontDescriptor /FontName /DejaVuSans${key==='bold'?'-Bold':''} /Flags 32 /FontBBox [${font.bbox.join(' ')}] /ItalicAngle 0 /Ascent ${font.ascent} /Descent ${font.descent} /CapHeight ${font.ascent} /StemV 80 /FontFile2 ${fontId} 0 R >>`);objects[index]=`<< /Type /Font /Subtype /TrueType /BaseFont /DejaVuSans${key==='bold'?'-Bold':''} /FirstChar 32 /LastChar 255 /Widths [${font.widths.join(' ')}] /Encoding /WinAnsiEncoding /FontDescriptor ${descriptorId} 0 R >>`;}
+ let pdf='%PDF-1.4\n';const offsets=[0];objects.forEach((obj,i)=>{offsets.push(pdf.length);pdf+=`${i+1} 0 obj\n${obj}\nendobj\n`;});const xref=pdf.length;pdf+=`xref\n0 ${objects.length+1}\n0000000000 65535 f \n`+offsets.slice(1).map(o=>String(o).padStart(10,'0')+' 00000 n \n').join('')+`trailer\n<< /Size ${objects.length+1} /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF`;
+ return Uint8Array.from(pdf,c=>c.charCodeAt(0));
+}
+export function downloadReportPDF(report:Report){const bytes=reportPDF(report);const url=URL.createObjectURL(new Blob([bytes],{type:'application/pdf'}));const link=document.createElement('a');link.href=url;link.download=`alianza-reporte-${report.start}-${report.end}.pdf`;link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}

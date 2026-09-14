@@ -5,7 +5,7 @@ const {render,screen,fireEvent,waitFor,cleanup}=await import('@testing-library/r
 const {default:Journal}=await import('../app/journal.tsx');
 const {localDate}=await import('../lib/domain.ts');
 const profile={owner:'test',kind:'profile',key:'me',data:{name:'Persona',ideal:'Líder de amor',shareNotes:false,shareSchedule:false},version:1,updated:new Date().toISOString()};
-const fixture={user:{id:'test',role:'jose',email:'person@example.test'},own:[profile],shared:[],partner:{name:'Pareja',ideal:'Mujer de fe',shareNotes:false,shareSchedule:false,records:[]},today:localDate()};
+const fixture={user:{id:'test',role:'jose',email:'person@example.test'},own:[profile,{owner:'test',kind:'spaces',key:'experience',version:1,data:{enabled:['personal','couple'],start:'personal'}}],shared:[],partner:{name:'Pareja',ideal:'Mujer de fe',shareNotes:false,shareSchedule:false,records:[]},today:localDate()};
 const writes=[];
 async function request(init){if(init?.method!=='POST')return Response.json(fixture);const p=JSON.parse(String(init.body));writes.push(p);const group=p.kind==='rs'?'shared':'own';const record={...p,owner:group==='shared'?'couple':'test',version:p.version+1,updated:new Date().toISOString()};fixture[group]=[...fixture[group].filter(r=>r.kind!==p.kind||r.key!==p.key),record];return Response.json({record});}
 try{
@@ -58,7 +58,7 @@ try{
  assert.equal(writes.length,2);assert.equal(fixture.shared.length,0);
  console.log('PASS Exploring a marital encounter leaves shared records empty until saved');
  cleanup();
- const newcomer={...fixture,user:{id:'new-person',role:'member',email:'new@example.test',symbol:'heart'},couple:{emblem:'neutral'},own:[{...profile,owner:'new-person',data:{name:'Invitado',ideal:'',shareSchedule:false,shareNotes:false}}],shared:[],partner:{name:'Su pareja',ideal:'',shareSchedule:false,shareNotes:false,records:[]}};
+ const newcomer={...fixture,user:{id:'new-person',role:'member',email:'new@example.test',symbol:'heart'},couple:{emblem:'neutral'},own:[{owner:'test',kind:'spaces',key:'experience',version:1,data:{enabled:['personal','couple'],start:'personal'}},{...profile,owner:'new-person',data:{name:'Invitado',ideal:'',shareSchedule:false,shareNotes:false}}],shared:[],partner:{name:'Su pareja',ideal:'',shareSchedule:false,shareNotes:false,records:[]}};
  render(React.createElement(Journal,{dataRequest:async(init)=>{assert.notEqual(init?.method,'POST','Exploring guidance must not save newcomer records');return Response.json(newcomer);},onSignOut(){}}));
  await screen.findByRole('heading',{name:'Mi día'});
 
@@ -70,10 +70,8 @@ try{
  await screen.findByRole('dialog');
  const purpose=screen.getByRole('textbox',{name:'Mi propósito particular',exact:true});
  fireEvent.change(purpose,{target:{value:'Mi propósito de prueba'}});
- const purposeGuide=screen.getByText('Una ayuda para formular mi propósito').closest('details');
- assert.equal(purposeGuide.open,false);
- fireEvent.click(purposeGuide.querySelector('summary'));
- assert.equal(purposeGuide.open,true);
+ fireEvent.click(screen.getByRole('button',{name:'Ayudame a formularlo'}));
+ assert(screen.getByLabelText('¿Qué actitud querés cultivar?'));
  assert.equal(purpose.value,'Mi propósito de prueba');
  assert.equal(writes.length,2);
  console.log('PASS Optional purpose guidance preserves the draft without requiring an ideal');

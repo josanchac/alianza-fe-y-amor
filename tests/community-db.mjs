@@ -119,7 +119,7 @@ try {
   }
   await as(ids[0]);
   state = await act();
-  assert.equal(state.groups[0].purposes[0].summary.amount, 5);
+  assert.equal(state.groups[0].purposes[0].summary, null, "Live small-group totals remain private");
   assert.equal(state.groups[0].purposes[0].logs.length, 1);
   await assert.rejects(
     () =>

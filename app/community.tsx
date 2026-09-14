@@ -1,4 +1,6 @@
+import {GroupsWorkspace} from './groups-workspace';
 import { useState, useRef } from "react";
+import {PersonalRosary} from './personal-rosary';
 import {QuietProgress} from "./quiet-progress";
 import {AppPanel} from "./app-panel";
 import {
@@ -40,7 +42,7 @@ type Props = {
   busy: boolean;
   onReload?: () => void;
 };
-function Form({
+export function Form({
   title,
   children,
   submit,
@@ -95,7 +97,7 @@ function Form({
     </form>
   );
 }
-function Input({
+export function Input({
   label,
   name,
   value = "",
@@ -151,12 +153,12 @@ export function PurposeCard({
     if(sending.current)return; sending.current=true;setError("");setFeedback("");
     try {
       await act({ ...v, id: p.id, groupId: group.id });
-      if(v.action==="purpose_log")setFeedback("Registro actualizado");
+      if(v.action==="purpose_log")setFeedback("Ocasión registrada");
     } catch (e) {
       setError((e as Error).message);
     } finally {sending.current=false;}
   }
-  if(compact&&!expanded){const todayLog=p.logs.find(l=>l.day===localDate());return <section className="card purpose-quick"><div><p className="eyebrow">{group.name}</p><h3>{p.title}</h3><p>{personalProgress(p)} de {p.target} ocasiones</p></div><button className="quick-mark" aria-label={'Registrar ocasión: '+p.title} disabled={busy||!p.joined||(todayLog?.amount??0)>=20||!current} onClick={()=>send({action:'purpose_log',day:localDate(),amount:(todayLog?.amount??0)+1,version:todayLog?.version??0})}><Plus size={22}/></button><button className="text-button purpose-detail" onClick={()=>setExpanded(true)}>Ver o corregir<ArrowRight size={16}/></button>{feedback&&<p className="quiet-feedback" role="status">{feedback}</p>}{error&&<p role="alert">{error}</p>}</section>;}
+  if(compact&&!expanded){const todayLog=p.logs.find(l=>l.day===localDate());return <section className="card purpose-quick"><div><p className="eyebrow">{group.name}</p><h3>{p.title}</h3><p>{personalProgress(p)} de {p.target} ocasiones</p></div><button className="quick-mark" aria-label={'Registrar ocasión: '+p.title} disabled={busy||!p.joined||(todayLog?.amount??0)>=20||!current} onClick={()=>send({action:'purpose_log',day:localDate(),amount:(todayLog?.amount??0)+1,version:todayLog?.version??0})}><Plus size={22}/></button><button className="text-button purpose-detail" onClick={()=>setExpanded(true)}>Ver mis registros<ArrowRight size={16}/></button>{feedback&&<p className="quiet-feedback" role="status">{feedback}</p>}{error&&<p role="alert">{error}</p>}</section>;}
   return (
     <section className="card purpose-card">
       {compact&&<button className="text-button" onClick={()=>setExpanded(false)}>Cerrar detalle</button>}
@@ -173,7 +175,7 @@ export function PurposeCard({
             }
             onClick={() => send({ action: "purpose_join", share: false })}
           >
-            Incorporar a mi horario
+            Participar en el propósito
           </button>
           {!coupleId && p.unit === "couple" && (
             <p>
@@ -184,7 +186,7 @@ export function PurposeCard({
         </>
       ) : (
         <>
-          <QuietProgress value={personalProgress(p)} total={p.target} label="Mi avance del propósito"/>
+          <QuietProgress symbol={group.symbol} image={group.symbolImage} value={personalProgress(p)} total={p.target} label="Mi avance del propósito"/>
           <div className="purpose-register">
             <div className="purpose-day"><span>{day===localDate()?'Hoy':new Date(day+'T12:00:00').toLocaleDateString('es-CR',{day:'numeric',month:'long'})}</span><button className="text-button" onClick={()=>setDateOpen(!dateOpen)} aria-expanded={dateOpen}>Cambiar día</button></div>
             {dateOpen&&<label className="purpose-date-field">
@@ -200,7 +202,7 @@ export function PurposeCard({
             </label>}
             <button
               className="primary purpose-action"
-              aria-label="Registrar una ocasión"
+              aria-label={day===localDate()?"Lo viví hoy":"Lo viví ese día"}
               disabled={
                 busy ||
                 day < p.start ||
@@ -220,7 +222,7 @@ export function PurposeCard({
               <Plus size={16} />
               Lo viví {day===localDate()?'hoy':'ese día'}
             </button>
-            {log && (
+            {log && log.amount > 0 && (
               <button
                 className="text-button"
                 disabled={busy || log.amount === 0}
@@ -233,7 +235,7 @@ export function PurposeCard({
                   })
                 }
               >
-                Corregir −1
+                Deshacer una ocasión
               </button>
             )}
           </div>
@@ -266,57 +268,7 @@ export function PurposeCard({
           </AppPanel>
         </>
       )}
-      {!compact && (
-        <details className="optional-details">
-          <summary>Revisión y avance del curso</summary>
-          {p.summary ? (
-            <p>
-              {p.summary.amount} de {p.summary.target} ocasiones previstas
-              registradas · {p.summary.recordedUnits} de {p.summary.units}{" "}
-              unidades participantes con registro compartido.
-            </p>
-          ) : (
-            <p>
-              Resumen reservado hasta contar con suficientes aportes
-              compartidos. No se muestra quién está pendiente.
-            </p>
-          )}
-          <p>
-            Para conversar: ¿qué ayudó a vivir el propósito? ¿Qué ajustaríamos?
-            Cada persona comparte solo lo que elija; la app no guarda respuestas
-            privadas aquí.
-          </p>
-          {p.decision && (
-            <p className="preserve">
-              <strong>Acuerdo del curso:</strong> {p.decision}
-            </p>
-          )}
-          {group.ownerId === userId && (
-            <Form
-              title="Acuerdo de revisión"
-              busy={busy}
-              submit={(f) =>
-                act({
-                  action: "purpose_review",
-                  id: p.id,
-                  groupId: group.id,
-                  version: p.version,
-                  decision: f.get("decision"),
-                })
-              }
-            >
-              <label>
-                Continuar, ajustar o elegir otro propósito
-                <textarea
-                  name="decision"
-                  defaultValue={p.decision}
-                  maxLength={500}
-                />
-              </label>
-            </Form>
-          )}
-        </details>
-      )}
+      {!compact&&<div className="group-summary"><strong>Avance colectivo</strong>{p.summary?<><p>Participación registrada: {p.summary.participation}</p><p>Meta alcanzada: {p.summary.completed}</p><small>Resumen al cierre, entre quienes eligieron compartir.</small></>:<p>El resumen se publica al cerrar el período cuando puede protegerse la privacidad.</p>}</div>}
       {error && (
         <p role="alert" className="notice">
           {error}
@@ -331,14 +283,16 @@ export function CreateRosary({
   coupleId,
   groupId,
   onCreated,
+  defaultScope="personal",
 }: {
   act: CommunityAction;
   busy: boolean;
   coupleId?: string | null;
   groupId?: string;
   onCreated?: () => void;
+  defaultScope?: "personal"|"couple";
 }) {
-  const [scope, setScope] = useState(groupId ? "group" : "personal");
+  const [scope, setScope] = useState(groupId ? "group" : defaultScope);
   const today=localDate(), suggested=mysteriesFor(today);
   const [chosenMystery,setChosenMystery]=useState<Mystery|null>(null);
   const weekday=new Date(today+"T12:00:00").toLocaleDateString("es-CR",{weekday:"long"});
@@ -352,7 +306,7 @@ export function CreateRosary({
         await act({
           action: "rosary_create",
           id,
-          scope: groupId ? "group" : f.get("scope") || "personal",
+          scope: groupId ? "group" : f.get("scope") || defaultScope,
           ...(groupId ? { groupId } : {}),
           mystery: f.get("mystery"),
           mode: f.get("mode"),
@@ -363,7 +317,7 @@ export function CreateRosary({
         onCreated?.();
       }}
     >
-      {!groupId && (
+      {!groupId && coupleId && defaultScope!=="couple" && (
         <label>
           ¿Con quién?
           <select name="scope" value={scope} onChange={(e) => setScope(e.target.value)}>
@@ -432,6 +386,10 @@ export function RosaryCard({
   habits?: { key: string; data: { title: string; active: boolean } }[];
   onLinked?: () => void;
 }) {
+  if(!r.groupId&&!r.coupleId)return <PersonalRosary r={r} act={act} busy={busy} habits={habits} onLinked={onLinked}/>;
+  return <SharedRosaryCard r={r} act={act} busy={busy} userId={userId} names={names} canManage={canManage} habits={habits} onLinked={onLinked}/>;
+}
+function SharedRosaryCard({r,act,busy,userId,names={},canManage=false,habits=[],onLinked}:Parameters<typeof RosaryCard>[0]){
   const [focus,setFocus]=useState(()=>r.slots.find(s=>s.userId===userId&&!s.done)?.decade??[1,2,3,4,5].find(n=>!r.slots.some(s=>s.decade===n&&s.done))??1);
   const [selected, setSelected] = useState<number | null>(null),
     [bead, setBead] = useState(0),
@@ -695,599 +653,4 @@ export function RosaryCard({
     </section>
   );
 }
-export function CommunityPanel({
-  state,
-  act,
-  userId,
-  name,
-  coupleId,
-  busy,
-}: Props) {
-  const [createGroupId, setCreateGroupId] = useState(() => crypto.randomUUID()),
-    [createPurposeId, setCreatePurposeId] = useState(() => crypto.randomUUID());
-  const [groupView,setGroupView]=useState("now");
-  const [groupId, setGroupId] = useState(""),
-    [create, setCreate] = useState(false),
-    [joinToken, setJoinToken] = useState(
-      () => new URLSearchParams(location.hash.slice(1)).get("grupo") || "",
-    ),
-    [preview, setPreview] = useState(""),
-    [token, setToken] = useState(""),
-    [error, setError] = useState(""),
-    [copied, setCopied] = useState(false);
-  const group = state.groups.find((g) => g.id === groupId);
-  const owner = group?.ownerId === userId;
-  async function send(p: Record<string, unknown>) {
-    setError("");
-    try {
-      return await act(p);
-    } catch (e) {
-      setError((e as Error).message);
-      return null;
-    }
-  }
-  const names = Object.fromEntries(
-    group?.members.map((m) => [m.id, m.name]) ?? [],
-  );
-  return (
-    <>
-      <div className="page-heading">
-        <div>
-          <p className="eyebrow">EN COMUNIDAD</p>
-          <h1>{group?.name || "Mis cursos y grupos"}</h1>
-        </div>
-        {group ? (
-          <PersonalSymbol symbol={group.symbol || "heart"} size={30} />
-        ) : (
-          <Users size={30} />
-        )}
-      </div>
-      {error && (
-        <p role="alert" className="notice">
-          {error}
-        </p>
-      )}
-      {!group ? (
-        <>
-          <p className="intro">
-            Un propósito común. Un vínculo que crece entre encuentros.
-          </p>
-          {state.groups.map((g) => (
-            <button
-              key={g.id}
-              className="card home-option"
-              onClick={() => {setGroupId(g.id);setGroupView("now");}}
-            >
-              <strong>{g.name}</strong>
-              <span>{g.motto || "Abrir nuestro espacio"}</span>
-              <ArrowRight />
-            </button>
-          ))}
-          <button className="soft-button" onClick={() => setCreate(!create)}>
-            <Plus size={18} />
-            Crear un grupo
-          </button>
-          {create && (
-            <section className="card">
-              <Form
-                title="Nuevo curso o grupo"
-                busy={busy}
-                submit={async (f) => {
-                  await act({
-                    action: "group_create",
-                    id: createGroupId,
-                    name: f.get("name"),
-                    displayName: f.get("displayName"),
-                  });
-                  setCreateGroupId(crypto.randomUUID());
-                  setCreate(false);
-                }}
-              >
-                <Input label="Nombre del grupo" name="name" required max={80} />
-                <Input
-                  label="Mi nombre visible en este grupo"
-                  name="displayName"
-                  value={name}
-                  required
-                  max={60}
-                />
-              </Form>
-            </section>
-          )}
-          <details className="card optional-details" open={!!joinToken}>
-            <summary>Tengo una invitación</summary>
-            <label>
-              Código de invitación
-              <input
-                value={joinToken}
-                onChange={(e) => {
-                  setJoinToken(e.target.value.trim());
-                  setPreview("");
-                }}
-                maxLength={64}
-              />
-            </label>
-            <button
-              className="soft-button"
-              disabled={busy || !joinToken}
-              onClick={async () => {
-                const v = await send({
-                  action: "invite_preview",
-                  token: joinToken,
-                });
-                if (v) setPreview(v.invitation.name);
-              }}
-            >
-              Consultar invitación
-            </button>
-            {preview && (
-              <Form
-                title={"Unirme a " + preview}
-                busy={busy}
-                submit={async (f) => {
-                  await act({
-                    action: "invite_join",
-                    token: joinToken,
-                    displayName: f.get("displayName"),
-                  });
-                  setPreview("");
-                  setJoinToken("");
-                  history.replaceState(
-                    null,
-                    "",
-                    location.pathname + location.search,
-                  );
-                }}
-              >
-                <Input
-                  label="Mi nombre visible"
-                  name="displayName"
-                  required
-                  max={60}
-                  value={name}
-                />
-                <p>
-                  El grupo verá tu nombre, reservas y aportes al rosario, y tus
-                  confirmaciones de asistencia. Tu horario, ideales y
-                  reflexiones siguen privados. El avance de propósitos solo se
-                  comparte si lo elegís.
-                </p>
-              </Form>
-            )}
-          </details>
-        </>
-      ) : (
-        <>
-          <button
-            className="text-button"
-            onClick={() => {
-              setGroupId("");
-              setToken("");
-            }}
-          >
-            ← Todos mis grupos
-          </button>
-          {group.motto && <p className="intro">{group.motto}</p>}
-          <div className="view-switch group-views" role="group" aria-label="Secciones del grupo">{[['now','Propósito'],['prayer','Rosario'],['meeting','Encuentro'],['manage',owner?'Organizar':'Integrantes']].map(([v,label])=><button key={v} aria-pressed={groupView===v} onClick={()=>setGroupView(v)}>{label}</button>)}</div>
-          <div className="group-active">
-            <div hidden={groupView!=="now"}>{!group.purposes.some(p=>p.start<=localDate()&&p.end>=localDate())&&<p className="empty-text">Cuando acuerden un propósito aparecerá aquí.</p>}{group.purposes
-              .filter((p) => p.start <= localDate() && p.end >= localDate())
-              .slice(0, 1)
-              .map((p) => (
-                <PurposeCard
-                  key={p.id}
-                  p={p}
-                  group={group}
-                  act={act}
-                  userId={userId}
-                  coupleId={coupleId}
-                  busy={busy}
-                />
-              ))}
-            </div><div hidden={groupView!=="prayer"}>{state.rosaries
-              .filter(
-                (r) =>
-                  r.groupId === group.id &&
-                  !r.cancelled &&
-                  completedDecades(r) < 5,
-              )
-              .slice(0, 1)
-              .map((r) => (
-                <RosaryCard
-                  key={r.id}
-                  r={r}
-                  act={act}
-                  busy={busy}
-                  userId={userId}
-                  names={names}
-                  canManage={owner}
-                />
-              ))}
-            </div><div hidden={groupView!=="meeting"}>{!group.meeting&&<p className="empty-text">Todavía no hay un encuentro preparado.</p>}{group.meeting && (
-              <section className="card">
-                <p className="eyebrow">PRÓXIMO ENCUENTRO</p>
-                <h3>
-                  {group.meeting.data.date} · {group.meeting.data.time}
-                </h3>
-                <p>{group.meeting.data.place}</p>
-                {group.meeting.data.material && (
-                  <a
-                    target="_blank"
-                    rel="noreferrer"
-                    href={group.meeting.data.material}
-                  >
-                    Abrir material de preparación
-                  </a>
-                )}
-                {group.meeting.data.question && (
-                  <p>{group.meeting.data.question}</p>
-                )}
-                {group.meeting.data.roles && (
-                  <p>Preparación: {group.meeting.data.roles}</p>
-                )}
-                <div className="choice-row">
-                  {[true, false].map((v) => (
-                    <button
-                      key={String(v)}
-                      className="soft-button"
-                      aria-pressed={group.meeting!.responses.some(
-                        (r) => r.userId === userId && r.attending === v,
-                      )}
-                      disabled={busy}
-                      onClick={() =>
-                        send({
-                          action: "meeting_rsvp",
-                          groupId: group.id,
-                          version: group.meeting!.version,
-                          attending: v,
-                        })
-                      }
-                    >
-                      {v ? "Voy a participar" : "Esta vez no puedo"}
-                    </button>
-                  ))}
-                </div>
-                <details>
-                  <summary>Confirmaciones de asistencia</summary>
-                  {group.meeting.responses.map((r) => (
-                    <p key={r.userId}>
-                      {names[r.userId] || "Participante"}:{" "}
-                      {r.attending ? "Participará" : "No participará"}
-                    </p>
-                  ))}
-                </details>
-              </section>
-            )}
-          </div></div>
-          <div hidden={groupView!=="prayer"}><details className="card optional-details">
-            <summary>Iniciar un rosario</summary>
-            <CreateRosary act={act} busy={busy} groupId={group.id} />
-          </details></div>
-          <div hidden={groupView!=="manage"}>{owner && (
-            <div><details className="card optional-details">
-              <summary>Proponer un propósito</summary>
-              <Form
-                title="Nuestro próximo propósito"
-                busy={busy}
-                submit={async (f) => {
-                  await act({
-                    action: "purpose_create",
-                    id: createPurposeId,
-                    groupId: group.id,
-                    title: f.get("title"),
-                    reason: f.get("reason"),
-                    start: f.get("start"),
-                    end: f.get("end"),
-                    target: Number(f.get("target")),
-                    unit: f.get("unit"),
-                  });
-                  setCreatePurposeId(crypto.randomUUID());
-                }}
-              >
-                <Input
-                  label="Lo que acordamos practicar"
-                  name="title"
-                  required
-                />
-                <Input label="Para qué (opcional)" name="reason" max={500} />
-                <div className="two-fields">
-                  <Input
-                    label="Desde"
-                    name="start"
-                    type="date"
-                    value={localDate()}
-                    required
-                  />
-                  <Input
-                    label="Hasta"
-                    name="end"
-                    type="date"
-                    value={localDate()}
-                    required
-                  />
-                </div>
-                <label>
-                  Ocasiones durante todo el período
-                  <input
-                    type="number"
-                    name="target"
-                    min={1}
-                    max={100}
-                    defaultValue={3}
-                    required
-                  />
-                </label>
-                <label>
-                  Lo registramos por
-                  <select name="unit">
-                    <option value="person">Persona</option>
-                    <option value="couple">Matrimonio vinculado</option>
-                  </select>
-                </label>
-                <p className="form-hint">
-                  El propósito lo acuerda el grupo. No reemplaza el propósito
-                  particular. Su meta y fechas quedan fijas para conservar el
-                  historial.
-                </p>
-              </Form>
-              </details><details className="card optional-details"><summary>Preparar un encuentro</summary><Form
-                title="Próximo encuentro"
-                busy={busy}
-                submit={(f) =>
-                  act({
-                    action: "meeting_save",
-                    groupId: group.id,
-                    version: group.meeting?.version ?? 0,
-                    data: Object.fromEntries(f.entries()),
-                  })
-                }
-              >
-                <Input
-                  label="Fecha"
-                  name="date"
-                  type="date"
-                  required
-                  value={group.meeting?.data.date || localDate()}
-                />
-                <Input
-                  label="Hora"
-                  name="time"
-                  type="time"
-                  required
-                  value={group.meeting?.data.time || "19:00"}
-                />
-                <Input
-                  label="Lugar o enlace"
-                  name="place"
-                  max={300}
-                  value={group.meeting?.data.place}
-                />
-                <Input
-                  label="Material oficial o autorizado (enlace HTTPS)"
-                  name="material"
-                  max={1000}
-                  value={group.meeting?.data.material}
-                />
-                <Input
-                  label="Pregunta para preparar"
-                  name="question"
-                  max={500}
-                  value={group.meeting?.data.question}
-                />
-                <Input
-                  label="Encargados de oración y preparación"
-                  name="roles"
-                  max={500}
-                  value={group.meeting?.data.roles}
-                />
-                <p className="form-hint">
-                  Al cambiar el encuentro se solicitan nuevas confirmaciones.
-                </p>
-              </Form>
-            </details></div>
-          )}
-          <details className="card optional-details" open>
-            <summary>Identidad e integrantes</summary>
-            {group.ideal && <p className="preserve">{group.ideal}</p>}
-            {group.members.map((m) => (
-              <p key={m.id}>
-                {m.name}
-                {group.ownerId === m.id ? " · Organizador" : ""}
-              </p>
-            ))}
-            {owner && (
-              <>
-                <Form
-                  title="Identidad del curso"
-                  busy={busy}
-                  submit={(f) =>
-                    act({
-                      action: "group_update",
-                      groupId: group.id,
-                      version: group.version,
-                      ...Object.fromEntries(f.entries()),
-                    })
-                  }
-                >
-                  <Input
-                    label="Nombre"
-                    name="name"
-                    value={group.name}
-                    max={80}
-                    required
-                  />
-                  <label>
-                    Símbolo del curso
-                    <select
-                      name="symbol"
-                      defaultValue={group.symbol || "heart"}
-                    >
-                      {[
-                        ["heart", "Corazón"],
-                        ["tree", "Árbol"],
-                        ["rosary", "Rosario"],
-                        ["cross", "Cruz"],
-                        ["flame", "Fuego"],
-                        ["star", "Estrella"],
-                      ].map(([id, label]) => (
-                        <option value={id} key={id}>
-                          {label}
-                        </option>
-                      ))}
-                    </select>
-                  </label>
-                  <Input
-                    label="Lema (opcional)"
-                    name="motto"
-                    value={group.motto}
-                    max={120}
-                  />
-                  <Input
-                    label="Ideal que el curso ya tiene (opcional)"
-                    name="ideal"
-                    value={group.ideal}
-                    max={500}
-                  />
-                </Form>
-                <button
-                  className="soft-button"
-                  disabled={busy}
-                  onClick={async () => {
-                    const v = await send({
-                      action: "invite_create",
-                      groupId: group.id,
-                    });
-                    if (v) {
-                      setToken(v.token);
-                      setCopied(false);
-                    }
-                  }}
-                >
-                  Crear invitación
-                </button>
-                {token && (
-                  <div className="invitation-code">
-                    <p>
-                      Enlace privado · vence en siete días. Requiere una cuenta
-                      habilitada en Alianza.
-                    </p>
-                    <input
-                      aria-label="Enlace de invitación al grupo"
-                      readOnly
-                      value={
-                        new URL("./", location.href).href + "#grupo=" + token
-                      }
-                    />
-                    <button
-                      className="soft-button"
-                      onClick={async () => {
-                        try {
-                          await navigator.clipboard.writeText(
-                            new URL("./", location.href).href +
-                              "#grupo=" +
-                              token,
-                          );
-                          setCopied(true);
-                        } catch {
-                          setError(
-                            "No se pudo copiar. Seleccioná el enlace para copiarlo.",
-                          );
-                        }
-                      }}
-                    >
-                      <Copy size={16} />
-                      {copied ? "Copiado" : "Copiar invitación"}
-                    </button>
-                  </div>
-                )}
-                <button
-                  className="text-button"
-                  disabled={busy}
-                  onClick={() =>
-                    send({ action: "invite_revoke", groupId: group.id })
-                  }
-                >
-                  Revocar enlaces de invitación
-                </button>
-                <Form
-                  title="Cambiar organizador"
-                  busy={busy}
-                  submit={(f) =>
-                    act({
-                      action: "group_transfer",
-                      groupId: group.id,
-                      userId: f.get("userId"),
-                    })
-                  }
-                >
-                  <label>
-                    Nuevo organizador
-                    <select name="userId">
-                      {group.members
-                        .filter((m) => m.id !== userId)
-                        .map((m) => (
-                          <option key={m.id} value={m.id}>
-                            {m.name}
-                          </option>
-                        ))}
-                    </select>
-                  </label>
-                </Form>
-              </>
-            )}
-            {!owner && (
-              <button
-                className="text-button"
-                disabled={busy}
-                onClick={async () => {
-                  if (await send({ action: "group_leave", groupId: group.id }))
-                    setGroupId("");
-                }}
-              >
-                Salir del grupo
-              </button>
-            )}
-          </details>
-          </div><div hidden={groupView!=="now"}><details className="card optional-details">
-            <summary>Historial del grupo</summary>
-            {group.purposes.map((p) => (
-              <PurposeCard
-                key={p.id}
-                p={p}
-                group={group}
-                act={act}
-                userId={userId}
-                coupleId={coupleId}
-                busy={busy}
-              />
-            ))}
-            {state.rosaries
-              .filter((r) => r.groupId === group.id)
-              .map((r) => (
-                <RosaryCard
-                  key={r.id}
-                  r={r}
-                  act={act}
-                  busy={busy}
-                  userId={userId}
-                  names={names}
-                  canManage={owner}
-                />
-              ))}
-          </details></div><div hidden={groupView!=="manage"}>
-          <p className="form-hint">
-            <a
-              href="https://www.santuariovallehermoso.cl/familias/material/cam/cam_3_cursos_programa_anual.pdf"
-              target="_blank"
-              rel="noreferrer"
-            >
-              Propósito y vida del grupo · Rama de Familias, Chile, pp. 23–25
-            </a>
-            . Organización y conteos propios de Alianza; no califican
-            crecimiento espiritual.
-          </p></div>
-        </>
-      )}
-    </>
-  );
-}
+export function CommunityPanel(props:Props){return <GroupsWorkspace {...props}/>;}

@@ -12,12 +12,7 @@ export type GroupPurpose = {
   joined: boolean;
   share: boolean;
   logs: PurposeLog[];
-  summary: null | {
-    units: number;
-    recordedUnits: number;
-    amount: number;
-    target: number;
-  };
+  summary: null | { participation:string; completed:string };
 };
 export type Meeting = {
   version: number;
@@ -31,7 +26,19 @@ export type Meeting = {
   };
   responses: { userId: string; attending: boolean }[];
 };
+export type GroupCapability='rosary'|'purpose'|'meeting'|'capital'|'materials'|'invites'|'identity';
+export type PermissionRule={mode:'coordinators'|'selected'|'all';users:string[]};
+export type CapitalCampaign={id:string;title:string;start:string;end:string;version:number;mine:{day:string;amount:number;version:number}[];summary:null|{range:string};share:boolean};
+export type GroupTask={id:string;title:string;assignee:string;done:boolean;version:number};
 export type CommunityGroup = {
+  photo?:string;
+  symbolImage?:string;
+  permissions?:Partial<Record<GroupCapability,PermissionRule>>;
+  coordinators?:string[];
+  capital?:CapitalCampaign[];
+  tasks?:GroupTask[];
+  materials?:{id:string;title:string;url:string}[];
+
   id: string;
   name: string;
   symbol?: "heart" | "tree" | "rosary" | "cross" | "flame" | "star";
@@ -44,6 +51,8 @@ export type CommunityGroup = {
   meeting: Meeting | null;
 };
 export type Rosary = {
+  personalStep?: number;
+  progressVersion?: number;
   id: string;
   ownerId: string;
   groupId: string | null;

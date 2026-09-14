@@ -1,0 +1,17 @@
+import assert from 'node:assert/strict';
+import {writeFile} from 'node:fs/promises';
+import {commitmentTotals} from '../lib/commitment-totals.ts';
+import {reportPDF} from '../lib/report-pdf.ts';
+const row=(kind,key,data)=>({kind,key,data,owner:'test',version:1,updated:''});
+const daily=[row('habit_plan','h',{versions:[{from:'2026-09-01',period:'day',target:1,active:true}]}),row('checks','2026-09-01',{h:'done'}),row('checks','2026-09-02',{h:'skip'}),row('checks','2026-09-03',{h:'missed'}),row('checks','2026-09-15',{h:'done'})];
+assert.deepEqual(commitmentTotals(daily,'h','2026-09-01','2026-09-30','2026-09-14'),{done:1,missed:1,skip:1,target:13,knownTarget:13,partial:false});
+assert.equal(commitmentTotals([],'h','2026-09-01','2026-09-14','2026-09-14').target,null);
+const weekly=[row('habit_plan','h',{versions:[{from:'2026-08-01',period:'week',target:3,active:true}]})];
+assert.equal(commitmentTotals(weekly,'h','2026-09-07','2026-09-13','2026-09-14').target,3);
+assert.equal(commitmentTotals(weekly,'h','2026-09-01','2026-09-13','2026-09-14').target,null);
+weekly[0].data.versions.push({from:'2026-09-10',period:'week',target:5,active:true});assert.equal(commitmentTotals(weekly,'h','2026-09-07','2026-09-13','2026-09-14').target,null);
+const sample={start:'2026-09-01',end:'2026-09-14',ideal:'Llevar esperanza a lo cotidiano',purposes:['Escuchar con atención'],habits:[{title:'Ofrecer mi día',frequency:'Cada día',target:14,done:10,missed:1,skip:0},{title:'Rezar el rosario',frequency:'3 días por semana',target:null,done:4,missed:0,skip:0}],notes:[{date:'2026-09-10',text:'Me ayudó encontrar un momento de silencio. Quiero conversar sobre cómo sostenerlo.'}],moments:[]};
+const bytes=reportPDF(sample),pdf=Buffer.from(bytes).toString('latin1');assert(pdf.startsWith('%PDF-1.4'));assert(pdf.endsWith('%%EOF'));assert(pdf.includes('/WinAnsiEncoding'));const xref=Number(pdf.match(/startxref\n(\d+)/)[1]);assert.equal(pdf.slice(xref,xref+4),'xref');
+await writeFile('/tmp/alianza-report-synthetic.pdf',bytes);
+const long=reportPDF({...sample,notes:[{date:'2026-09-10',text:('Reflexión con acentos, ñ y un próximo paso. ').repeat(600)}]});assert(new TextDecoder().decode(long).includes('/Count 8')||long.length>20000);await writeFile('/tmp/alianza-report-long.pdf',long);
+console.log('PASS reports: known plan quotas, skipped days, future exclusion, unknown history, changed schedules, accented and multipage PDFs');

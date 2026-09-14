@@ -3,7 +3,7 @@ import {dom} from './dom.mjs';
 const React=await import('react');const {render,screen,fireEvent,waitFor,cleanup}=await import('@testing-library/react');
 const {default:Journal}=await import('../app/journal.tsx');
 const {prepareSymbol}=await import('../app/symbol-picker.tsx');
-const fixture={user:{id:'test',role:'neca',symbol:'rosary',email:'test@example.test',relationshipVersion:2,dataEpoch:3,coupleId:null},own:[{owner:'test',kind:'profile',key:'me',version:1,data:{name:'Neca',ideal:'',shareNotes:false,shareSchedule:false}}],shared:[],partner:null,today:'2026-09-12'};
+const fixture={user:{id:'test',role:'neca',symbol:'rosary',email:'test@example.test',relationshipVersion:2,dataEpoch:3,coupleId:null},own:[{owner:'test',kind:'spaces',key:'experience',version:1,data:{enabled:['personal'],start:'personal'}},{owner:'test',kind:'profile',key:'me',version:1,data:{name:'Neca',ideal:'',shareNotes:false,shareSchedule:false}}],shared:[],partner:null,today:'2026-09-12'};
 const writes=[];let fail=false;
 async function request(init){if(init?.method!=='POST')return Response.json(fixture);const p=JSON.parse(init.body);if(fail)return Response.json({error:'Error de prueba'},{status:503});writes.push(p);const record={...p,owner:'test',version:p.version+1};fixture.own=[...fixture.own.filter(r=>r.kind!==p.kind||r.key!==p.key),record];return Response.json({record});}
 try{
@@ -12,6 +12,7 @@ try{
  assert(document.querySelector('img[src$="emblem.svg"]'));assert.equal(document.querySelector('.account-pill svg[viewBox="0 0 24 28"]'),null);
  fireEvent.mouseDown(screen.getByRole('tab',{name:'Mi espacio'}),{button:0,ctrlKey:false});fireEvent.click(screen.getByRole('button',{name:'Mi camino y mi ideal'}));await screen.findByRole('heading',{name:'Mi camino'});fireEvent.click(screen.getByRole('button',{name:'Ya tengo un ideal'}));fireEvent.click(screen.getByRole('button',{name:'Escribir o revisar mi ideal'}));await screen.findByRole('dialog');assert.equal(screen.getByLabelText('Cómo quiero que me llamen').value,'');assert(!screen.getByLabelText('Cómo quiero que me llamen').required);
  fireEvent.click(screen.getByRole('button',{name:'Cerrar',exact:true}));
+ fireEvent.click(screen.getByRole('button',{name:'Cambiar mi punto de partida'}));
  fireEvent.click(screen.getByRole('button',{name:'Estoy descubriéndolo'}));
  fireEvent.change(screen.getByLabelText('Mi borrador privado'),{target:{value:'Borrador que debe sobrevivir la navegación'}});
  const leaving=new dom.window.Event('beforeunload',{cancelable:true});window.dispatchEvent(leaving);assert(leaving.defaultPrevented);
@@ -19,7 +20,7 @@ try{
  fireEvent.click(screen.getByRole('button',{name:'Mi camino y mi ideal'}));
  assert.equal(screen.getByLabelText('Mi borrador privado').value,'Borrador que debe sobrevivir la navegación');
  fireEvent.mouseDown(screen.getByRole('tab',{name:'Mi espacio'}),{button:0,ctrlKey:false});
- assert.equal(screen.getByText('Usar Alianza en pareja').closest('details').open,false);
+ assert.equal(screen.queryByText('Usar Alianza en pareja'),null);
  fireEvent.click(screen.getByRole('button',{name:'Elegir mi símbolo'}));await screen.findByRole('dialog');
  assert.equal(screen.getByRole('button',{name:'Sin símbolo',exact:true}).getAttribute('aria-pressed'),'true');
  fireEvent.click(screen.getByRole('button',{name:'Árbol',exact:true}));fail=true;fireEvent.click(screen.getByRole('button',{name:'Guardar',exact:true}));await screen.findByRole('alert');assert(screen.getByRole('dialog'));

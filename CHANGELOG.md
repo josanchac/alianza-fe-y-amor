@@ -1,5 +1,23 @@
 # Historial de versiones de Alianza
 
+## 0.2.0-alpha.4 — 2026-09-14
+
+- Publicación controlada de la experiencia aprobada, con aviso de mantenimiento, protección de escrituras antiguas y conservación de borradores durante pausas.
+- Procedimiento y límites en docs/RELEASE_0.2.0-alpha.4.md. No se declara beta ni se amplía el acceso.
+
+## 0.2.0-alpha.3 — 2026-09-14
+
+- Eliminado el desplazamiento negativo del componente de ventanas que sobrevivía a la compilación.
+- Reproducción del fallo y verificación sobre archivos compilados, incluyendo tamaño móvil y texto ampliado.
+- Registro técnico y límites de validación en docs/RELEASE_0.2.0-alpha.3.md.
+
+## 0.2.0-alpha.2 — 2026-09-14
+
+- Logo de cabecera destacado y navegación al inicio del espacio activo.
+- Selección de espacios mediante botones accesibles.
+- Encuadre compartido de ventanas según el área visible, sin traslaciones acumuladas.
+- Ajustes de legibilidad a 320 px y texto ampliado. Evidencia en docs/RELEASE_0.2.0-alpha.2.md.
+
 ## 0.1.0-alpha.1 — 2026-09-13
 
 Primera entrega con numeración formal. Alfa privada para el piloto existente. El `1.0.0` anterior de package.json era metadato inicial, no una declaración de versión estable; no se renumeran ni sobrescriben entregas históricas.
@@ -28,3 +46,7 @@ Ver docs/UX_REVIEW_20260913.md y docs/RELEASE_0.1.0-alpha.1.md. Las pruebas sint
 - 2026-09-13: nueva experiencia y personalización del piloto, documentadas en RELEASE_READINESS.md y LIGHT_ENTRY_RELEASE.md.
 - 2026-09-13: tres vistas privadas de revisión, previas a la activación de comunidad; no equivalen a versiones del piloto.
 - Los commits originales permanecen como registro histórico; no se inventan etiquetas alfa o beta retrospectivas.
+
+## 0.2.0-alpha.1 · 2026-09-14
+
+Espacios independientes; rosario individual guiado y persistente; símbolos de avance; revisión con notas integradas; reporte PDF; identidad del grupo, capital de gracias y permisos por actividad. [Alcance, pruebas y límites](docs/RELEASE_0.2.0-alpha.1.md). Alfa privada; piloto sin modificar.

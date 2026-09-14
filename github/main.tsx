@@ -1,4 +1,6 @@
 import {LogoViewer} from '../app/logo-viewer';
+import {MaintenanceBoundary} from './maintenance';
+import {APP_VERSION} from '../app/version';
 import React, {useEffect,useMemo,useState,useRef} from 'react';
 import {createRoot} from 'react-dom/client';
 import {createClient,type SupabaseClient,type Session} from '@supabase/supabase-js';
@@ -82,9 +84,8 @@ async function start(){const root=createRoot(document.getElementById('root')!);i
   if(!/^https:\/\/[a-z0-9-]+\.supabase\.co$/.test(c.url)||!c.publishableKey?.startsWith('sb_publishable_'))throw new Error('Esta versión todavía está en preparación. El acceso se habilitará al completar la publicación.');
   // Only authentication tokens persist on this device; records stay in Postgres.
   const setupPassword=['invite','recovery'].includes(new URLSearchParams(location.hash.slice(1)).get('type')||'');
-  const client=createClient(c.url,c.publishableKey,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,storageKey:'alianza-auth'}});
+  const client=createClient(c.url,c.publishableKey,{global:{headers:{'x-client-info':'alianza/'+APP_VERSION}},auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,storageKey:'alianza-auth'}});
   const hash=new URLSearchParams(location.hash.slice(1));const token=hash.get('token_hash');const type=hash.get('type');
-  if(token&&(type==='invite'||type==='recovery'))root.render(<Invitation client={client} token={token} type={type} emailRecoveryEnabled={!!c.emailRecoveryEnabled}/>);
-  else root.render(<Login client={client} setupPassword={setupPassword} emailRecoveryEnabled={!!c.emailRecoveryEnabled}/>);
+  root.render(<MaintenanceBoundary client={client} initialActive={!!c.maintenance}>{token&&(type==='invite'||type==='recovery')?<Invitation client={client} token={token} type={type} emailRecoveryEnabled={!!c.emailRecoveryEnabled}/>:<Login client={client} setupPassword={setupPassword} emailRecoveryEnabled={!!c.emailRecoveryEnabled}/>}</MaintenanceBoundary>);
 }catch(e){root.render(<main className="gate"><LockKeyhole size={36}/><h1>Alianza · Fe y Amor</h1><p>{(e as Error).message}</p><button className="primary" onClick={()=>location.reload()}>Volver a intentar</button></main>);}}
 void start();
