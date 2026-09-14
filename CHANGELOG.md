@@ -1,5 +1,13 @@
 # Historial de versiones de Alianza
 
+## 0.2.0-alpha.5 — 2026-09-14
+
+- Rezo individual en pantalla dedicada, letra ajustable, avance amplio, pausa protegida y descarte confirmado.
+- Pantalla encendida cuando el dispositivo lo permite; continuidad al volver de una interrupción.
+- Padre nuestro y tres Avemarías iniciales configurables, con invocaciones Hija, Madre y Esposa como alternativa.
+- Letanías opcionales y cierre con compromiso de hoy, marcación automática voluntaria o registro solo por hoy, sin duplicados.
+- Evidencia y límites: docs/RELEASE_0.2.0-alpha.5.md.
+
 ## 0.2.0-alpha.4 — 2026-09-14
 
 - Publicación controlada de la experiencia aprobada, con aviso de mantenimiento, protección de escrituras antiguas y conservación de borradores durante pausas.

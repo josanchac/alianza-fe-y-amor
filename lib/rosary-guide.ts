@@ -7,4 +7,20 @@ export const PRAYERS={
  hail:{name:'Salve',text:'Dios te salve, Reina y Madre de misericordia, vida, dulzura y esperanza nuestra; Dios te salve. A ti llamamos los desterrados hijos de Eva; a ti suspiramos, gimiendo y llorando en este valle de lágrimas. Ea, pues, Señora, abogada nuestra, vuelve a nosotros esos tus ojos misericordiosos; y después de este destierro muéstranos a Jesús, fruto bendito de tu vientre. ¡Oh clemente, oh piadosa, oh dulce Virgen María! Ruega por nosotros, santa Madre de Dios, para que seamos dignos de alcanzar las promesas de nuestro Señor Jesucristo. Amén.'},
 };
 export type PrayerStep={prayer:keyof typeof PRAYERS;decade:number;bead?:number;total?:number};
+export type RosaryOpening={include:boolean;mary:'standard'|'trinitarian'};
+export const DEFAULT_OPENING:RosaryOpening={include:true,mary:'standard'};
+export const THREE_MARY_SOURCE='https://www.hrparish.org/rosario';
+// Traditional prayer; short invocations also documented in the Opus Dei devocionario.
+export const MARY_INVOCATIONS=['Hija de Dios Padre','Madre de Dios Hijo','Esposa de Dios Espíritu Santo'];
+export function prayerFor(step:PrayerStep,opening:RosaryOpening=DEFAULT_OPENING){
+ const prayer=PRAYERS[step.prayer];
+ if(step.decade===0&&step.prayer==='mary'&&opening.mary==='trinitarian'){
+  const invocation=MARY_INVOCATIONS[(step.bead??1)-1];
+  return {name:'Avemaría · '+invocation,text:prayer.text.replace('María, llena','María, '+invocation+', llena')};
+ }
+ return prayer;
+}
+export function nextPrayerStep(step:number,direction:1|-1,opening:RosaryOpening){
+ return !opening.include&&step===1&&direction===1?6:!opening.include&&step===6&&direction===-1?1:step+direction;
+}
 export const ROSARY_STEPS:PrayerStep[]=[{prayer:'cross',decade:0},{prayer:'creed',decade:0},{prayer:'father',decade:0},...Array.from({length:3},(_,i)=>({prayer:'mary' as const,decade:0,bead:i+1,total:3})),{prayer:'glory',decade:0},...Array.from({length:5},(_,i):PrayerStep[]=>[{prayer:'father',decade:i+1},...Array.from({length:10},(_,b)=>({prayer:'mary' as const,decade:i+1,bead:b+1,total:10})),{prayer:'glory',decade:i+1}]).flat(),{prayer:'hail',decade:6},{prayer:'cross',decade:6}];

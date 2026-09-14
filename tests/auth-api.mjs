@@ -85,6 +85,18 @@ try{
  await rpc(d.client,'product_metrics',{action:'consent',enabled:true});await rpc(d.client,'product_metrics',{action:'event',event:'open'});
  await rpc(d.client,'product_metrics',{action:'consent',enabled:false});assert.equal((await rpc(d.client,'product_metrics',{})).enabled,false);
  pass('Real JWT group isolation, invitation acceptance, leave revocation, anonymous denial and voluntary metrics');
+ const personalId=crypto.randomUUID();
+ await rpc(d.client,'community',{action:'rosary_create',id:personalId,scope:'personal',mystery:'joyful',mode:'free',dataEpoch:1});
+ await rpc(d.client,'community',{action:'rosary_opening',id:personalId,version:0,include:false,mary:'trinitarian',dataEpoch:1});
+ await assert.rejects(()=>rpc(e.client,'community',{action:'rosary_discard',id:personalId,version:1,dataEpoch:1}),x=>x.code==='42501');
+ let version=1;
+ for(const step of [1,6,...Array.from({length:63},(_,i)=>i+7)])await rpc(d.client,'community',{action:'rosary_step',id:personalId,version:version++,step,dataEpoch:1});
+ await rpc(d.client,'community',{action:'rosary_today',id:personalId,mode:'once',dataEpoch:1});
+ const once=(await rpc(d.client,'data')).own;
+ await rpc(d.client,'community',{action:'rosary_today',id:personalId,mode:'once',dataEpoch:1});
+ assert.deepEqual((await rpc(d.client,'data')).own,once);
+ assert(once.some(r=>r.kind==='habit'&&r.key.startsWith('rosary-once:')&&!r.data.active));
+ pass('Real API persists rosary options, rejects another user, skips optional opening and links only today without duplicate writes');
  // Verify the maintenance gate through real JWTs, PostgREST and the SDK header.
  assert.equal((await make().from('alianza_service_status').select('active').single()).data.active,false);
  assert((await d.client.from('alianza_service_status').update({active:true}).eq('id',true)).error);

@@ -51,6 +51,7 @@ export type CommunityGroup = {
   meeting: Meeting | null;
 };
 export type Rosary = {
+  opening?: import('./rosary-guide').RosaryOpening;
   personalStep?: number;
   progressVersion?: number;
   id: string;

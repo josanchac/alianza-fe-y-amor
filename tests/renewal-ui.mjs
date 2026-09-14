@@ -11,7 +11,7 @@ function RosaryHarness(){const [r,setR]=React.useState(base);return React.create
 try{
  render(React.createElement(RosaryHarness));assert.equal(screen.queryByText('Reservar'),null);assert.equal(screen.queryByText('Administrar este encuentro'),null);fireEvent.click(screen.getByRole('button',{name:'Empezar a rezar'}));assert(screen.getByRole('heading',{name:'Señal de la cruz'}));assert.equal(screen.queryByText(/En el nombre del Padre/),null);fireEvent.click(screen.getByRole('button',{name:'Ver oración'}));assert(screen.getByText(/En el nombre del Padre/));
  fail=true;fireEvent.click(screen.getByRole('button',{name:'Avanzar'}));await screen.findByRole('alert');assert(screen.getByRole('heading',{name:'Señal de la cruz'}));fail=false;
- for(let n=1;n<=ROSARY_STEPS.length;n++){fireEvent.click(screen.getByRole('button',{name:n===ROSARY_STEPS.length?'Terminé el rosario':'Avanzar'}));await waitFor(()=>assert.equal(calls.at(-1).step,n));}
+ for(let n=1;n<=ROSARY_STEPS.length;n++){const button=screen.getByRole('button',{name:n===ROSARY_STEPS.length?'Terminé el rosario':'Avanzar'});await waitFor(()=>assert.equal(button.disabled,false));fireEvent.click(button);await waitFor(()=>assert.equal(calls.at(-1).step,n));}
  assert(screen.getByRole('heading',{name:'Rosario concluido'}));assert.equal(calls.filter(p=>p.action==='rosary_complete').length,0);cleanup();
  const group={id:'g',name:'Curso',ownerId:'a',version:1,members:[{id:'a',name:'Ana'},{id:'b',name:'Beatriz'}],motto:'',ideal:'',purposes:[],meeting:null};
  const groupView=render(React.createElement(GroupsWorkspace,{state:{groups:[group],rosaries:[]},act:async p=>{calls.push(p);return{};},userId:'a',name:'Ana',busy:false}));
