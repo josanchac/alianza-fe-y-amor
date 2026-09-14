@@ -51,7 +51,7 @@
     "components/ui/table.tsx": "20e5a7f224959c6b75802995706a97e9da171f693d4b6b1b436388fcd9df96f3",
     "components/ui/tabs.tsx": "865d0194331b9b2be36723fa79d3575dc83078b4cb941cafee87cb72fc2cff46",
     "github/admin.tsx": "7c0333056a40104b35242473b2965de8b6a1fbd62158ecb0f95da76b0e5f32f7",
-    "github/config.public.json": "71eee60977eb38e50415b40fcf6076e4bb9ecfd3fe3ac51c729329f83259e159",
+    "github/config.public.json": "3ba1e30479eb52518df95c0da17c8a9d5a646beffb67846ca6b05400c685a945",
     "github/index.html": "fd340334f04792bf4791ef681c18b315489b93cc2f613536ad807d4a92905862",
     "github/main.tsx": "6b866115a095cbc584812943f3e9d226f07d2190bf2159754385f9ba9bf428aa",
     "github/maintenance.tsx": "835d6357879f2f831e06a77e0199b9dfd81365c3ee65dcf72c082e54ca652af7",
