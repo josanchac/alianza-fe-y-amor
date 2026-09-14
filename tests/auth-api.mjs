@@ -92,7 +92,7 @@ try{
  await assert.rejects(()=>rpc(d.client,'product_metrics',{action:'consent',enabled:true}),x=>x.code==='PT503');
  await sql.query("begin;select pg_advisory_xact_lock(8254,42);update public.alianza_service_status set active=false,required_version='test-new';commit");
  await assert.rejects(()=>rpc(d.client,'product_metrics',{action:'consent',enabled:true}),x=>x.code==='PT426');
- const current=createClient(api.href,config.ANON_KEY,{...options,global:{headers:{'x-client-info':'alianza/test-new'}}});
+ const current=createClient(api.href,config.ANON_KEY,{...options,global:{headers:{'X-Client-Info':'alianza/test-new'}}});
  const session=(await d.client.auth.getSession()).data.session;assert(!(await current.auth.setSession(session)).error);
  assert.equal((await rpc(current,'product_metrics',{action:'consent',enabled:true})).enabled,true);
  await sql.query('update public.alianza_service_status set required_version=null');
