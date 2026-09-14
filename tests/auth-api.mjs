@@ -85,6 +85,18 @@ try{
  await rpc(d.client,'product_metrics',{action:'consent',enabled:true});await rpc(d.client,'product_metrics',{action:'event',event:'open'});
  await rpc(d.client,'product_metrics',{action:'consent',enabled:false});assert.equal((await rpc(d.client,'product_metrics',{})).enabled,false);
  pass('Real JWT group isolation, invitation acceptance, leave revocation, anonymous denial and voluntary metrics');
+ // Verify the maintenance gate through real JWTs, PostgREST and the SDK header.
+ assert.equal((await make().from('alianza_service_status').select('active').single()).data.active,false);
+ assert((await d.client.from('alianza_service_status').update({active:true}).eq('id',true)).error);
+ await sql.query('begin;select pg_advisory_xact_lock(8254,42);update public.alianza_service_status set active=true;commit');
+ await assert.rejects(()=>rpc(d.client,'product_metrics',{action:'consent',enabled:true}),x=>x.code==='PT503');
+ await sql.query("begin;select pg_advisory_xact_lock(8254,42);update public.alianza_service_status set active=false,required_version='test-new';commit");
+ await assert.rejects(()=>rpc(d.client,'product_metrics',{action:'consent',enabled:true}),x=>x.code==='PT426');
+ const current=createClient(api.href,config.ANON_KEY,{...options,global:{headers:{'x-client-info':'alianza/test-new'}}});
+ const session=(await d.client.auth.getSession()).data.session;assert(!(await current.auth.setSession(session)).error);
+ assert.equal((await rpc(current,'product_metrics',{action:'consent',enabled:true})).enabled,true);
+ await sql.query('update public.alianza_service_status set required_version=null');
+ pass('Real API maintenance blocks writes, rejects old SDK clients and accepts the explicit current-version header without granting status-edit permissions');
  const refreshed=await a.client.auth.refreshSession();assert(!refreshed.error);assert.equal((await rpc(a.client,'data')).user.id,a.id);
  const refreshToken=refreshed.data.session.refresh_token;assert(!(await a.client.auth.signOut({scope:'global'})).error);
  assert((await make().auth.refreshSession({refresh_token:refreshToken})).error,'Signed-out refresh token rejected');
