@@ -18,6 +18,10 @@ try{
  const combined=(await Promise.all(pending.map(f=>readFile('supabase/migrations/'+f,'utf8')))).map(s=>s.replace(/^begin;\s*/i,'').replace(/commit;\s*$/i,'')).join('\n');
  const verify=await readFile('scripts/operations/verify-release-checkpoint.sql','utf8');
  await db.exec('begin;'+combined+'\nselect alianza_private.install_maintenance_triggers();\n'+verify+'\ncommit;');
+ // Rehearse alpha.5 on the alpha.4 snapshot without changing previous rows.
+ await db.exec(await readFile('scripts/operations/create-release-checkpoint.sql','utf8'));
+ const comfort=(await readFile('supabase/migrations/20260914213938_rosary_comfort.sql','utf8')).replace(/^begin;\s*/i,'').replace(/commit;\s*$/i,'');
+ await db.exec('begin;'+comfort+'\n'+verify+'\ncommit;');
  // A silent change to an existing value must fail the same pre-commit check.
  await db.exec("begin;update alianza_private.members set name='changed';");
  await assert.rejects(()=>db.exec(verify),/Existing values changed/);await db.exec('rollback');

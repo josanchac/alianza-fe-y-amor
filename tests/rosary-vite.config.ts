@@ -1,0 +1,1 @@
+import {defineConfig} from 'vite';import react from '@vitejs/plugin-react';import path from 'node:path';export default defineConfig({root:path.resolve('.'),resolve:{alias:{'@':path.resolve('.')}},plugins:[react()],server:{host:'0.0.0.0',port:5175},build:{outDir:'/tmp/alianza-rosary-qa',rollupOptions:{input:{rosary:'tests/rosary-visual.html',frame:'tests/rosary-frame.html'}}}});

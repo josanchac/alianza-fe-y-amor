@@ -375,6 +375,7 @@ export function RosaryCard({
   names = {},
   canManage = false,
   habits = [],
+  checks = {},
   onLinked,
 }: {
   r: Rosary;
@@ -384,9 +385,10 @@ export function RosaryCard({
   names?: Record<string, string>;
   canManage?: boolean;
   habits?: { key: string; data: { title: string; active: boolean } }[];
+  checks?: Record<string,string>;
   onLinked?: () => void;
 }) {
-  if(!r.groupId&&!r.coupleId)return <PersonalRosary r={r} act={act} busy={busy} habits={habits} onLinked={onLinked}/>;
+  if(!r.groupId&&!r.coupleId)return <PersonalRosary r={r} act={act} busy={busy} habits={habits} checks={checks} onLinked={onLinked}/>;
   return <SharedRosaryCard r={r} act={act} busy={busy} userId={userId} names={names} canManage={canManage} habits={habits} onLinked={onLinked}/>;
 }
 function SharedRosaryCard({r,act,busy,userId,names={},canManage=false,habits=[],onLinked}:Parameters<typeof RosaryCard>[0]){

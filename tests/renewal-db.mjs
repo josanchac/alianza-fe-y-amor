@@ -90,6 +90,44 @@ try {
   await as(ids[1]);for(let step=2;step<=69;step++)st=await act({action:'rosary_step',id:personal,step,version:step-1});
   assert.equal(st.rosaries.find(r=>r.id===personal).mine.length,5);
   await assert.rejects(()=>act({action:'rosary_step',id:personal,step:69,version:69}));
+// Alpha.5: configured opening is private, synchronized and cannot change mid-prayer.
+  const configurable=crypto.randomUUID();await act({action:'rosary_create',id:configurable,scope:'personal',mystery:'joyful',mode:'free'});
+  st=await act({action:'rosary_opening',id:configurable,version:0,include:false,mary:'trinitarian'});
+  assert.deepEqual(st.rosaries.find(r=>r.id===configurable).opening,{include:false,mary:'trinitarian'});
+  await assert.rejects(()=>act({action:'rosary_opening',id:configurable,version:0,include:true,mary:'standard'}));
+  await act({action:'rosary_step',id:configurable,version:1,step:1});
+  await assert.rejects(()=>act({action:'rosary_step',id:configurable,version:2,step:2}));
+  await act({action:'rosary_step',id:configurable,version:2,step:6});
+  await act({action:'rosary_step',id:configurable,version:3,step:1});
+  await assert.rejects(()=>act({action:'rosary_opening',id:configurable,version:4,include:true,mary:'standard'}));
+  await assert.rejects(()=>act({action:'rosary_discard',id:configurable,version:3}));
+  await as(ids[0]);await assert.rejects(()=>act({action:'rosary_discard',id:configurable,version:4}));
+  assert(!(await act()).rosaries.some(r=>r.id===configurable));
+  await as(ids[1]);st=await act({action:'rosary_discard',id:configurable,version:4});
+  assert.equal(st.rosaries.find(r=>r.id===configurable).cancelled,true);
+  assert.equal(st.rosaries.find(r=>r.id===configurable).mine.length,0);
+  await assert.rejects(()=>act({action:'rosary_step',id:configurable,version:5,step:6}));
+  await assert.rejects(()=>act({action:'rosary_today',id:configurable,mode:'once'}));
+  await assert.rejects(()=>act({action:'rosary_discard',id:personal,version:69}));
+  await assert.rejects(()=>act({action:'rosary_discard',id:rid,version:0}));
+  // Exactly-once day marking preserves other checks and makes no future obligation.
+  await data({kind:'habit',key:'regular-rosary',version:0,dataEpoch:1,data:{title:'Mi rosario',active:true,moment:'Mañana',anchor:'',minimum:''}});
+  await data({kind:'checks',key:today,version:0,dataEpoch:1,data:{other:'missed'}});
+  await act({action:'rosary_today',id:personal,mode:'existing',habitKey:'regular-rosary'});
+  let own=(await data()).own;let check=own.find(r=>r.kind==='checks'&&r.key===today);
+  assert.equal(check.data.other,'missed');assert.equal(check.data['regular-rosary'],'done');
+  const checkVersion=check.version;
+  await act({action:'rosary_today',id:personal,mode:'existing',habitKey:'regular-rosary'});
+  assert.equal((await data()).own.find(r=>r.kind==='checks'&&r.key===today).version,checkVersion);
+  await act({action:'rosary_today',id:personal,mode:'once'});const onceState=(await data()).own;
+  await act({action:'rosary_today',id:personal,mode:'once'});own=(await data()).own;
+  assert.deepEqual(own,onceState);
+  const onceKey='rosary-once:'+today,one=own.find(r=>r.kind==='habit'&&r.key===onceKey);
+  assert.equal(one.data.active,false);
+  const versions=own.find(r=>r.kind==='habit_plan'&&r.key===onceKey).data.versions;
+  assert.equal(versions.length,2);assert.equal(versions[0].from,today);assert.equal(versions[0].active,true);assert.equal(versions[1].active,false);assert(versions[1].from>today);
+  await assert.rejects(()=>db.query('select * from alianza_private.rosary_settings'));
+  await assert.rejects(()=>db.query("select alianza_private.community_before_rosary_comfort('{}')"));
   await data({kind:'spaces',key:'experience',data:{enabled:['group'],start:'group'},version:0,dataEpoch:1});
   assert((await data()).own.some(r=>r.kind==='spaces'));await as(ids[0]);assert(!(await data()).own.some(r=>r.kind==='spaces'));
   // Each member sees only their own capital log, including the coordinator.
