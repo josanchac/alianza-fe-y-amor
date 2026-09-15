@@ -106,9 +106,9 @@ try{
  assert.equal((await rpc(d.client,'relationship',pairPayload({action:'create_request',email:e.email}))).state.invitations[0].id,pi.id);
  assert.equal((await rpc(e.client,'data')).receivedInvitations[0].id,pi.id);
  await assert.rejects(()=>rpc(d.client,'relationship',pairPayload({action:'accept_request',id:pi.id})),x=>x.code==='PT409');
- const linked=(await rpc(e.client,'relationship',pairPayload({action:'accept_request',id:pi.id}))).state;
- assert(linked.user.coupleId);assert.equal(linked.partner.shareSchedule,false);assert.equal(linked.partner.shareNotes,false);
- assert.equal((await rpc(d.client,'data')).user.coupleId,linked.user.coupleId);
+ const requestLinked=(await rpc(e.client,'relationship',pairPayload({action:'accept_request',id:pi.id}))).state;
+ assert(requestLinked.user.coupleId);assert.equal(requestLinked.partner.shareSchedule,false);assert.equal(requestLinked.partner.shareNotes,false);
+ assert.equal((await rpc(d.client,'data')).user.coupleId,requestLinked.user.coupleId);
  pass('Real JWT exact-email recognition, durable requests, recipient-only acceptance and sharing-off couple space');
  // Verify the maintenance gate through real JWTs, PostgREST and the SDK header.
  assert.equal((await make().from('alianza_service_status').select('active').single()).data.active,false);

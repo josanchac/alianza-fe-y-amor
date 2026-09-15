@@ -30,6 +30,23 @@ for(const file of files.filter(f=>f>='20260909143538'))await admin.query(await r
 assert.deepEqual((await admin.query('select * from alianza_private.records order by owner,kind,key')).rows,before);
 pass('All incremental migrations preserve original personal records on PostgreSQL');
 {
+ const a=await person(),b=await person();
+ const inv=await rpc(a.uid,'relationship',{action:'create_request',email:b.email,relationshipVersion:1,dataEpoch:1});
+ const accept={action:'accept_request',id:inv.state.invitations[0].id,relationshipVersion:1,dataEpoch:1};
+ const results=await simultaneous([[b.uid,'relationship',accept],[b.uid,'relationship',accept]]);
+ assert.equal(results.filter(x=>x.ok).length,1);assert.equal(results.find(x=>!x.ok).code,'PT409');
+ const snapshot=await rpc(b.uid,'data',null);assert(snapshot.user.coupleId);assert.equal(snapshot.partner.shareSchedule,false);
+ assert.equal((await admin.query('select count(*)::int n from alianza_private.couple_participants where couple_id=$1',[snapshot.user.coupleId])).rows[0].n,2);
+ pass('Two simultaneous request-ID accepts create one couple with sharing off');
+}
+{
+ const a=await person(),b=await person();const payload={action:'create_request',email:b.email,relationshipVersion:1,dataEpoch:1};
+ const results=await simultaneous([[a.uid,'relationship',payload],[a.uid,'relationship',payload]]);
+ assert(results.every(x=>x.ok));assert.equal(results[0].value.state.invitations[0].id,results[1].value.state.invitations[0].id);
+ assert.equal((await rpc(a.uid,'data',null)).invitations.length,1);
+ pass('Concurrent repeated requests preserve one invitation and one reusable link');
+}
+{
  const a=await person(),b=await person(),inv=await invitation(a,b);const results=await simultaneous([[b.uid,'relationship',{action:'accept',token:inv.token,relationshipVersion:1}],[b.uid,'relationship',{action:'accept',token:inv.token,relationshipVersion:1}]]);
  assert.equal(results.filter(x=>x.ok).length,1);assert.equal(results.find(x=>!x.ok).code,'PT409');
  const s=await rpc(a.uid,'data',null);assert(s.user.coupleId);assert.equal((await admin.query('select count(*)::int n from alianza_private.couple_participants where couple_id=$1',[s.user.coupleId])).rows[0].n,2);
