@@ -97,6 +97,19 @@ try{
  assert.deepEqual((await rpc(d.client,'data')).own,once);
  assert(once.some(r=>r.kind==='habit'&&r.key.startsWith('rosary-once:')&&!r.data.active));
  pass('Real API persists rosary options, rejects another user, skips optional opening and links only today without duplicate writes');
+ // Pairing requests use real Auth email ownership, not client user metadata.
+ const pairPayload=p=>({relationshipVersion:1,dataEpoch:1,...p});
+ assert.equal((await rpc(d.client,'relationship',pairPayload({action:'lookup_recipient',email:e.email}))).candidate,null);
+ await rpc(e.client,'relationship',pairPayload({action:'pairing_visibility',name:'Nombre elegido E',enabled:true,version:0}));
+ assert.equal((await rpc(d.client,'relationship',pairPayload({action:'lookup_recipient',email:e.email}))).candidate.name,'Nombre elegido E');
+ const pi=(await rpc(d.client,'relationship',pairPayload({action:'create_request',email:e.email}))).state.invitations[0];
+ assert.equal((await rpc(d.client,'relationship',pairPayload({action:'create_request',email:e.email}))).state.invitations[0].id,pi.id);
+ assert.equal((await rpc(e.client,'data')).receivedInvitations[0].id,pi.id);
+ await assert.rejects(()=>rpc(d.client,'relationship',pairPayload({action:'accept_request',id:pi.id})),x=>x.code==='PT409');
+ const linked=(await rpc(e.client,'relationship',pairPayload({action:'accept_request',id:pi.id}))).state;
+ assert(linked.user.coupleId);assert.equal(linked.partner.shareSchedule,false);assert.equal(linked.partner.shareNotes,false);
+ assert.equal((await rpc(d.client,'data')).user.coupleId,linked.user.coupleId);
+ pass('Real JWT exact-email recognition, durable requests, recipient-only acceptance and sharing-off couple space');
  // Verify the maintenance gate through real JWTs, PostgREST and the SDK header.
  assert.equal((await make().from('alianza_service_status').select('active').single()).data.active,false);
  assert((await d.client.from('alianza_service_status').update({active:true}).eq('id',true)).error);

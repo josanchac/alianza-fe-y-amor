@@ -1,0 +1,55 @@
+import {useRef,useState} from 'react';
+import {Heart,Mail,Link as LinkIcon,Check,UserRound} from 'lucide-react';
+import {Dialog,DialogContent,DialogTitle,DialogDescription} from '@/components/ui/dialog';
+import type {PairAction} from './pairing';
+
+export type PairRequest={id:string;email:string;name?:string;expiresAt:string};
+export type PairIdentity={enabled:boolean;name:string;version:number};
+export function invitationLink(id:string){const url=new URL(location.href);url.search='';url.hash='';url.searchParams.set('vinculacion',id);return url.href;}
+const consentText='Las 4 Rs y el ideal matrimonial serán compartidos. El horario, las reflexiones y el ideal personal seguirán privados.';
+
+export function PairInvitation({act,busy,onSent}:{act:PairAction;busy:boolean;onSent:()=>void}){
+ const [email,setEmail]=useState(''),[review,setReview]=useState<{email:string;name?:string}|null>(null),[consent,setConsent]=useState(false),[error,setError]=useState(''),[working,setWorking]=useState(false);
+ const generation=useRef(0),locked=useRef(false);
+ async function lookup(){if(locked.current)return;locked.current=true;setWorking(true);setError('');const request=++generation.current;const target=email.trim().toLowerCase();setReview(null);setConsent(false);try{const result=await act({action:'lookup_recipient',email:target});if(generation.current===request)setReview({email:target,name:result.candidate?.name});}catch(e){if(generation.current===request)setError((e as Error).message);}finally{locked.current=false;setWorking(false);}}
+ async function send(){if(!review||!consent||locked.current)return;locked.current=true;setWorking(true);setError('');try{await act({action:'create_request',email:review.email});onSent();}catch(e){setError((e as Error).message);}finally{locked.current=false;setWorking(false);}}
+ return <form className="pair-request-form" onSubmit={e=>{e.preventDefault();void lookup();}}>
+  <label>Correo de tu cónyuge<input type="email" required maxLength={254} autoComplete="off" autoCapitalize="none" value={email} onChange={e=>{generation.current++;setEmail(e.target.value);setReview(null);setConsent(false);setError('');}}/></label>
+  {!review&&<button className="primary" disabled={busy||working}>Continuar</button>}
+  {review&&<><div className="pair-person"><UserRound aria-hidden="true" size={28}/><div><strong>{review.name||'Enviar a este correo'}</strong><span className="break">{review.email}</span></div></div>
+   {!review.name&&<p className="muted">No hay un nombre visible. Revisá el correo; la solicitud solo podrá aceptarse desde esa cuenta.</p>}
+   <p>{consentText}</p><label className="consent-row"><input type="checkbox" checked={consent} onChange={e=>setConsent(e.target.checked)}/>Quiero vincularme con esta persona. Mi nombre y correo aparecerán en su solicitud.</label>
+   <button type="button" className="primary" disabled={busy||working||!consent} onClick={()=>void send()}>Enviar solicitud</button><p className="muted">Al entrar con ese correo, podrá aceptarla en Alianza. También podrás compartirle el enlace.</p></>}
+  {error&&<p role="alert" className="notice">{error}</p>}
+ </form>;
+}
+
+export function PendingPairRequest({request,act,busy}:{request:PairRequest;act:PairAction;busy:boolean}){
+ const [message,setMessage]=useState(''),[error,setError]=useState(''),[manual,setManual]=useState(false),[cancel,setCancel]=useState(false),[working,setWorking]=useState(false);
+ const locked=useRef(false);const link=invitationLink(request.id);
+ async function copy(){setError('');try{await navigator.clipboard.writeText(link);setMessage('Enlace copiado');}catch{setManual(true);setMessage('Podés copiar el enlace aquí.');}}
+ async function share(){setError('');if(!navigator.share){await copy();return;}try{await navigator.share({title:'Solicitud en Alianza',text:'Podés revisar mi solicitud de vinculación en Alianza.',url:link});}catch(e){if((e as Error).name!=='AbortError'){setManual(true);setError('No se pudo compartir. Podés copiar el enlace.');}}}
+ return <section className="pair-pending"><p className="eyebrow">SOLICITUD ENVIADA</p><h3>Esperando su respuesta</h3><p className="break">{request.email}</p><p className="muted">Disponible hasta el {new Date(request.expiresAt).toLocaleDateString('es-CR',{timeZone:'America/Costa_Rica'})}.</p>
+  <div className="pair-actions"><button className="soft-button" onClick={()=>void share()}><LinkIcon size={18} aria-hidden="true"/>Compartir enlace</button><button className="text-button" onClick={()=>void copy()}>Copiar enlace</button></div>
+  {manual&&<label>Enlace para compartir<input readOnly value={link} onFocus={e=>e.target.select()}/></label>}
+  {cancel?<div className="notice"><p>¿Cancelar esta solicitud?</p><button className="soft-button" disabled={busy||working} onClick={async()=>{if(locked.current)return;locked.current=true;setWorking(true);setError('');try{await act({action:'cancel',id:request.id});}catch(e){setError((e as Error).message);}finally{locked.current=false;setWorking(false);}}}>Sí, cancelar solicitud</button><button className="text-button" disabled={working} onClick={()=>setCancel(false)}>Conservar solicitud</button></div>:<button className="text-button" disabled={busy} onClick={()=>setCancel(true)}>Cancelar solicitud</button>}
+  {message&&<p role="status">{message}</p>}{error&&<p role="alert">{error}</p>}
+ </section>;
+}
+
+export function PairingRecognition({identity,act,busy}:{identity?:PairIdentity;act:PairAction;busy:boolean}){
+ const [open,setOpen]=useState(false),[draft,setDraft]=useState<PairIdentity>({enabled:false,name:'',version:0}),[error,setError]=useState(''),[working,setWorking]=useState(false);const locked=useRef(false);
+ return <><button className="text-button" onClick={()=>{setDraft(identity??{enabled:false,name:'',version:0});setError('');setOpen(true);}}>Cómo me reconoce mi pareja</button><Dialog open={open} onOpenChange={setOpen}><DialogContent className="journal-dialog"><DialogTitle>Cómo me reconoce mi pareja</DialogTitle><DialogDescription>Solo al escribir tu correo completo. Vos elegís si mostrar tu nombre.</DialogDescription><form onSubmit={async e=>{e.preventDefault();if(locked.current)return;locked.current=true;setWorking(true);setError('');try{await act({action:'pairing_visibility',...draft});setOpen(false);}catch(e){setError((e as Error).message);}finally{locked.current=false;setWorking(false);}}}><label>Nombre para reconocerte<input maxLength={80} required={draft.enabled} value={draft.name} onChange={e=>setDraft({...draft,name:e.target.value})}/></label><label className="consent-row"><input type="checkbox" checked={draft.enabled} onChange={e=>setDraft({...draft,enabled:e.target.checked})}/>Mostrar este nombre al buscar mi correo completo</label><button className="primary" disabled={busy||working}>Guardar preferencia</button>{error&&<p role="alert">{error}</p>}</form></DialogContent></Dialog></>;
+}
+
+export function PairingInbox({requests=[],act,busy,onAccepted}:{requests?:PairRequest[];act:PairAction;busy:boolean;onAccepted:()=>void}){
+ const [open,setOpen]=useState(false),[selected,setSelected]=useState<string|null>(null),[consent,setConsent]=useState(false),[error,setError]=useState(''),[working,setWorking]=useState(false),[done,setDone]=useState(false);const locked=useRef(false);
+ const request=requests.find(r=>r.id===selected);const linkId=new URLSearchParams(location.search).get('vinculacion');
+ async function respond(action:'accept_request'|'reject_request'){if(!request||locked.current||action==='accept_request'&&!consent)return;locked.current=true;setWorking(true);setError('');try{await act({action,id:request.id});setSelected(null);setConsent(false);if(action==='accept_request')setDone(true);}catch(e){setError((e as Error).message);}finally{locked.current=false;setWorking(false);}}
+ if(!requests.length&&!open&&!linkId)return null;
+ return <><button className="pair-inbox-notice" onClick={()=>{setOpen(true);setSelected(requests.find(r=>r.id===linkId)?.id??(requests.length===1?requests[0].id:null));setConsent(false);setError('');setDone(false);}}><Mail size={22} aria-hidden="true"/><span><strong>{requests.length===1?'Tenés una solicitud de vinculación':requests.length?`${requests.length} solicitudes de vinculación`:'Revisar enlace de vinculación'}</strong><small>Revisarla cuando quieras</small></span></button>
+ <Dialog open={open} onOpenChange={v=>{if(!working){setOpen(v);if(!v&&linkId){const url=new URL(location.href);url.searchParams.delete('vinculacion');history.replaceState(history.state,'',url);}}}}><DialogContent className="journal-dialog"><DialogTitle>{done?'Ya están vinculados':'Vinculación en pareja'}</DialogTitle><DialogDescription>{done?'Cada uno conserva su espacio personal.':'Solo se vinculan si ambos están de acuerdo.'}</DialogDescription>
+  {done?<><Check className="gold-icon" size={40} aria-hidden="true"/><p>{consentText}</p><button className="primary" onClick={()=>{setOpen(false);if(linkId){const url=new URL(location.href);url.searchParams.delete('vinculacion');history.replaceState(history.state,'',url);}onAccepted();}}>Ir a nuestro espacio</button></>:request?<><div className="pair-person"><Heart size={28} aria-hidden="true"/><div><strong>{request.name||'Esta persona'} quiere vincularse con vos</strong><span className="break">{request.email}</span></div></div><p>{consentText}</p><label className="consent-row"><input type="checkbox" checked={consent} onChange={e=>setConsent(e.target.checked)}/>Reconozco a esta persona y quiero vincular nuestras cuentas.</label><button className="primary" disabled={busy||working||!consent} onClick={()=>void respond('accept_request')}>Aceptar vinculación</button><button className="text-button" disabled={busy||working} onClick={()=>void respond('reject_request')}>Rechazar solicitud</button>{requests.length>1&&<button className="text-button" disabled={working} onClick={()=>{setSelected(null);setConsent(false);setError('');}}>Ver otras solicitudes</button>}</>:<>{requests.map(r=><button className="soft-button pair-person" key={r.id} onClick={()=>{setSelected(r.id);setConsent(false);setError('');}}><span><strong>{r.name||'Solicitud recibida'}</strong><span className="break">{r.email}</span></span></button>)}{!requests.length&&<p>No hay solicitudes pendientes para esta cuenta. Si recibiste un enlace, ingresá con el correo al que se envió; también puede haber vencido o sido cancelado.</p>}</>}
+  {error&&<p className="notice" role="alert">{error}</p>}
+ </DialogContent></Dialog></>;
+}

@@ -1,5 +1,13 @@
 # Historial de versiones de Alianza
 
+## 0.2.0-alpha.6 — 2026-09-15
+
+- Solicitudes de pareja dentro de Alianza, visibles desde cualquier espacio y sin abrir ventanas automáticamente.
+- Solicitud pendiente recuperable, enlace para compartir, cancelación y aceptación sin copiar códigos.
+- Reconocimiento opcional por nombre al ingresar el correo completo; activado únicamente por su titular.
+- Aceptación mutua habilita el espacio de pareja sin activar permisos personales ni modificar otros espacios.
+- Los códigos anteriores siguen funcionando. Evidencia y límites: docs/RELEASE_0.2.0-alpha.6.md.
+
 ## 0.2.0-alpha.5 — 2026-09-14
 
 - Rezo individual en pantalla dedicada, letra ajustable, avance amplio, pausa protegida y descarte confirmado.

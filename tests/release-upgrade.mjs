@@ -22,6 +22,10 @@ try{
  await db.exec(await readFile('scripts/operations/create-release-checkpoint.sql','utf8'));
  const comfort=(await readFile('supabase/migrations/20260914213938_rosary_comfort.sql','utf8')).replace(/^begin;\s*/i,'').replace(/commit;\s*$/i,'');
  await db.exec('begin;'+comfort+'\n'+verify+'\ncommit;');
+ // Rehearse alpha.6: pending invitations and journals remain byte-for-byte intact.
+ await db.exec(await readFile('scripts/operations/create-release-checkpoint.sql','utf8'));
+ const pairing=(await readFile('supabase/migrations/20260915030736_pairing_requests.sql','utf8')).replace(/^begin;\s*/i,'').replace(/commit;\s*$/i,'');
+ await db.exec('begin;'+pairing+'\n'+verify+'\ncommit;');
  // A silent change to an existing value must fail the same pre-commit check.
  await db.exec("begin;update alianza_private.members set name='changed';");
  await assert.rejects(()=>db.exec(verify),/Existing values changed/);await db.exec('rollback');
