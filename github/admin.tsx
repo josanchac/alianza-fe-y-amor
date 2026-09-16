@@ -1,5 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import type { SupabaseClient } from "@supabase/supabase-js";
+import {PilotPanel} from './pilot';
+import {PilotEvents,type PilotEvent} from '../app/pilot-events';
 export type Activity = {
   asOf: string;
   suppressed: boolean;
@@ -52,7 +54,7 @@ export function AdminPanel({
         ← Volver a mi espacio
       </button>
       <h1>Uso y mejora de Alianza</h1>
-      <p>Indicadores agregados · participación voluntaria</p>
+      <p>Indicadores agregados · participación voluntaria</p><PilotPanel client={client}/><h2>Medición general</h2>
       <section className="admin-privacy">
         <strong>Sin actividad individual ni contenido espiritual.</strong>
         <p>
@@ -153,17 +155,23 @@ export function UserEnvironment({
   userId,
   children,
   onConsentChange,
+  onPilotChange,
 }: {
   client: SupabaseClient;
   userId: string;
   children: React.ReactNode;
   onConsentChange?: (enabled: boolean) => void;
+  onPilotChange?: (enabled: boolean) => void;
 }) {
   const [admin, setAdmin] = useState(false),
     [show, setShow] = useState(false),
     [enabled, setEnabled] = useState(false),
     [error, setError] = useState(""),
     [answer, setAnswer] = useState("");
+  const [pilot,setPilot]=useState(false),[pilotBusy,setPilotBusy]=useState(false);
+  const recordPilot=useCallback((event:PilotEvent)=>{if(pilot)void client.rpc('alianza_pilot_metrics',{payload:{action:'event',event}}).then(()=>{});},[client,pilot]);
+  useEffect(()=>{let active=true;setPilot(false);client.rpc('alianza_pilot_metrics',{payload:{action:'status'}}).then(({data,error})=>{if(active&&!error)setPilot(!!data?.enabled);});return()=>{active=false;};},[client,userId]);
+  useEffect(()=>{onPilotChange?.(pilot);if(!pilot)return;const record=()=>{if(document.visibilityState==='visible')void client.rpc('alianza_pilot_metrics',{payload:{action:'event',event:'open'}}).then(()=>{});};record();document.addEventListener('visibilitychange',record);return()=>document.removeEventListener('visibilitychange',record);},[client,pilot,onPilotChange]);
   useEffect(() => {
     let active = true;
     client.rpc("alianza_is_admin").then(({ data, error }) => {
@@ -204,9 +212,12 @@ export function UserEnvironment({
             <button onClick={() => setShow(true)}>Uso y mejora</button>
           </div>
         )}
-        {children}
+        <PilotEvents.Provider value={recordPilot}>{children}</PilotEvents.Provider>
         <details className="activity-disclosure">
           <summary>Ayudar a mejorar Alianza</summary>
+          <h3>Piloto cercano</h3><p>Compartí qué funciones usás y si la app carga y guarda bien. El administrador verá cantidades incluso con pocos participantes, sin nombres ni textos. Por el tamaño del grupo podría deducir actividad; no es una medición anónima.</p>
+          <label className="consent-label"><input type="checkbox" checked={pilot} disabled={pilotBusy} onChange={async e=>{const value=e.target.checked;setPilotBusy(true);try{const r=await client.rpc('alianza_pilot_metrics',{payload:{action:'consent',enabled:value}});if(r.error)throw Error();setPilot(value);setError('');}catch{setError('No se pudo guardar tu participación en el piloto.');}finally{setPilotBusy(false);}}}/>Participar en el piloto cercano</label><p>Opcional. Al desactivar se eliminan tus eventos del piloto. Se conservan como máximo 90 días y no se recupera actividad anterior a tu aceptación.</p>
+          <h3>Medición general</h3>
           <p>
             Podés compartir señales técnicas de uso, guardados y errores. No se
             envían textos, nombres de compromisos, pantallas visitadas ni

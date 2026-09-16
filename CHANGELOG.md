@@ -1,5 +1,13 @@
 # Historial de versiones de Alianza
 
+## 0.2.0-alpha.8 — 2026-09-16 (preparada, no publicada)
+
+- Panel «Piloto cercano»: actividad y errores visibles desde un participante que acepte esta medición.
+- Activos en 7/30 días y uso por función, sin nombres, correos ni textos privados.
+- Participación explícita independiente del consentimiento general; al retirarla se eliminan sus eventos del piloto.
+- Umbral general de cinco participantes conservado. No se reconstruye el pasado ni se interpreta cumplimiento espiritual.
+- Evidencia: docs/RELEASE_0.2.0-alpha.8.md.
+
 ## 0.2.0-alpha.7 — 2026-09-16 (preparada, no publicada)
 
 - Avances independientes de día, semana y mes, con símbolos compactos y tonos suaves.

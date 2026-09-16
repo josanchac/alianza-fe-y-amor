@@ -7,7 +7,7 @@ try{
 render(React.createElement(UserEnvironment,{client,userId:'test'},React.createElement('input',{'aria-label':'Borrador personal',defaultValue:'Sin guardar'})));
 await screen.findByRole('button',{name:'Uso y mejora'});fireEvent.click(screen.getByRole('button',{name:'Uso y mejora'}));await screen.findByText('Últimos 30 días');assert.equal(screen.queryByText('test@example.test'),null);
 assert(!calls.includes('alianza_data'));fireEvent.click(screen.getByRole('button',{name:'← Volver a mi espacio'}));assert.equal(screen.getByLabelText('Borrador personal').value,'Sin guardar');
-fireEvent.click(screen.getByRole('button',{name:'Uso y mejora'}));await screen.findByText('Últimos 30 días');fail=true;fireEvent.click(screen.getByRole('button',{name:'Actualizar resumen'}));await screen.findByRole('alert');assert.equal(screen.queryByText('test@example.test'),null);cleanup();
+fireEvent.click(screen.getByRole('button',{name:'Uso y mejora'}));await screen.findByText('Últimos 30 días');fail=true;fireEvent.click(screen.getByRole('button',{name:'Actualizar resumen'}));await screen.findAllByRole('alert');assert.equal(screen.queryByText('test@example.test'),null);cleanup();
 render(React.createElement(UserEnvironment,{client,userId:'nonadmin'},'Mi espacio'));await waitFor(()=>assert.equal(screen.queryByRole('button',{name:'Uso y mejora'}),null));cleanup();
-render(React.createElement(AdminPanel,{client,onBack(){}}));await screen.findByRole('alert');console.log('PASS admin UI aggregates only, denied access, clearing stale results, and preserving personal drafts');
+render(React.createElement(AdminPanel,{client,onBack(){}}));await screen.findAllByRole('alert');console.log('PASS admin UI aggregates only, denied access, clearing stale results, and preserving personal drafts');
 }finally{cleanup();dom.window.close();}

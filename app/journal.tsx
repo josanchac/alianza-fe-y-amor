@@ -1,3 +1,4 @@
+import {usePilotEvent} from './pilot-events';
 import {RhythmProgress} from './rhythm-progress';
 import {frequencyAt,rhythmProgress} from '@/lib/rhythm';
 import {registeredCount} from '@/lib/schedule';
@@ -51,6 +52,7 @@ function calendar(title:string,date:string,time='20:00',recurrence=''){
  const content=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Alianza//ES','BEGIN:VEVENT','UID:'+crypto.randomUUID()+'@alianza','DTSTAMP:'+stamp(new Date()),'DTSTART:'+stamp(start),'DTEND:'+stamp(new Date(start.getTime()+30*60000)),'SUMMARY:'+title.replace(/[\r\n,;]/g,' '),...(recurrence?['RRULE:FREQ='+recurrence]:[]),'BEGIN:VALARM','TRIGGER:-PT10M','ACTION:DISPLAY','DESCRIPTION:Un momento para nuestra alianza','END:VALARM','END:VEVENT','END:VCALENDAR'].join('\r\n');download('alianza-recordatorio.ics',content,'text/calendar;charset=utf-8');toast.success('Recordatorio preparado. Abrilo y confirmá que se agregue a tu calendario.');}
 export default function Journal({dataRequest,onSignOut,assetBase='./',communityTransport}:{dataRequest:(init?:RequestInit)=>Promise<Response>;onSignOut:()=>void;assetBase?:string;communityTransport?:(payload:Record<string,unknown>)=>Promise<Response>}){
  useDialogViewport();
+ const pilotEvent=usePilotEvent();
  const [rhythm,setRhythm]=useState<'day'|'week'|'month'>('day');
  const [homeVisit,setHomeVisit]=useState(0);
  const [space,setSpace]=useState('personal');const openedUser=useRef('');
@@ -59,6 +61,7 @@ export default function Journal({dataRequest,onSignOut,assetBase='./',communityT
  const [scheduleView,setScheduleView]=useState<'day'|'month'|'history'>('day'),[chooseAgain,setChooseAgain]=useState(false);
  const [help,setHelp]=useState(false),[install,setInstall]=useState(false),[movement,setMovement]=useState(false);
  const [date,setDate]=useState(localDate()),[tab,setTab]=useState(()=>new URLSearchParams(location.hash.slice(1)).has('grupo')?'community':'today'),[editor,setEditor]=useState<Editor|null>(null),[discard,setDiscard]=useState(false),[formError,setFormError]=useState(''),[conflict,setConflict]=useState(false),[reminderTime,setReminderTime]=useState('20:30');
+ useEffect(()=>{if(!state)return;const event=tab==='today'?(scheduleView==='history'?'view_history':scheduleView==='month'?'view_review':rhythm==='week'?'view_week':rhythm==='month'?'view_month':'view_day'):tab==='prayer'?'view_prayer':tab==='community'?'view_groups':tab==='couple'?'view_couple':'view_personal';pilotEvent(event);},[!!state,tab,scheduleView,rhythm,pilotEvent]);
  const [habitStep,setHabitStep]=useState(0),[imageBusy,setImageBusy]=useState(false);
  const [settingsView,setSettingsView]=useState('personal');
  const [prayerView,setPrayerView]=useState<'start'|'create'|'history'>('start');
