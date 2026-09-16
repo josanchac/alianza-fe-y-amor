@@ -1,5 +1,5 @@
 import {reportFonts} from './report-font';
-type Report={start:string;end:string;ideal:string;purposes:string[];habits:{title:string;frequency:string;target:number|null;knownTarget?:number;done:number;missed:number;skip:number}[];notes:{date:string;text:string}[];moments:{date:string;text:string}[]};
+type Report={start:string;end:string;ideal:string;purposes:string[];habits:{title:string;frequency:string;target:number|null;knownTarget?:number;done:number;missed:number;skip:number}[];notes:{date:string;text:string;category?:string}[];moments:{date:string;text:string}[]};
 // Standard PDF fonts use WinAnsi; escaped octal bytes preserve Spanish accents.
 const pdfText=(text:string)=>text.replace(/[\u2018\u2019]/g,"'").replace(/[\u201c\u201d]/g,'"').replace(/[\u2013\u2014]/g,'-').replace(/[^\x20-\xff]/g,' ').replace(/[\\()]/g,'\\$&').replace(/[\x80-\xff]/g,c=>'\\'+c.charCodeAt(0).toString(8).padStart(3,'0'));
 export function reportPDF(report:Report){
@@ -11,7 +11,7 @@ export function reportPDF(report:Report){
  paragraph('Mis compromisos',15,true);
  for(const h of report.habits){if(y<150)page();paragraph(h.title,12,true);paragraph(h.frequency,10);const rowY=y;line('Previstos',10,48,true);y=rowY;line('Registrados',10,185,true);y=rowY;line('Me costó',10,320,true);y=rowY;line('No aplicaba',10,435,true);const numberY=y;line(h.target===null?(h.knownTarget?h.knownTarget+' + parcial':'Parcial'):String(h.target),12,48);y=numberY;line(String(h.done),12,185);y=numberY;line(String(h.missed),12,320);y=numberY;line(String(h.skip),12,435);y-=10;}
  paragraph('Parcial: período en curso, cambios de frecuencia o historia insuficiente. Los días sin registro no se cuentan como faltas.',9);
- if(report.notes.length){paragraph('Notas para conversar',15,true);for(const n of report.notes){paragraph(n.date,10,true);paragraph(n.text);}}
+ if(report.notes.length){paragraph('Notas para conversar',15,true);let category='';for(const n of report.notes){if(n.category&&n.category!==category){category=n.category;paragraph(category,13,true);}paragraph(n.date,10,true);paragraph(n.text);}}
  if(report.moments.length){paragraph('Registros matrimoniales seleccionados',15,true);for(const n of report.moments){paragraph(n.date,10,true);paragraph(n.text);}}
  page();
  const objects:string[]=['<< /Type /Catalog /Pages 2 0 R >>','', '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>','<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>'];const pageIds:number[]=[];

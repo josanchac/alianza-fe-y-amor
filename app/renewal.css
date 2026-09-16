@@ -92,3 +92,17 @@ html body .rosary-focus button{min-height:48px}
 .pair-person span{overflow-wrap:anywhere}
 .pair-pending{padding:18px;border:1px solid #d8e0e4;border-radius:20px;margin-top:18px}
 .pair-request-form .primary,.pair-pending .soft-button{min-height:48px}
+.rhythm-progress{display:flex;gap:.65rem;margin:1rem 0;flex-wrap:wrap}
+.rhythm-progress>button{display:flex;align-items:center;gap:.4rem;flex:1;min-width:95px;padding:.55rem;border:1px solid #d8e0e4;border-radius:18px;text-align:left;background:#f7fafb}
+.rhythm-progress>button[aria-pressed="true"]{outline:2px solid #a18b51;outline-offset:1px}
+.rhythm-progress .rhythm-week{background:#eef3f1;color:#456558}
+.rhythm-progress .rhythm-month{background:#f5f0e7;color:#80652e}
+.rhythm-progress strong,.rhythm-progress small{display:block}
+.rhythm-progress small{font-size:.78rem;line-height:1.35;margin-top:.2rem}
+.rhythm-mini{width:36px;height:36px;flex-shrink:0;overflow:hidden}
+.rhythm-mini .symbol-progress{transform:scale(.375);transform-origin:top left;margin:0}
+.rhythm-week .symbol-progress-color{color:#456558}
+.rhythm-month .symbol-progress-color{color:#80652e}
+.occurrence-controls{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem;margin:.65rem 0}
+.reflection-summary article+article{border-top:1px solid #dce3e7;padding-top:1rem;margin-top:1rem}
+.reflection-summary time{font-size:.85rem;color:#5e717b}

@@ -1,5 +1,5 @@
 import type {PersonalSymbolId} from './personal-symbols';
-export type Habit = {title:string; moment:'Mañana'|'Durante el día'|'Noche'; active:boolean; anchor:string; minimum:string; frequency?:{period:'day'|'week'|'month';target:number}};
+export type Habit = {title:string; moment:'Mañana'|'Durante el día'|'Noche'; active:boolean; anchor:string; minimum:string; frequency?:{period:'day'|'week'|'month';target:number;unit?:'days'|'times'}};
 export type Profile = {name:string; ideal:string; shareSchedule:boolean; shareNotes:boolean;shareIdeal?:boolean; symbol?:PersonalSymbolId};
 export type RecordItem = {owner:string;kind:string;key:string;data:any;version:number;updated:string};
 export const R_TYPES = [

@@ -1,5 +1,14 @@
 # Historial de versiones de Alianza
 
+## 0.2.0-alpha.7 — 2026-09-16 (preparada, no publicada)
+
+- Avances independientes de día, semana y mes, con símbolos compactos y tonos suaves.
+- Las metas semanales y mensuales no reducen el avance diario; «Hoy no aplicaba» excluye un compromiso diario sin marcarlo cumplido.
+- Metas por días distintos o por veces, con varias ocasiones en una fecha y opción de deshacer.
+- Agradecimientos y ofrecimientos separados, fechados y conservados literalmente en revisión y reporte seleccionado.
+- Migración aditiva preparada y probada localmente. Sin cambios al servicio publicado ni a los datos del piloto.
+- Evidencia y límites: docs/RELEASE_0.2.0-alpha.7.md.
+
 ## 0.2.0-alpha.6 — 2026-09-15
 
 - Solicitudes de pareja dentro de Alianza, visibles desde cualquier espacio y sin abrir ventanas automáticamente.
