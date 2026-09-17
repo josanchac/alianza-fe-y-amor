@@ -110,6 +110,46 @@ try {
   await assert.rejects(()=>act({action:'rosary_today',id:configurable,mode:'once'}));
   await assert.rejects(()=>act({action:'rosary_discard',id:personal,version:69}));
   await assert.rejects(()=>act({action:'rosary_discard',id:rid,version:0}));
+
+  // Alpha.10: both ordered routes preserve IDs and record only final completion.
+  for(const position of ['start','end']){
+    const id=crypto.randomUUID();
+    await act({action:'rosary_create',id,scope:'personal',mystery:'joyful',mode:'free'});
+    let state=await act({action:'rosary_opening',id,version:0,include:true,mary:'trinitarian',position});
+    assert.equal(state.rosaries.find(r=>r.id===id).opening.position,position);
+    const mysteries=Array.from({length:60},(_,i)=>i+7);
+    const order=position==='end'?[0,1,71,70,...mysteries,2,3,4,5,6,67,68,69]:[0,1,70,2,3,4,5,6,...mysteries,67,68,69];
+    let version=1;
+    await assert.rejects(()=>act({action:'rosary_step',id,version,step:69}));
+    for(let i=1;i<order.length;i++){
+      if(i===3){
+        await act({action:'rosary_step',id,version:version++,step:order[i-2]});
+        await act({action:'rosary_step',id,version:version++,step:order[i-1]});
+      }
+      state=await act({action:'rosary_step',id,version:version++,step:order[i]});
+      const rosary=state.rosaries.find(r=>r.id===id);
+      assert.equal(rosary.personalStep,order[i]);
+      assert.equal(rosary.mine.length,i===order.length-1?5:0);
+    }
+    await assert.rejects(()=>act({action:'rosary_step',id,version,step:68}));
+  }
+  // Delete is owner-only, versioned, epoch-aware and refuses every saved history.
+  await as(ids[8]);
+  const habitData={title:'Unused',active:true,moment:'Mañana',anchor:'',minimum:''};
+  await data({kind:'habit',key:'unused',version:0,dataEpoch:1,data:habitData});
+  async function remove(key,version=1,extra={}){return (await db.query('select public.alianza_relationship($1::jsonb) v',[JSON.stringify({action:'delete_habit',key,version,dataEpoch:1,relationshipVersion:1,...extra})])).rows[0].v;}
+  await assert.rejects(()=>remove('unused',0),e=>e.code==='PT409');
+  await assert.rejects(()=>remove('unused',1,{dataEpoch:2}),e=>e.code==='PT409');
+  await as(ids[9]);await assert.rejects(()=>remove('unused'),e=>e.code==='42501');
+  await as(ids[8]);
+  const removed=await remove('unused');assert(!removed.state.own.some(r=>r.key==='unused'));
+  await data({kind:'habit',key:'used',version:0,dataEpoch:1,data:habitData});
+  await data({kind:'checks',key:today,version:0,dataEpoch:1,data:{used:'done'}});
+  await assert.rejects(()=>remove('used'),e=>e.code==='PT409');
+  await data({kind:'habit',key:'used',version:1,dataEpoch:1,data:{...habitData,active:false}});
+  assert.equal((await data()).own.find(r=>r.kind==='checks'&&r.key===today).data.used,'done');
+  await as(ids[1]);
+
   // Exactly-once day marking preserves other checks and makes no future obligation.
   await data({kind:'habit',key:'regular-rosary',version:0,dataEpoch:1,data:{title:'Mi rosario',active:true,moment:'Mañana',anchor:'',minimum:''}});
   await data({kind:'checks',key:today,version:0,dataEpoch:1,data:{other:'missed'}});

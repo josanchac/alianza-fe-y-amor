@@ -4,14 +4,14 @@ globalThis.FormData=dom.window.FormData;
 const React=await import('react');const {render,screen,fireEvent,waitFor,cleanup}=await import('@testing-library/react');
 const {PersonalRosary}=await import('../app/personal-rosary.tsx');
 const {GroupsWorkspace}=await import('../app/groups-workspace.tsx');
-const {ROSARY_STEPS}=await import('../lib/rosary-guide.ts');
+const {ROSARY_STEPS,rosaryStepOrder}=await import('../lib/rosary-guide.ts');
 const calls=[];let fail=false;
 const base={id:'r',ownerId:'a',groupId:null,coupleId:null,mystery:'joyful',mode:'free',intention:'',cancelled:false,slots:[],mine:[],personalStep:0,progressVersion:0};
-function RosaryHarness(){const [r,setR]=React.useState(base);return React.createElement(PersonalRosary,{r,busy:false,act:async p=>{calls.push(p);if(fail)throw Error('Sin conexión');setR({...r,personalStep:p.step,progressVersion:r.progressVersion+1});return{};}});}
+function RosaryHarness(){const [r,setR]=React.useState(base);return React.createElement(PersonalRosary,{r,busy:false,act:async p=>{calls.push(p);if(fail)throw Error('Sin conexión');if(p.action==='rosary_opening')setR({...r,opening:{include:p.include,mary:p.mary,position:p.position},progressVersion:r.progressVersion+1});else setR({...r,personalStep:p.step,progressVersion:r.progressVersion+1});return{};}});}
 try{
- render(React.createElement(RosaryHarness));assert.equal(screen.queryByText('Reservar'),null);assert.equal(screen.queryByText('Administrar este encuentro'),null);fireEvent.click(screen.getByRole('button',{name:'Empezar a rezar'}));assert(screen.getByRole('heading',{name:'Señal de la cruz'}));assert.equal(screen.queryByText(/En el nombre del Padre/),null);fireEvent.click(screen.getByRole('button',{name:'Ver oración'}));assert(screen.getByText(/En el nombre del Padre/));
+ render(React.createElement(RosaryHarness));assert.equal(screen.queryByText('Reservar'),null);assert.equal(screen.queryByText('Administrar este encuentro'),null);fireEvent.click(screen.getByRole('button',{name:'Empezar a rezar'}));await screen.findByRole('dialog');assert(screen.getByRole('heading',{name:'Señal de la cruz'}));assert.equal(screen.queryByText(/En el nombre del Padre/),null);fireEvent.click(screen.getByRole('button',{name:'Ver oración'}));assert(screen.getByText(/En el nombre del Padre/));
  fail=true;fireEvent.click(screen.getByRole('button',{name:'Avanzar'}));await screen.findByRole('alert');assert(screen.getByRole('heading',{name:'Señal de la cruz'}));fail=false;
- for(let n=1;n<=ROSARY_STEPS.length;n++){const button=screen.getByRole('button',{name:n===ROSARY_STEPS.length?'Terminé el rosario':'Avanzar'});await waitFor(()=>assert.equal(button.disabled,false));fireEvent.click(button);await waitFor(()=>assert.equal(calls.at(-1).step,n));}
+ for(const n of rosaryStepOrder({include:true,mary:'standard',position:'end'}).slice(1)){const button=screen.getByRole('button',{name:n===ROSARY_STEPS.length?'Terminé el rosario':'Avanzar'});await waitFor(()=>assert.equal(button.disabled,false));fireEvent.click(button);await waitFor(()=>assert.equal(calls.at(-1).step,n));}
  assert(screen.getByRole('heading',{name:'Rosario concluido'}));assert.equal(calls.filter(p=>p.action==='rosary_complete').length,0);cleanup();
  const group={id:'g',name:'Curso',ownerId:'a',version:1,members:[{id:'a',name:'Ana'},{id:'b',name:'Beatriz'}],motto:'',ideal:'',purposes:[],meeting:null};
  const groupView=render(React.createElement(GroupsWorkspace,{state:{groups:[group],rosaries:[]},act:async p=>{calls.push(p);return{};},userId:'a',name:'Ana',busy:false}));

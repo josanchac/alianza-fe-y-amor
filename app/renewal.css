@@ -64,7 +64,15 @@ html body [data-slot="dialog-content"].rosary-focus{padding:0!important;display:
 html body .rosary-focus-header [data-slot="dialog-title"]{font-size:1.5rem;padding:0!important;font-family:Georgia,serif}
 .rosary-focus-header [data-slot="dialog-description"]{font-size:1rem;margin:.35rem 0 0}
 .rosary-focus-body{overflow-y:auto;overscroll-behavior:contain;padding:1.25rem;scrollbar-gutter:stable}
-.rosary-focus .rosary-map{width:min(100%,230px);margin:0 auto .5rem}
+.rosary-focus .rosary-map{width:100%;height:100%;max-height:100%;min-height:0;margin:0 auto .5rem}
+.rosary-reading{display:flex;flex-direction:column;align-items:stretch}
+.rosary-reading>.rosary-map{flex:1 1 280px;min-height:150px;max-width:560px;align-self:center}
+.rosary-reading>.eyebrow,.rosary-reading>.current-prayer,.rosary-reading>.prayer-expand,.rosary-reading>.prayer-text{flex:0 0 auto}
+.rosary-reading.prayer-is-expanded>.rosary-map{flex:0 0 auto;height:clamp(150px,25dvh,260px)}
+.habit-edit{display:flex;align-items:center;gap:.2rem;font-size:.8rem;min-height:44px;flex-shrink:0}
+.habit-remove{color:#8d3430;margin:1rem 0;min-height:44px}
+.share-app{margin:1rem 0}
+@media(max-height:600px){.rosary-reading>.rosary-map{flex:0 0 auto;height:170px}.rosary-focus-header{padding:.5rem 1rem}html body .rosary-focus button.prayer-advance{min-height:56px}}
 .rosary-map circle{transition:fill .45s ease,stroke .45s ease,opacity .45s ease,r .45s ease}
 .rosary-focus .eyebrow{font-size:1rem;letter-spacing:.08em;line-height:1.5}
 .rosary-focus .current-prayer h3,.rosary-focus .litany-prayer h3{font-family:Georgia,serif;font-size:calc(var(--prayer-size,24px) * 1.25);line-height:1.35;margin:.7rem 0}

@@ -51,3 +51,23 @@ export function progressLabel(p:PeriodProgress){
  if(p.done>=(p.target??Infinity))return `${p.done} de ${p.target} ${unit} · meta registrada${p.extra?` · ${p.extra} adicionales`:''}`;
  return `${p.done} de ${p.target} ${unit} · ${p.open?'en curso':'faltan registros para confirmar'}`;
 }
+
+// The live indicator uses the current agreed goal. Historical evaluation above
+// remains conservative when a period includes missing history or plan changes.
+export function liveProgressFor(rows:RecordItem[],key:string,date:string,today:string){
+ const historical=progressFor(rows,key,date,today),plans=plansFor(rows,key),at=planAt(plans,date);
+ if(!at?.active)return {...historical,label:progressLabel(historical)};
+ let since=plans.findIndex(p=>p===at);
+ while(since>0){const previous=plans[since-1];if(!previous.active||previous.period!==at.period||previous.target!==at.target||(previous.unit??'days')!==(at.unit??'days'))break;since--;}
+ const start=plans[since].from>historical.start?plans[since].from:historical.start;
+ const end=historical.end<today?historical.end:today;
+ const done=countsFor(rows,key,start,end).done,target=at.target;
+ const unit=at.unit==='times'?(target===1?'vez':'veces'):(target===1?'día':'días');
+ const period=at.period==='week'?'esta semana':at.period==='month'?'este mes':'hoy';
+ const partial=start>historical.start;
+ return {...historical,done,target,percent:Math.min(100,Math.round(100*done/target)),extra:Math.max(0,done-target),label:`${done} de ${target} ${unit} ${period}${partial?' · desde '+start.slice(8)+'/'+start.slice(5,7):''}`};
+}
+
+export function hasHabitHistory(rows:RecordItem[],key:string){
+ return rows.some(r=>(r.kind==='checks'&&Object.hasOwn(r.data,key))||(r.kind==='habit_review'&&r.data.habitKey===key));
+}
