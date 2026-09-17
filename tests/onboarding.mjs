@@ -10,12 +10,12 @@ const writes=[];
 async function request(init){if(init?.method!=='POST')return Response.json(fixture);const p=JSON.parse(String(init.body));writes.push(p);const group=p.kind==='rs'?'shared':'own';const record={...p,owner:group==='shared'?'couple':'test',version:p.version+1,updated:new Date().toISOString()};fixture[group]=[...fixture[group].filter(r=>r.kind!==p.kind||r.key!==p.key),record];return Response.json({record});}
 try{
  render(React.createElement(Journal,{dataRequest:request,onSignOut(){}}));
- await screen.findByRole('heading',{name:'Mi día'});
+ await screen.findByRole('heading',{name:'Mis compromisos'});
 
  await screen.findByRole('heading',{name:'Tu primer compromiso'});
  assert.equal(screen.queryByRole('checkbox'),null);assert.equal(writes.length,0);
  assert.equal(screen.getByText('Necesito una idea para empezar').closest('details').open,false);
- assert(screen.getByRole('button',{name:/Mi reflexión del día/}));
+ assert(screen.getByRole('button',{name:/Ofrecimiento/}));assert(screen.getByRole('button',{name:/Meditación/}));assert(screen.getByRole('button',{name:/Agradecimiento/}));
  console.log('PASS Empty first visit has no automatic commitments, checks, or writes');
  fireEvent.click(screen.getByText('Necesito una idea para empezar'));
  fireEvent.click(screen.getByRole('button',{name:'Ofrecer mi día a la Mater'}));
@@ -60,9 +60,9 @@ try{
  cleanup();
  const newcomer={...fixture,user:{id:'new-person',role:'member',email:'new@example.test',symbol:'heart'},couple:{emblem:'neutral'},own:[{owner:'test',kind:'spaces',key:'experience',version:1,data:{enabled:['personal','couple'],start:'personal'}},{...profile,owner:'new-person',data:{name:'Invitado',ideal:'',shareSchedule:false,shareNotes:false}}],shared:[],partner:{name:'Su pareja',ideal:'',shareSchedule:false,shareNotes:false,records:[]}};
  render(React.createElement(Journal,{dataRequest:async(init)=>{assert.notEqual(init?.method,'POST','Exploring guidance must not save newcomer records');return Response.json(newcomer);},onSignOut(){}}));
- await screen.findByRole('heading',{name:'Mi día'});
+ await screen.findByRole('heading',{name:'Mis compromisos'});
 
- await screen.findByRole('heading',{name:'Mi día'});
+ await screen.findByRole('heading',{name:'Mis compromisos'});
  assert.equal(screen.queryByText('Líder de amor'),null);assert(!document.body.textContent.includes('Neca'));assert.equal(document.querySelector('img[src$="emblem.png"]'),null);
  console.log('PASS A new couple sees its own identity and can start without an ideal');
  fireEvent.click(screen.getByRole('button',{name:'Mi mes',exact:true}));

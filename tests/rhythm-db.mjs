@@ -30,6 +30,10 @@ try{
  await assert.rejects(()=>save('checks',today,{rosary:0},count.record.version),e=>e.code==='22023');
  await assert.rejects(()=>save('habit','bad',{...base,frequency:{period:'month',target:100,unit:'times'}}),e=>e.code==='22023');
  await assert.rejects(()=>save('habit','bad',{...base,frequency:{period:'day',target:1,unit:'times'}}),e=>e.code==='22023');
- await as(2);await assert.rejects(()=>save('checks',today,{rosary:2}),e=>e.code==='22023');assert(!(await data()).own.some(r=>r.kind==='checks'));
- console.log('PASS occurrence validation, historical unit plans, repeated daily occasions, stale writes, legacy completion preservation, numeric correction and cross-account isolation');
+ await save('journal',today,{offering:'Mi día',meditation:'Una luz',gratitude:'Mi familia'});
+ await save('prayers','me',{personalIdeal:'Oración personal',marriageIdeal:'',homeShrine:'Oración del Santuario Hogar',alliance:''});
+ await save('preferences','experience',{focus:'schedule',lastSeenRelease:'neca-feedback-2026-09-17'});
+ await assert.rejects(()=>save('prayers','bad',{personalIdeal:'',marriageIdeal:'',homeShrine:'',alliance:'',extra:'no'}),e=>e.code==='22023');
+ await as(2);await assert.rejects(()=>save('checks',today,{rosary:2}),e=>e.code==='22023');const second=await data();assert(!(second.own.some(r=>r.kind==='checks')));assert(!(second.own.some(r=>r.kind==='prayers')));
+ console.log('PASS occurrence validation, meditation and private prayers, historical unit plans, repeated daily occasions, stale writes, legacy completion preservation, numeric correction and cross-account isolation');
 }catch(e){console.error('FAIL',e.message,e.code??'',e.where??'');process.exitCode=1;}finally{await db.close();}

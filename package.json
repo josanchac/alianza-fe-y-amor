@@ -1,6 +1,6 @@
 {
   "name": "alianza-fe-y-amor",
-  "version": "0.2.0-alpha.8",
+  "version": "0.2.0-alpha.9",
   "private": true,
   "type": "module",
   "engines": {
@@ -11,7 +11,7 @@
     "build": "vite build --config vite.github.config.ts && node tests/build-assets.mjs",
     "typecheck": "tsc --noEmit",
     "verify:methodology": "node scripts/check-methodology.mjs",
-    "test": "node tests/pilot-db.mjs && node --import tsx tests/pilot-ui.mjs && node --import tsx tests/rhythms.mjs && node tests/rhythm-db.mjs && node --import tsx tests/rhythm-ui.mjs && node tests/password-db.mjs && node tests/multi-couple.mjs && node --experimental-strip-types tests/reports.ts && node --import tsx tests/onboarding.mjs && node --import tsx tests/install-guide.mjs && node tests/admin-activity.mjs && node --import tsx tests/admin-ui.mjs && node tests/methodology.mjs && node tests/guided-schedule-db.mjs && node --experimental-strip-types tests/schedule.ts && node --import tsx tests/journey.mjs && node --import tsx tests/commitment-review.mjs && node --import tsx tests/reset-ui.mjs && node tests/personal-reset.mjs && node tests/pairing-requests-db.mjs && node --import tsx tests/pairing-requests-ui.mjs && node tests/pairing-db.mjs && node --import tsx tests/pairing-ui.mjs && node tests/personalization-db.mjs && node --import tsx tests/light-entry.mjs && node tests/community-db.mjs && node --import tsx tests/community-ui.mjs && node --import tsx tests/usability-journeys.mjs && node --import tsx tests/release-ui.mjs && node tests/renewal-db.mjs && node --import tsx tests/renewal-ui.mjs && node --import tsx tests/renewal-reports.mjs && node --import tsx tests/maintenance-ui.mjs && node tests/release-upgrade.mjs && node --import tsx tests/rosary-comfort-ui.mjs"
+    "test": "node tests/pilot-db.mjs && node --import tsx tests/pilot-ui.mjs && node --import tsx tests/rhythms.mjs && node tests/rhythm-db.mjs && node --import tsx tests/rhythm-ui.mjs && node --import tsx tests/neca-feedback-ui.mjs && node tests/password-db.mjs && node tests/multi-couple.mjs && node --experimental-strip-types tests/reports.ts && node --import tsx tests/onboarding.mjs && node --import tsx tests/install-guide.mjs && node tests/admin-activity.mjs && node --import tsx tests/admin-ui.mjs && node tests/methodology.mjs && node tests/guided-schedule-db.mjs && node --experimental-strip-types tests/schedule.ts && node --import tsx tests/journey.mjs && node --import tsx tests/commitment-review.mjs && node --import tsx tests/reset-ui.mjs && node tests/personal-reset.mjs && node tests/pairing-requests-db.mjs && node --import tsx tests/pairing-requests-ui.mjs && node tests/pairing-db.mjs && node --import tsx tests/pairing-ui.mjs && node tests/personalization-db.mjs && node --import tsx tests/light-entry.mjs && node tests/community-db.mjs && node --import tsx tests/community-ui.mjs && node --import tsx tests/usability-journeys.mjs && node --import tsx tests/release-ui.mjs && node tests/renewal-db.mjs && node --import tsx tests/renewal-ui.mjs && node --import tsx tests/renewal-reports.mjs && node --import tsx tests/maintenance-ui.mjs && node tests/release-upgrade.mjs && node --import tsx tests/rosary-comfort-ui.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "2.116.0",

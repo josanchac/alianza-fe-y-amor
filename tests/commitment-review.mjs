@@ -15,8 +15,7 @@ const writes=[];let fail=false;
 async function request(init){if(init?.method!=='POST')return Response.json(fixture);const p=JSON.parse(init.body);if(fail)return Response.json({error:'No se pudo guardar.'},{status:503});writes.push(p);const record={...row(p.kind,p.key,p.data),version:p.version+1};fixture.own=[...fixture.own.filter(r=>r.kind!==p.kind||r.key!==p.key),record];return Response.json({record});}
 const mount=()=>render(React.createElement(Journal,{dataRequest:request,onSignOut(){}}));
 try{
- mount();await screen.findByRole('heading',{name:'Mi día'});
- fireEvent.click(screen.getByRole('button',{name:/Semana/}));
+ mount();await screen.findByRole('heading',{name:'Mis compromisos'});
  fireEvent.pointerDown(screen.getByRole('button',{name:'Opciones: Escuchar con atención'}),{button:0,ctrlKey:false,pointerType:'mouse'});
  fireEvent.click(await screen.findByRole('menuitem',{name:'Anotar o revisar este compromiso'}));
  await screen.findByRole('dialog');assert.equal(writes.length,0);assert(!screen.queryByLabelText('Mi valoración de este período'));
@@ -35,7 +34,7 @@ try{
  const saved=writes.at(-1);assert.equal(saved.kind,'habit_review');assert.equal(saved.data.start,previous+'-01');assert.equal(saved.data.assessment,'met');
  assert(!fixture.own.some(r=>r.kind==='checks'));assert.equal(fixture.own.filter(r=>r.kind==='habit').length,1);
  fireEvent.click(screen.getByRole('button',{name:'Explorar un próximo paso'}));await screen.findByRole('heading',{name:'¿Qué te ayudaría hoy?'});assert.equal(writes.length,2);
- cleanup();mount();await screen.findByRole('heading',{name:'Mi día'});fireEvent.click(screen.getByRole('button',{name:'Mi mes',exact:true}));fireEvent.change(screen.getByLabelText('Mi mes'),{target:{value:previous}});
+ cleanup();mount();await screen.findByRole('heading',{name:'Mis compromisos'});fireEvent.click(screen.getByRole('button',{name:'Mi mes',exact:true}));fireEvent.change(screen.getByLabelText('Mi mes'),{target:{value:previous}});
  assert(screen.getByText('Lo viví aunque olvidé marcarlo'));assert(screen.getByText('Según mi revisión, lo cumplí'));assert.equal(writes.length,2);
  console.log('PASS Period notes survive reload and failed saves; personal assessment never fabricates daily checks; exploration creates no commitment');
  const week=rangeFor('week',previous+'-08'),draft={habitKey:'listen',period:'week',...week,note:'Conservar al pausar',assessment:'met',nextStep:'keep'};

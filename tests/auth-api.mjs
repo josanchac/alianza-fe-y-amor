@@ -99,7 +99,8 @@ try{
  pass('Real API persists rosary options, rejects another user, skips optional opening and links only today without duplicate writes');
  // Pairing requests use real Auth email ownership, not client user metadata.
  const pairPayload=p=>({relationshipVersion:1,dataEpoch:1,...p});
- assert.equal((await rpc(d.client,'relationship',pairPayload({action:'lookup_recipient',email:e.email}))).candidate,null);
+ assert.equal((await rpc(d.client,'relationship',pairPayload({action:'lookup_recipient',email:e.email}))).candidate.email,e.email);
+ assert.equal((await rpc(d.client,'relationship',pairPayload({action:'lookup_recipient',email:'missing@example.test'}))).candidate,null);
  await rpc(e.client,'relationship',pairPayload({action:'pairing_visibility',name:'Nombre elegido E',enabled:true,version:0}));
  assert.equal((await rpc(d.client,'relationship',pairPayload({action:'lookup_recipient',email:e.email}))).candidate.name,'Nombre elegido E');
  const pi=(await rpc(d.client,'relationship',pairPayload({action:'create_request',email:e.email}))).state.invitations[0];

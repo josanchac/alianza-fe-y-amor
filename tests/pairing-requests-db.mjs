@@ -14,7 +14,7 @@ try{
  async function data(){return(await db.query('select public.alianza_data(null) v')).rows[0].v;}
  async function pair(p){return(await db.query('select public.alianza_relationship($1::jsonb) v',[JSON.stringify({relationshipVersion:1,dataEpoch:1,...p})])).rows[0].v;}
  await as(1);assert.deepEqual((await data()).pairingIdentity,{enabled:false,name:'',version:0});
- assert.deepEqual(await pair({action:'lookup_recipient',email:'p2@example.test'}),await pair({action:'lookup_recipient',email:'unknown@example.test'}));
+ assert.deepEqual((await pair({action:'lookup_recipient',email:'p2@example.test'})).candidate,{name:'Person 2',email:'p2@example.test'});assert.equal((await pair({action:'lookup_recipient',email:'unknown@example.test'})).candidate,null);
  await assert.rejects(()=>pair({action:'lookup_recipient',email:'p2'}),e=>e.code==='22023');
  await as(2);await pair({action:'pairing_visibility',name:'Nombre elegido',enabled:true,version:0});
  await assert.rejects(()=>pair({action:'pairing_visibility',name:'Stale',enabled:false,version:0}),e=>e.code==='PT409');
@@ -31,7 +31,15 @@ try{
  const profile=snapshot.own.find(r=>r.kind==='profile').data;assert.equal(profile.shareSchedule,false);assert.equal(profile.shareNotes,false);assert.equal(profile.shareIdeal,false);
  await assert.rejects(()=>pair({action:'accept_request',id:request.id}),e=>e.code==='PT409');
  await as(1);assert.equal((await data()).user.coupleId,snapshot.user.coupleId);assert.equal((await data()).invitations.length,0);
- console.log('PASS exact-email opt-in recognition, default privacy, identity-bound consent, stable pending request, wrong-recipient rejection, independent spaces and single acceptance');
+ const ownProfile=(await data()).own.find(r=>r.kind==='profile');
+ async function saveOwn(kind,key,value,version=0){const s=await data();return db.query('select public.alianza_data($1::jsonb)',[JSON.stringify({kind,key,data:value,version,dataEpoch:s.user.dataEpoch,relationshipVersion:s.user.relationshipVersion})]);}
+ await saveOwn('prayers','me',{personalIdeal:'Privada',marriageIdeal:'Privada también',homeShrine:'',alliance:''});
+ await saveOwn('journal',(await data()).today,{gratitude:'Gracias',offering:'Mi día',meditation:'Mi reflexión'});
+ await as(2);assert.equal((await data()).partner.records.length,0);
+ await as(1);await saveOwn('profile','me',{...ownProfile.data,shareNotes:true},ownProfile.version);
+ await as(2);const sharedNotes=(await data()).partner.records;assert(sharedNotes.some(r=>r.kind==='journal'&&r.data.meditation==='Mi reflexión'));assert(!sharedNotes.some(r=>r.kind==='prayers'));
+ console.log('PASS prayer texts remain owner-only even when journal reflections are deliberately shared with a spouse');
+ console.log('PASS exact-email account recognition, default privacy, identity-bound acceptance, stable pending request, wrong-recipient rejection, independent spaces and single acceptance');
  await as(3);const other=(await pair({action:'create_request',email:'p4@example.test'})).state.invitations[0];await as(4);await pair({action:'reject_request',id:other.id});assert.equal((await data()).receivedInvitations.length,0);
  await as(3);const again=(await pair({action:'create_request',email:'p4@example.test'})).state.invitations[0];await pair({action:'cancel',id:again.id});await as(4);await assert.rejects(()=>pair({action:'accept_request',id:again.id}),e=>e.code==='PT409');
  await as(3);const expired=(await pair({action:'create_request',email:'p4@example.test'})).state.invitations[0];await db.exec('reset role');await db.query("update alianza_private.pair_invitations set expires_at=now()-interval '1 second' where id=$1",[expired.id]);await as(4);assert.equal((await data()).receivedInvitations.length,0);await assert.rejects(()=>pair({action:'accept_request',id:expired.id}),e=>e.code==='PT409');

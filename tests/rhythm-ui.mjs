@@ -13,23 +13,23 @@ const writes=[];
 async function request(init){if(init?.method!=='POST')return Response.json(fixture);const p=JSON.parse(init.body);writes.push(p);const record={...row(p.kind,p.key,p.data),version:p.version+1};fixture.own=[...fixture.own.filter(r=>r.kind!==p.kind||r.key!==p.key),record];return Response.json({record});}
 try{
  render(React.createElement(Journal,{dataRequest:request,onSignOut(){}}));
- await screen.findByRole('heading',{name:'Mi día'});
- assert(screen.getByLabelText('1 de 1 compromisos registrados'));
- assert(!screen.queryByText('Dos rosarios al mes'));
- fireEvent.click(screen.getByRole('button',{name:/Mes/}));
+ await screen.findByRole('heading',{name:'Mis compromisos'});
+ assert(screen.getByLabelText('1 de 2 compromisos marcados hoy'));
  await screen.findByText('Dos rosarios al mes');
+ assert(screen.getByText('Mensual'));
  fireEvent.click(screen.getByRole('button',{name:'Registrar una ocasión'}));
  await waitFor(()=>assert.equal(fixture.own.find(r=>r.kind==='checks').data.rosary,1));
  fireEvent.click(await screen.findByRole('button',{name:'Registrar otra ocasión'}));
  await waitFor(()=>assert.equal(fixture.own.find(r=>r.kind==='checks').data.rosary,2));
- await waitFor(()=>assert(screen.getByRole('button',{name:/Mes/}).textContent.includes('1 de 1 completos')));
+ await waitFor(()=>assert(screen.getByText(/2 de 2 veces/)));
  fireEvent.click(screen.getByRole('button',{name:'Deshacer una ocasión'}));
  await waitFor(()=>assert.equal(fixture.own.find(r=>r.kind==='checks').data.rosary,1));
- assert(screen.getByLabelText('1 de 1 compromisos registrados'));
+ assert(screen.getByLabelText('2 de 2 compromisos marcados hoy'));
  cleanup();
- render(React.createElement(ReflectionSummary,{rows:[row('journal',today,{gratitude:'Por la familia',offering:'Mi esfuerzo'})],start:month+'-01',end:today}));
+ render(React.createElement(ReflectionSummary,{rows:[row('journal',today,{gratitude:'Por la familia',offering:'Mi esfuerzo',meditation:'Una palabra que guardo'})],start:month+'-01',end:today}));
  assert(screen.getByRole('heading',{name:'Mis agradecimientos'}).parentElement.textContent.includes('Por la familia'));
  assert(screen.getByRole('heading',{name:'Mis ofrecimientos a la Mater'}).parentElement.textContent.includes('Mi esfuerzo'));
- assert.equal(document.querySelectorAll('time[datetime="'+today+'"]').length,2);
- console.log('PASS daily completion excludes monthly goals, compact period navigation, repeated occasions and undo, dated gratitude and offering groups');
+ assert(screen.getByRole('heading',{name:'Mis meditaciones'}).parentElement.textContent.includes('Una palabra que guardo'));
+ assert.equal(document.querySelectorAll('time[datetime="'+today+'"]').length,3);
+ console.log('PASS one commitment view, visible cadence chips, repeated monthly occasions and undo, dated gratitude, meditation and offering groups');
 }finally{cleanup();dom.window.close();}
