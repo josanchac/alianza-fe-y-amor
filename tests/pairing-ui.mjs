@@ -3,7 +3,7 @@ import {dom} from './dom.mjs';
 const React=await import('react');const {render,screen,fireEvent,waitFor,cleanup}=await import('@testing-library/react');
 const {PairingPanel,MaritalIdeal}=await import('../app/pairing.tsx');const {default:Journal}=await import('../app/journal.tsx');
 const {localDate}=await import('../lib/domain.ts');
-const calls=[];let fail=false;const act=async payload=>{if(fail)throw new Error('Sin conexión; intentá otra vez.');calls.push(payload);return payload.action==='preview'?{invitation:{name:'Persona invitante',email:'inviter@example.test'}}:payload.action==='create'?{token:'a'.repeat(64)}:{};};
+const calls=[];let fail=false;const act=async payload=>{if(fail)throw new Error('Sin conexión; intentá otra vez.');calls.push(payload);return payload.action==='lookup_recipient'?{candidate:{name:'Persona cónyuge',email:payload.email}}:payload.action==='preview'?{invitation:{name:'Persona invitante',email:'inviter@example.test'}}:payload.action==='create'?{token:'a'.repeat(64)}:{};};
 const state={user:{id:'one',relationshipVersion:1,coupleId:null},partner:null,invitations:[]};
 try{
  let continued=false;render(React.createElement(PairingPanel,{state,act,busy:false,onContinue(){continued=true;}}));
@@ -35,7 +35,7 @@ try{
  cleanup();calls.length=0;
  const today=localDate();let fixture={user:{id:'one',role:'member',email:'one@example.test',relationshipVersion:1,coupleId:null},own:[{owner:'one',kind:'spaces',key:'experience',version:1,data:{enabled:['personal','couple'],start:'personal'}},{owner:'one',kind:'profile',key:'me',data:{name:'Persona',ideal:'',shareSchedule:false,shareNotes:false},version:1,updated:''}],shared:[],partner:null,archives:[],invitations:[],marriageIdeal:null,today};
  const requests=[];async function request(init){if(init?.method==='POST'){const p=JSON.parse(init.body);requests.push(p);return Response.json({error:'No permitido en esta prueba'},{status:409});}return Response.json(fixture);}
- render(React.createElement(Journal,{dataRequest:request,onSignOut(){}}));await screen.findByRole('heading',{name:'Mi día'});
+ render(React.createElement(Journal,{dataRequest:request,onSignOut(){}}));await screen.findByRole('heading',{name:'Mis compromisos'});
  assert.equal(screen.queryByRole('tab',{name:'En pareja'}),null);fireEvent.mouseDown(screen.getByRole('tab',{name:'Mi espacio'}),{button:0,ctrlKey:false});await screen.findByRole('heading',{name:'Podés empezar por vos'});assert.equal(screen.queryByRole('button',{name:'Preparar este momento'}),null);
  // Receive a linked state from the server, then hold a shared draft through an unlink.
  fixture={...fixture,user:{...fixture.user,coupleId:'pair',relationshipVersion:2},couple:{emblem:'neutral'},partner:{name:'Pareja',ideal:'',shareSchedule:false,shareNotes:false,records:[]},marriageIdeal:{text:'',version:0,confirmations:0,confirmedByMe:false}};

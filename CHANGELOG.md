@@ -1,5 +1,15 @@
 # Historial de versiones de Alianza
 
+## 0.2.0-alpha.9 — 2026-09-17 (preparada para publicación)
+
+- Una sola vista para compromisos diarios, semanales y mensuales, con cadencia y significado de la marca visibles.
+- Ofrecimiento por la mañana, meditación durante el día y agradecimiento por la noche; todos opcionales.
+- Oraciones privadas del ideal personal, ideal matrimonial, Santuario Hogar y Alianza, visibles solo si fueron escritas.
+- «Mi recorrido» abre con un resumen breve y deja detalles y reflexiones plegados.
+- Vinculación por correo exacto corregida, conservando solicitud y aceptación bilateral.
+- Métricas agregadas del piloto cercano automáticas para sus cuentas autorizadas, sin ocultar resultados ni capturar contenido privado.
+- Evidencia y límites: docs/RELEASE_0.2.0-alpha.9.md.
+
 ## 0.2.0-alpha.8 — 2026-09-16 (preparada, no publicada)
 
 - Panel «Piloto cercano»: actividad y errores visibles desde un participante que acepte esta medición.
