@@ -9,9 +9,9 @@ try{
  let continued=false;render(React.createElement(PairingPanel,{state,act,busy:false,onContinue(){continued=true;}}));
  fireEvent.click(screen.getByRole('button',{name:'Continuar individualmente'}));assert(continued);assert.equal(calls.length,0);
  fireEvent.click(screen.getByRole('button',{name:'Quiero usarla en pareja'}));
- fireEvent.change(screen.getByLabelText('Correo de tu cónyuge'),{target:{value:'spouse@example.test'}});const create=screen.getByRole('button',{name:'Crear código de vinculación'});assert(create.disabled);
- fireEvent.click(screen.getByRole('checkbox'));assert(!create.disabled);fireEvent.click(create);await screen.findByLabelText('Código para compartir');assert.equal(calls[0].email,'spouse@example.test');
- fireEvent.change(screen.getByLabelText('Correo de tu cónyuge'),{target:{value:'other@example.test'}});assert(screen.getByText(/Compartí este código con spouse@example.test/));assert(create.disabled);
+ fireEvent.change(screen.getByLabelText('Correo de tu cónyuge'),{target:{value:'spouse@example.test'}});fireEvent.click(screen.getByRole('button',{name:'Continuar',exact:true}));
+ const create=await screen.findByRole('button',{name:'Enviar solicitud'});assert(create.disabled);assert.equal(calls[0].action,'lookup_recipient');
+ fireEvent.click(screen.getByRole('checkbox'));assert(!create.disabled);fireEvent.click(create);await waitFor(()=>assert.equal(calls.at(-1).action,'create_request'));assert.equal(calls.at(-1).email,'spouse@example.test');
  console.log('PASS Individual continuation is free of writes; invitation creation requires explicit consent to the exact recipient');
  cleanup();calls.length=0;render(React.createElement(PairingPanel,{state,act,busy:false}));fireEvent.click(screen.getByRole('button',{name:'Tengo un código de vinculación'}));
  fireEvent.change(screen.getByLabelText('Código que recibiste'),{target:{value:'b'.repeat(64)}});fireEvent.click(screen.getByRole('button',{name:'Revisar invitación'}));await screen.findByRole('heading',{name:'Vincularme con Persona invitante'});

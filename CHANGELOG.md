@@ -1,5 +1,30 @@
 # Historial de versiones de Alianza
 
+## 0.2.0-alpha.8 — 2026-09-16 (preparada, no publicada)
+
+- Panel «Piloto cercano»: actividad y errores visibles desde un participante que acepte esta medición.
+- Activos en 7/30 días y uso por función, sin nombres, correos ni textos privados.
+- Participación explícita independiente del consentimiento general; al retirarla se eliminan sus eventos del piloto.
+- Umbral general de cinco participantes conservado. No se reconstruye el pasado ni se interpreta cumplimiento espiritual.
+- Evidencia: docs/RELEASE_0.2.0-alpha.8.md.
+
+## 0.2.0-alpha.7 — 2026-09-16 (preparada, no publicada)
+
+- Avances independientes de día, semana y mes, con símbolos compactos y tonos suaves.
+- Las metas semanales y mensuales no reducen el avance diario; «Hoy no aplicaba» excluye un compromiso diario sin marcarlo cumplido.
+- Metas por días distintos o por veces, con varias ocasiones en una fecha y opción de deshacer.
+- Agradecimientos y ofrecimientos separados, fechados y conservados literalmente en revisión y reporte seleccionado.
+- Migración aditiva preparada y probada localmente. Sin cambios al servicio publicado ni a los datos del piloto.
+- Evidencia y límites: docs/RELEASE_0.2.0-alpha.7.md.
+
+## 0.2.0-alpha.6 — 2026-09-15
+
+- Solicitudes de pareja dentro de Alianza, visibles desde cualquier espacio y sin abrir ventanas automáticamente.
+- Solicitud pendiente recuperable, enlace para compartir, cancelación y aceptación sin copiar códigos.
+- Reconocimiento opcional por nombre al ingresar el correo completo; activado únicamente por su titular.
+- Aceptación mutua habilita el espacio de pareja sin activar permisos personales ni modificar otros espacios.
+- Los códigos anteriores siguen funcionando. Evidencia y límites: docs/RELEASE_0.2.0-alpha.6.md.
+
 ## 0.2.0-alpha.5 — 2026-09-14
 
 - Rezo individual en pantalla dedicada, letra ajustable, avance amplio, pausa protegida y descarte confirmado.

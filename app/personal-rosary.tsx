@@ -40,7 +40,7 @@ export function PersonalRosary({r,act,busy,habits=[],checks={},onLinked}:{r:Rosa
  const wake=usePrayerScreen(active&&(!finished||litany!==null),awake);
  const today=localDate(),completedToday=finished&&r.mine.filter(m=>m.day===today).length===5;
  const candidates=habits.filter(h=>/rosario/i.test(h.data.title));
- const isMarked=(key:string)=>checks[key]==='done'||linked===key;
+ const isMarked=(key:string)=>checks[key]==='done'||Number(checks[key])>0||linked===key;
  useEffect(()=>{if(step===0)setDraft(opening);},[r.opening,step]);
  useEffect(()=>{body.current?.scrollTo?.({top:0,behavior:'instant'});},[step,litany,confirm,options]);
  useEffect(()=>{if(active){try{sessionStorage.setItem(resumeKey,r.id);}catch{}}},[active,r.id,resumeKey]);

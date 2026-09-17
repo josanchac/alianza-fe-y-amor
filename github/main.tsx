@@ -15,7 +15,7 @@ import './password.css';
 function pendingSetup(userId?:string|null){try{if(userId===null)sessionStorage.removeItem('alianza-password-setup');else if(userId)sessionStorage.setItem('alianza-password-setup',userId);return sessionStorage.getItem('alianza-password-setup');}catch{return null;}}
 
 function Login({client,setupPassword=false,emailRecoveryEnabled=false}:{client:SupabaseClient;setupPassword?:boolean;emailRecoveryEnabled?:boolean}){
-  const metricsEnabled=useRef(false);
+  const metricsEnabled=useRef(false),pilotEnabled=useRef(false);
   const [session,setSession]=useState<Session|null>(null),[ready,setReady]=useState(false);
   const [mode,setMode]=useState<'login'|'recover'|'password'>(setupPassword?'password':'login');
   const [email,setEmail]=useState(''),[password,setPassword]=useState(''),[repeat,setRepeat]=useState('');
@@ -25,7 +25,7 @@ function Login({client,setupPassword=false,emailRecoveryEnabled=false}:{client:S
     const {data:{subscription}}=client.auth.onAuthStateChange((event,next)=>{
       setSession(next);setReady(true);
       if(next&&(event==='PASSWORD_RECOVERY'||(setupPassword&&event==='INITIAL_SESSION')||pendingSetup()===next.user.id)){pendingSetup(next.user.id);setMode('password');}
-      if(event==='SIGNED_OUT'){metricsEnabled.current=false;pendingSetup(null);setPassword('');setRepeat('');setMode('login');}
+      if(event==='SIGNED_OUT'){metricsEnabled.current=false;pilotEnabled.current=false;pendingSetup(null);setPassword('');setRepeat('');setMode('login');}
     });
     return()=>subscription.unsubscribe();
   },[client]);
@@ -39,6 +39,7 @@ function Login({client,setupPassword=false,emailRecoveryEnabled=false}:{client:S
     const write=!!payload&&payload.action!=='snapshot'&&payload.action!=='invite_preview';
     if(metricsEnabled.current)void client.rpc('alianza_product_metrics',{payload:{action:'event',event:write?(error?'save_error':'save_ok'):(error?'load_error':'load_ok')}}).then(()=>{});
     if(metricsEnabled.current&&!write&&performance.now()-started>3000)void client.rpc('alianza_product_metrics',{payload:{action:'event',event:'slow_load'}}).then(()=>{});
+    if(pilotEnabled.current){void client.rpc('alianza_pilot_metrics',{payload:{action:'event',event:write?(error?'save_error':'save_ok'):(error?'load_error':'load_ok')}}).then(()=>{});if(!write&&performance.now()-started>3000)void client.rpc('alianza_pilot_metrics',{payload:{action:'event',event:'slow_load'}}).then(()=>{});}
     if(error){const status=error.code==='PT409'?409:error.code==='42501'?403:error.code==='22023'?400:error.code==='PT429'?429:503;
       return Response.json({error:status===409?'Este registro cambió en otro celular. Tu texto sigue aquí; actualizá antes de guardar.':status===403?'Tu sesión terminó o esta cuenta no tiene acceso.':status===400?(payload?.community?'Revisá los datos y las fechas. La invitación debe seguir vigente y las decenas secuenciales se completan en orden.':payload?.action?'La invitación no está disponible o los datos no coinciden. Revisá el código, el correo de tu cuenta y que ambos puedan vincularse.':'Revisá los campos y las fechas.'):status===429?'Esperá un día antes de crear más invitaciones.':'No se pudo guardar o cargar. Revisá la conexión y volvé a intentar.'},{status});}
     return Response.json(data);
@@ -64,7 +65,7 @@ function Login({client,setupPassword=false,emailRecoveryEnabled=false}:{client:S
     }catch(e){setError((e as Error).message);}finally{setBusy(false);}
   }
   if(!ready)return <main className="gate"><LoaderCircle className="spin"/><p>Abriendo tu espacio…</p></main>;
-  if(session&&mode!=='password')return <UserEnvironment key={session.user.id} client={client} userId={session.user.id} onConsentChange={enabled=>{metricsEnabled.current=enabled;}}><Journal key={session.user.id} dataRequest={request} communityTransport={communityTransport} onSignOut={signOut} assetBase="./"/>{error&&<p className="auth-alert" role="alert">{error}</p>}<button className="change-password" onClick={()=>{setMode('password');setError('');setMessage('');}}>Cambiar mi contraseña</button></UserEnvironment>;
+  if(session&&mode!=='password')return <UserEnvironment key={session.user.id} client={client} userId={session.user.id} onConsentChange={enabled=>{metricsEnabled.current=enabled;}} onPilotChange={enabled=>{pilotEnabled.current=enabled;}}><Journal key={session.user.id} dataRequest={request} communityTransport={communityTransport} onSignOut={signOut} assetBase="./"/>{error&&<p className="auth-alert" role="alert">{error}</p>}<button className="change-password" onClick={()=>{setMode('password');setError('');setMessage('');}}>Cambiar mi contraseña</button></UserEnvironment>;
   if(mode==='recover'&&!emailRecoveryEnabled)return <main className="auth-page"><section className="auth-card"><LockKeyhole size={32}/><h1>Recuperar mi acceso</h1><p>La recuperación automática por correo todavía no está activada.</p><p>Si todavía podés entrar, usá «Cambiar mi contraseña» dentro de tu espacio.</p><p>Si no podés entrar, pedí a quien administra Alianza un nuevo enlace privado para tu correo. Nunca compartás tu contraseña.</p><button className="primary" onClick={()=>setMode('login')}>Volver a entrar</button></section></main>;
   return <main className="auth-page"><section className="auth-card"><LogoViewer><img className="auth-emblem" src="./emblem.svg" alt="Árbol y rosario entrelazados"/></LogoViewer><div className="brand-word">Alianza<span>FE Y AMOR</span></div><p className="auth-intro">Un camino compartido.<br/>Una entrega personal.</p><h1>{mode==='login'?'Tu espacio de fe y amor':mode==='recover'?'Recuperar mi acceso':'Elegir mi contraseña'}</h1>{mode==='password'&&session&&<><p className="auth-step">PASO 2 DE 2 · ELEGÍ Y GUARDÁ</p><div className="auth-account"><span>Tu usuario es tu correo electrónico</span><strong>{session.user.email}</strong><p>Usá este correo y tu contraseña para entrar la próxima vez.</p></div></>}<form onSubmit={submit}>
     {mode!=='password'&&<label>Correo electrónico (tu usuario)<input type="email" autoComplete="username" value={email} onChange={e=>setEmail(e.target.value)} required autoCapitalize="none" spellCheck={false}/></label>}

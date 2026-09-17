@@ -10,7 +10,7 @@ export function commitmentTotals(rows:RecordItem[],key:string,start:string,end:s
   if(p.period==='day'){if(rows.find(r=>r.kind==='checks'&&r.key===day)?.data[key]!=='skip')target+=p.target;continue;}
   const range=rangeFor(p.period,day),id=range.start+':'+range.end;if(seen.has(id))continue;seen.add(id);
   if(range.start<start||range.end>last){unknown=true;continue;}
-  let valid=true;for(let d=range.start;d<=range.end;d=shift(d,1)){const q=planAt(plans,d);if(!q?.active||q.period!==p.period||q.target!==p.target)valid=false;}
+  let valid=true;for(let d=range.start;d<=range.end;d=shift(d,1)){const q=planAt(plans,d);if(!q?.active||q.period!==p.period||q.target!==p.target||(q.unit??'days')!==(p.unit??'days'))valid=false;}
   if(valid)target+=p.target;else unknown=true;
  }
  return {...countsFor(rows,key,start,last),target:unknown?null:target,knownTarget:target,partial:unknown};

@@ -20,9 +20,9 @@ try{
  fireEvent.change(screen.getByLabelText('¿Qué quiero cultivar?'),{target:{value:'Ejercicio elegido'}});
  fireEvent.click(screen.getByRole('button',{name:'Continuar',exact:true}));fireEvent.click(screen.getByRole('button',{name:'Por semana',exact:true}));
  assert.equal(screen.getByLabelText('Cantidad de días').value,'3');
- fireEvent.click(screen.getByRole('button',{name:'Guardar',exact:true}));await screen.findByRole('checkbox',{name:'Ejercicio elegido'});
- assert.deepEqual(writes[1].data.frequency,{period:'week',target:3});
- cleanup();mount();await screen.findByRole('heading',{name:'Mi día'});await screen.findByRole('checkbox',{name:'Ejercicio elegido'});assert.equal(writes.length,2);
+ fireEvent.click(screen.getByRole('button',{name:'Guardar',exact:true}));fireEvent.click(await screen.findByRole('button',{name:/Semana/}));await screen.findByRole('checkbox',{name:'Ejercicio elegido'});
+ assert.deepEqual(writes[1].data.frequency,{period:'week',target:3,unit:'days'});
+ cleanup();mount();await screen.findByRole('heading',{name:'Mi día'});fireEvent.click(await screen.findByRole('button',{name:/Semana/}));await screen.findByRole('checkbox',{name:'Ejercicio elegido'});assert.equal(writes.length,2);
  console.log('PASS Chosen start and weekly commitment persist; failed choice does not advance');
  cleanup();fixture.own.push(row('purpose',previous,{text:'Propósito anterior',review:''}),row('purpose',month,{text:'Propósito actual',review:'Nota actual'}));
  mount();await screen.findByRole('heading',{name:'Mi día'});fireEvent.mouseDown(screen.getByRole('tab',{name:'Hoy',exact:true}),{button:0,ctrlKey:false});fireEvent.click(screen.getByRole('button',{name:'Mi mes',exact:true}));
