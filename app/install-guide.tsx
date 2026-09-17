@@ -3,6 +3,14 @@ import {Smartphone, Share, MoreVertical, PlusSquare, Check, ChevronLeft, Chevron
 import {Dialog, DialogContent, DialogTitle, DialogDescription} from '@/components/ui/dialog';
 
 export const APP_ADDRESS='https://josanchac.github.io/alianza-fe-y-amor/';
+export function ShareApp(){
+ const [copied,setCopied]=useState(false),[manual,setManual]=useState(false);
+ async function share(){
+  if(navigator.share){try{await navigator.share({title:'Alianza · Fe y Amor',url:APP_ADDRESS});return;}catch(e){if((e as Error).name==='AbortError')return;}}
+  try{await navigator.clipboard.writeText(APP_ADDRESS);setCopied(true);}catch{setManual(true);}
+ }
+ return <div className="share-app"><button className="soft-button" onClick={share}><Share size={18}/>{copied?'Enlace copiado':'Compartir enlace de Alianza'}</button>{manual&&<label>Copiá este enlace<input readOnly value={APP_ADDRESS} onFocus={e=>e.currentTarget.select()}/></label>}<p className="form-hint">El acceso al piloto sigue siendo por invitación.</p></div>;
+}
 const instructions={
  iphone:[
   {title:'Abrí Alianza en Safari',text:'Copiá la dirección de abajo y abrila en Safari, el navegador de tu iPhone.',label:'Safari',icon:Compass},

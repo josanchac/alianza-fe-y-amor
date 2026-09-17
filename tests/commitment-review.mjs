@@ -16,7 +16,7 @@ async function request(init){if(init?.method!=='POST')return Response.json(fixtu
 const mount=()=>render(React.createElement(Journal,{dataRequest:request,onSignOut(){}}));
 try{
  mount();await screen.findByRole('heading',{name:'Mis compromisos'});
- fireEvent.pointerDown(screen.getByRole('button',{name:'Opciones: Escuchar con atención'}),{button:0,ctrlKey:false,pointerType:'mouse'});
+ fireEvent.pointerDown(screen.getByRole('button',{name:'Editar: Escuchar con atención'}),{button:0,ctrlKey:false,pointerType:'mouse'});
  fireEvent.click(await screen.findByRole('menuitem',{name:'Anotar o revisar este compromiso'}));
  await screen.findByRole('dialog');assert.equal(writes.length,0);assert(!screen.queryByLabelText('Mi valoración de este período'));
  fireEvent.change(screen.getByLabelText('Qué me ayudó, qué me costó o qué quiero recordar'),{target:{value:'Nota de la semana actual'}});
