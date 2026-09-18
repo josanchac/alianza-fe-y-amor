@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import {PilotPanel} from './pilot';
 import {PilotEvents,type PilotEvent} from '../app/pilot-events';
+import {InvitationAdmin} from './invitations';
 export type Activity = {
   asOf: string;
   suppressed: boolean;
@@ -14,10 +15,13 @@ export type Activity = {
 export function AdminPanel({
   client,
   onBack,
+  invitationsEnabled=false,
 }: {
   client: SupabaseClient;
   onBack: () => void;
+  invitationsEnabled?: boolean;
 }) {
+  const [section,setSection]=useState<'activity'|'invitations'>('activity');
   const [data, setData] = useState<Activity | null>(null),
     [busy, setBusy] = useState(true),
     [error, setError] = useState("");
@@ -54,6 +58,8 @@ export function AdminPanel({
         ← Volver a mi espacio
       </button>
       <h1>Uso y mejora de Alianza</h1>
+      {invitationsEnabled&&<nav className="admin-tabs" aria-label="Administración"><button aria-pressed={section==='activity'} onClick={()=>setSection('activity')}>Uso del piloto</button><button aria-pressed={section==='invitations'} onClick={()=>setSection('invitations')}>Personas e invitaciones</button></nav>}
+      {section==='invitations'?<InvitationAdmin client={client}/>:<>
       <p>Indicadores agregados · participación voluntaria</p><PilotPanel client={client}/><h2>Medición general</h2>
       <section className="admin-privacy">
         <strong>Sin actividad individual ni contenido espiritual.</strong>
@@ -147,6 +153,7 @@ export function AdminPanel({
             </details>
           </>
         ))}
+      </>}
     </main>
   );
 }
@@ -156,12 +163,14 @@ export function UserEnvironment({
   children,
   onConsentChange,
   onPilotChange,
+  invitationsEnabled=false,
 }: {
   client: SupabaseClient;
   userId: string;
   children: React.ReactNode;
   onConsentChange?: (enabled: boolean) => void;
   onPilotChange?: (enabled: boolean) => void;
+  invitationsEnabled?: boolean;
 }) {
   const [admin, setAdmin] = useState(false),
     [show, setShow] = useState(false),
@@ -169,8 +178,9 @@ export function UserEnvironment({
     [error, setError] = useState(""),
     [answer, setAnswer] = useState("");
   const [pilot,setPilot]=useState(false);
+  const [pilotOptional,setPilotOptional]=useState(false);
   const recordPilot=useCallback((event:PilotEvent)=>{if(pilot)void client.rpc('alianza_pilot_metrics',{payload:{action:'event',event}}).then(()=>{});},[client,pilot]);
-  useEffect(()=>{let active=true;setPilot(false);client.rpc('alianza_pilot_metrics',{payload:{action:'status'}}).then(({data,error})=>{if(active&&!error)setPilot(!!data?.enabled);});return()=>{active=false;};},[client,userId]);
+  useEffect(()=>{let active=true;setPilot(false);client.rpc('alianza_pilot_metrics',{payload:{action:'status'}}).then(({data,error})=>{if(active&&!error){setPilot(!!data?.enabled);setPilotOptional(!!data?.optional);}});return()=>{active=false;};},[client,userId]);
   useEffect(()=>{onPilotChange?.(pilot);if(!pilot)return;const record=()=>{if(document.visibilityState==='visible')void client.rpc('alianza_pilot_metrics',{payload:{action:'event',event:'open'}}).then(()=>{});};record();document.addEventListener('visibilitychange',record);return()=>document.removeEventListener('visibilitychange',record);},[client,pilot,onPilotChange]);
   useEffect(() => {
     let active = true;
@@ -205,7 +215,7 @@ export function UserEnvironment({
   }, [client, enabled]);
   return (
     <>
-      {show && <AdminPanel client={client} onBack={() => setShow(false)} />}
+      {show && <AdminPanel client={client} invitationsEnabled={invitationsEnabled} onBack={() => setShow(false)} />}
       <div hidden={show}>
         {admin && (
           <div className="admin-entry">
@@ -215,6 +225,7 @@ export function UserEnvironment({
         <PilotEvents.Provider value={recordPilot}>{children}</PilotEvents.Provider>
         <details className="activity-disclosure">
           <summary>Ayudar a mejorar Alianza</summary>
+          {pilotOptional&&<><h3>Métricas del piloto</h3><p>Funciones utilizadas y errores, sin tus textos. El administrador ve agregados; en un grupo pequeño pueden permitir deducciones.</p><label><input type="checkbox" checked={pilot} onChange={async e=>{const value=e.target.checked;const r=await client.rpc('alianza_pilot_metrics',{payload:{action:'consent',enabled:value}});if(r.error)setError('No pudimos guardar tu elección.');else{setPilot(!!r.data?.enabled);setError('');}}}/>Aportar métricas de uso al piloto</label><p>Al desactivar se eliminan tus eventos del piloto. Conservás el acceso a Alianza.</p></>}
           <h3>Medición general</h3>
           <p>
             Podés compartir señales técnicas de uso, guardados y errores. No se

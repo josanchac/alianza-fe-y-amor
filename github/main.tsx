@@ -8,13 +8,15 @@ import {Eye,EyeOff,LockKeyhole,LoaderCircle} from 'lucide-react';
 import Journal from '../app/journal';
 import {UserEnvironment} from './admin';
 import {InstallPage} from '../app/install-guide';
+import {InvitationEntryGate,readInvitationProof,savedInvitation} from './invitations';
 import '../app/globals.css';
 import './password.css';
+import './invitations.css';
 
 // Keep an unfinished password setup open after a page refresh, per browser tab.
 function pendingSetup(userId?:string|null){try{if(userId===null)sessionStorage.removeItem('alianza-password-setup');else if(userId)sessionStorage.setItem('alianza-password-setup',userId);return sessionStorage.getItem('alianza-password-setup');}catch{return null;}}
 
-function Login({client,setupPassword=false,emailRecoveryEnabled=false}:{client:SupabaseClient;setupPassword?:boolean;emailRecoveryEnabled?:boolean}){
+function Login({client,setupPassword=false,emailRecoveryEnabled=false,invitationsEnabled=false}:{client:SupabaseClient;setupPassword?:boolean;emailRecoveryEnabled?:boolean;invitationsEnabled?:boolean}){
   const metricsEnabled=useRef(false),pilotEnabled=useRef(false);
   const [session,setSession]=useState<Session|null>(null),[ready,setReady]=useState(false);
   const [mode,setMode]=useState<'login'|'recover'|'password'>(setupPassword?'password':'login');
@@ -25,7 +27,7 @@ function Login({client,setupPassword=false,emailRecoveryEnabled=false}:{client:S
     const {data:{subscription}}=client.auth.onAuthStateChange((event,next)=>{
       setSession(next);setReady(true);
       if(next&&(event==='PASSWORD_RECOVERY'||(setupPassword&&event==='INITIAL_SESSION')||pendingSetup()===next.user.id)){pendingSetup(next.user.id);setMode('password');}
-      if(event==='SIGNED_OUT'){metricsEnabled.current=false;pilotEnabled.current=false;pendingSetup(null);setPassword('');setRepeat('');setMode('login');}
+      if(event==='SIGNED_OUT'){metricsEnabled.current=false;pilotEnabled.current=false;pendingSetup(null);savedInvitation(null);setPassword('');setRepeat('');setMode('login');}
     });
     return()=>subscription.unsubscribe();
   },[client]);
@@ -65,7 +67,10 @@ function Login({client,setupPassword=false,emailRecoveryEnabled=false}:{client:S
     }catch(e){setError((e as Error).message);}finally{setBusy(false);}
   }
   if(!ready)return <main className="gate"><LoaderCircle className="spin"/><p>Abriendo tu espacio…</p></main>;
-  if(session&&mode!=='password')return <UserEnvironment key={session.user.id} client={client} userId={session.user.id} onConsentChange={enabled=>{metricsEnabled.current=enabled;}} onPilotChange={enabled=>{pilotEnabled.current=enabled;}}><Journal key={session.user.id} dataRequest={request} communityTransport={communityTransport} onSignOut={signOut} assetBase="./"/>{error&&<p className="auth-alert" role="alert">{error}</p>}<button className="change-password" onClick={()=>{setMode('password');setError('');setMessage('');}}>Cambiar mi contraseña</button></UserEnvironment>;
+  if(session&&mode!=='password'){
+   const environment=<UserEnvironment key={session.user.id} client={client} userId={session.user.id} invitationsEnabled={invitationsEnabled} onConsentChange={enabled=>{metricsEnabled.current=enabled;}} onPilotChange={enabled=>{pilotEnabled.current=enabled;}}><Journal key={session.user.id} dataRequest={request} communityTransport={communityTransport} onSignOut={signOut} assetBase="./"/>{error&&<p className="auth-alert" role="alert">{error}</p>}<button className="change-password" onClick={()=>{setMode('password');setError('');setMessage('');}}>Cambiar mi contraseña</button></UserEnvironment>;
+   return invitationsEnabled?<InvitationEntryGate key={session.user.id} client={client} onSignOut={signOut}>{environment}</InvitationEntryGate>:environment;
+  }
   if(mode==='recover'&&!emailRecoveryEnabled)return <main className="auth-page"><section className="auth-card"><LockKeyhole size={32}/><h1>Recuperar mi acceso</h1><p>La recuperación automática por correo todavía no está activada.</p><p>Si todavía podés entrar, usá «Cambiar mi contraseña» dentro de tu espacio.</p><p>Si no podés entrar, pedí a quien administra Alianza un nuevo enlace privado para tu correo. Nunca compartás tu contraseña.</p><button className="primary" onClick={()=>setMode('login')}>Volver a entrar</button></section></main>;
   return <main className="auth-page"><section className="auth-card"><LogoViewer><img className="auth-emblem" src="./emblem.svg" alt="Árbol y rosario entrelazados"/></LogoViewer><div className="brand-word">Alianza<span>FE Y AMOR</span></div><p className="auth-intro">Un camino compartido.<br/>Una entrega personal.</p><h1>{mode==='login'?'Tu espacio de fe y amor':mode==='recover'?'Recuperar mi acceso':'Elegir mi contraseña'}</h1>{mode==='password'&&session&&<><p className="auth-step">PASO 2 DE 2 · ELEGÍ Y GUARDÁ</p><div className="auth-account"><span>Tu usuario es tu correo electrónico</span><strong>{session.user.email}</strong><p>Usá este correo y tu contraseña para entrar la próxima vez.</p></div></>}<form onSubmit={submit}>
     {mode!=='password'&&<label>Correo electrónico (tu usuario)<input type="email" autoComplete="username" value={email} onChange={e=>setEmail(e.target.value)} required autoCapitalize="none" spellCheck={false}/></label>}
@@ -74,10 +79,10 @@ function Login({client,setupPassword=false,emailRecoveryEnabled=false}:{client:S
     <button className="primary" type="submit" disabled={busy}>{busy?<><LoaderCircle className="spin" size={18}/>Un momento…</>:mode==='login'?'Entrar':mode==='recover'?'Recibir enlace':'Guardar y entrar'}</button>
   </form>{mode==='login'&&<details className="auth-help"><summary>¿Es mi primera vez?</summary><p>Abrí tu enlace privado, elegí una contraseña de al menos 6 caracteres y tocá «Guardar y entrar». Después usá aquí tu correo y esa contraseña.</p><p>Si el enlace venció, pedí uno nuevo. Cada persona usa su propio enlace.</p></details>}<button className="text-button" disabled={busy} onClick={()=>{if(mode==='password'&&session){setMode('login');}else setMode(mode==='recover'?'login':'recover');setError('');setMessage('');setPassword('');setRepeat('');}}>{mode==='login'?'Olvidé mi contraseña':'Volver'}</button><a className="text-button" href="?guia=instalar" target="_blank" rel="noreferrer">Instalar Alianza en mi teléfono</a><p className="auth-private"><LockKeyhole size={14}/>Solo las cuentas habilitadas pueden entrar.</p></section></main>;
 }
-function Invitation({client,token,type,emailRecoveryEnabled}:{client:SupabaseClient;token:string;type:'invite'|'recovery';emailRecoveryEnabled:boolean}){
+function Invitation({client,token,type,emailRecoveryEnabled,invitationsEnabled=false}:{client:SupabaseClient;token:string;type:'invite'|'recovery';emailRecoveryEnabled:boolean;invitationsEnabled?:boolean}){
  const [busy,setBusy]=useState(false),[activated,setActivated]=useState(false),[error,setError]=useState('');
  async function activate(){if(busy)return;setBusy(true);setError('');try{const {data,error}=await client.auth.verifyOtp({token_hash:token,type});if(error)throw error;pendingSetup(data.user?.id);history.replaceState(null,'',new URL('./',location.href));setActivated(true);}catch{setError('Este enlace venció o ya se utilizó. Si ya elegiste tu contraseña, entrá normalmente; si no, solicitá un enlace nuevo.');}finally{setBusy(false);}}
- if(activated)return <Login client={client} setupPassword emailRecoveryEnabled={emailRecoveryEnabled}/>;
+ if(activated)return <Login client={client} setupPassword emailRecoveryEnabled={emailRecoveryEnabled} invitationsEnabled={invitationsEnabled}/>;
  return <main className="auth-page"><section className="auth-card"><LogoViewer><img className="auth-emblem" src="./emblem.svg" alt="Árbol y rosario"/></LogoViewer><div className="brand-word">Alianza<span>FE Y AMOR</span></div><p className="auth-step">PASO 1 DE 2</p><h1>Tu acceso personal</h1><p>Este enlace te permite elegir tu contraseña. Después entrás con tu correo electrónico.</p><p>No necesitás completar un horario ahora: podés empezar con un solo compromiso o explorar.</p>{error&&<p role="alert" className="notice">{error}</p>}<button className="primary" disabled={busy} onClick={activate}>{busy?'Un momento…':'Continuar y elegir contraseña'}</button><p className="muted">El enlace es privado, vence y se usa una sola vez.</p><a className="text-button" href="./">Ya tengo contraseña</a></section></main>;
 }
 async function start(){const root=createRoot(document.getElementById('root')!);if(new URLSearchParams(location.search).get('guia')==='instalar'){root.render(<InstallPage/>);return;}try{
@@ -87,6 +92,7 @@ async function start(){const root=createRoot(document.getElementById('root')!);i
   const setupPassword=['invite','recovery'].includes(new URLSearchParams(location.hash.slice(1)).get('type')||'');
   const client=createClient(c.url,c.publishableKey,{global:{headers:{'X-Client-Info':'alianza/'+APP_VERSION}},auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,storageKey:'alianza-auth'}});
   const hash=new URLSearchParams(location.hash.slice(1));const token=hash.get('token_hash');const type=hash.get('type');
-  root.render(<MaintenanceBoundary client={client} initialActive={!!c.maintenance}>{token&&(type==='invite'||type==='recovery')?<Invitation client={client} token={token} type={type} emailRecoveryEnabled={!!c.emailRecoveryEnabled}/>:<Login client={client} setupPassword={setupPassword} emailRecoveryEnabled={!!c.emailRecoveryEnabled}/>}</MaintenanceBoundary>);
+  const invitationProof=readInvitationProof(location.hash);if(invitationProof)savedInvitation(invitationProof);
+  root.render(<MaintenanceBoundary client={client} initialActive={!!c.maintenance}>{token&&(type==='invite'||type==='recovery')?<Invitation client={client} token={token} type={type} emailRecoveryEnabled={!!c.emailRecoveryEnabled} invitationsEnabled={!!c.invitationManagementEnabled}/>:<Login client={client} setupPassword={setupPassword} emailRecoveryEnabled={!!c.emailRecoveryEnabled} invitationsEnabled={!!c.invitationManagementEnabled}/>}</MaintenanceBoundary>);
 }catch(e){root.render(<main className="gate"><LockKeyhole size={36}/><h1>Alianza · Fe y Amor</h1><p>{(e as Error).message}</p><button className="primary" onClick={()=>location.reload()}>Volver a intentar</button></main>);}}
 void start();

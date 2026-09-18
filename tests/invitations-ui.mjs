@@ -1,0 +1,37 @@
+import assert from 'node:assert/strict';
+import {dom} from './dom.mjs';
+const React=await import('react');
+const {render,screen,fireEvent,cleanup,waitFor}=await import('@testing-library/react');
+const {InvitationAdmin,InvitationEntryGate,savedInvitation,readInvitationProof}=await import('../github/invitations.tsx');
+const calls=[];
+let mailReady=true;
+const client={rpc:async()=>({data:{people:[{id:null,email:'active@example.test',label:'',version:0,state:'active',delivery:null}]},error:null}),functions:{invoke:async(name,{body})=>{calls.push(body);return {data:body.action==='status'?{mailReady}:{result:'requested'},error:null};}}};
+try{
+ render(React.createElement(InvitationAdmin,{client}));
+ await screen.findByText('active@example.test');
+ assert.equal(screen.queryByRole('button',{name:'Renovar invitación'}),null);
+ fireEvent.change(screen.getByLabelText('Correo de la persona'),{target:{value:'new@example.test'}});
+ fireEvent.click(screen.getByRole('button',{name:'Invitar a una persona'}));
+ assert(!calls.some(c=>c.action==='invite'));
+ fireEvent.click(screen.getByRole('button',{name:'Confirmar y enviar'}));
+ await screen.findByText('Envío solicitado al correo indicado. No equivale a entrega confirmada.');
+ assert.equal(calls.filter(c=>c.action==='invite').length,1);
+ cleanup();mailReady=false;
+ render(React.createElement(InvitationAdmin,{client}));await screen.findByText('active@example.test');
+ assert(screen.getByRole('button',{name:'Invitar a una persona'}).disabled);cleanup();
+ assert.equal(readInvitationProof('#invite_proof=bad'),null);
+ savedInvitation({id:'00000000-0000-4000-8000-000000000001',proof:'a'.repeat(64)});
+ const entryCalls=[];
+ const entry={rpc:async(name,{p})=>{entryCalls.push(p);return {data:{state:p.action==='status'?'pending':'accepted',legacyMetrics:false},error:null};}};
+ render(React.createElement(InvitationEntryGate,{client:entry,onSignOut(){}},'Private workspace'));
+ await screen.findByRole('checkbox');assert.equal(screen.getByRole('checkbox').checked,false);
+ assert.equal(screen.queryByText('Private workspace'),null);
+ fireEvent.click(screen.getByRole('button',{name:'Entrar a mi espacio individual'}));
+ await screen.findByText('Private workspace');assert.equal(entryCalls.at(-1).metrics,false);assert.equal(savedInvitation(),null);
+ cleanup();
+ const cancelled={rpc:async()=>({data:{state:'cancelled'},error:null})};
+ render(React.createElement(InvitationEntryGate,{client:cancelled,onSignOut(){}},'Private workspace'));
+ await waitFor(()=>assert(screen.getByText(/Esta invitación venció/)));
+ assert.equal(screen.queryByText('Private workspace'),null);
+ console.log('PASS invitation UI: recipient confirmation, no active-account reset, delivery distinction, disabled mail, private gate and optional metrics');
+}finally{cleanup();dom.window.close();}

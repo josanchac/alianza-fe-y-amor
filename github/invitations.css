@@ -1,0 +1,12 @@
+.invitation-admin {max-width:48rem;margin:auto;padding:1rem;}
+.invitation-admin form,.invitation-admin label,.invitation-list li {display:grid;gap:.65rem;}
+.invitation-admin form {margin:1.5rem 0;}
+.invitation-admin input {min-width:0;max-width:100%;padding:.7rem;font:inherit;}
+.invitation-admin button {min-height:44px;white-space:normal;}
+.invitation-list {list-style:none;margin:1rem 0;padding:0;display:grid;gap:1rem;}
+.invitation-list li,.invitation-confirm {border:1px solid #ccd7dc;border-radius:16px;padding:1rem;overflow-wrap:anywhere;}
+.invitation-list li>div {display:flex;gap:.5rem;flex-wrap:wrap;}
+.invitation-confirm {background:#f6f2e9;margin:1rem 0;}
+.invitation-confirm button {margin:.3rem;}
+.admin-tabs {display:flex;gap:.5rem;flex-wrap:wrap;margin:1rem 0;}
+.admin-tabs [aria-pressed=true] {background:#16394a;color:white;}

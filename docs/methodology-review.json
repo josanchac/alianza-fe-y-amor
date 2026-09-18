@@ -4,9 +4,9 @@
   "scope": "Guías breves y comportamiento de la aplicación compilada desde github/main.tsx. Síntesis atribuidas, no curso completo ni formato nacional costarricense. El prototipo exploratorio está excluido de publicación. No acredita aval institucional ni pastoral. Incluye notas y oraciones privadas elegidas por la persona, valoración personal por período e invitación voluntaria a explorar basada únicamente en su elección. Incluye rosarios compartidos, propósitos de grupo como controles de producto, cuaderno privado del ideal, medición técnica general voluntaria y medición agregada automática del piloto cerrado sin contenido personal. Cotejo complementario en COMMUNITY_RELEASE.md. Incluye espacios independientes, rosario individual paso a paso, PDF seleccionado por el usuario, responsabilidades delegadas y capital de gracias con resumen protegido.",
   "verification": {
     "performedBy": "Codex — cotejo documental asistido, no representante del Movimiento",
-    "date": "2026-09-17",
+    "date": "2026-09-18",
     "criteria": "Fuentes institucionales íntegramente consultadas; ficha y procedencia identificables; correspondencia de cada área; reglas de producto separadas; exclusión explícita de enseñanzas sin respaldo.",
-    "evidence": "docs/DOCUMENTARY_VERIFICATION.md; docs/LIGHT_ENTRY_RELEASE.md; docs/COMMUNITY_RELEASE.md; docs/UX_REVIEW_20260913.md; docs/RELEASE_0.1.0-alpha.1.md; docs/RELEASE_0.2.0-alpha.1.md; docs/RELEASE_0.2.0-alpha.2.md; docs/RELEASE_0.2.0-alpha.3.md; docs/RELEASE_0.2.0-alpha.4.md; docs/RELEASE_0.2.0-alpha.5.md; docs/RELEASE_0.2.0-alpha.6.md; docs/RELEASE_0.2.0-alpha.7.md; docs/RELEASE_0.2.0-alpha.8.md; docs/RELEASE_0.2.0-alpha.9.md; docs/RELEASE_0.2.0-alpha.10.md"
+    "evidence": "docs/DOCUMENTARY_VERIFICATION.md; docs/LIGHT_ENTRY_RELEASE.md; docs/COMMUNITY_RELEASE.md; docs/UX_REVIEW_20260913.md; docs/RELEASE_0.1.0-alpha.1.md; docs/RELEASE_0.2.0-alpha.1.md; docs/RELEASE_0.2.0-alpha.2.md; docs/RELEASE_0.2.0-alpha.3.md; docs/RELEASE_0.2.0-alpha.4.md; docs/RELEASE_0.2.0-alpha.5.md; docs/RELEASE_0.2.0-alpha.6.md; docs/RELEASE_0.2.0-alpha.7.md; docs/RELEASE_0.2.0-alpha.8.md; docs/RELEASE_0.2.0-alpha.9.md; docs/RELEASE_0.2.0-alpha.10.md; docs/PILOT_INVITATIONS_IMPLEMENTATION.md; tests/invitations-db.mjs; tests/invitations-handler.mjs; tests/invitations-ui.mjs"
   },
   "pastoralReview": {
     "status": "deferred",
@@ -26,7 +26,7 @@
     "app/habit-fields.tsx": "d2611b20ebb589e96f76b23f888917ddd466193ccca56398451a93798f0fadcc",
     "app/home.tsx": "ea63b937c16c809da8855c1c83a50eb68b2abfcfec7de867a2c87075b657fcb6",
     "app/install-guide.tsx": "78bb188ccb6a627e5e5ed579b27ed3f5e63e1b49201c720b5d9554464917901c",
-    "app/journal.tsx": "58394e51bf706c4607e7c042803dd3b0c7edcab1c8227af10445b3d60d4e0149",
+    "app/journal.tsx": "d29815af822eac8dc772d03bb34d6068dcff8b0f44f5e343d1d41869b0736a93",
     "app/logo-viewer.tsx": "0c9eb87e7460b13a01efa51c6e3c2d40b942c76f3ebc5f5eaeb62e9e828689b8",
     "app/month-review.tsx": "9f090115b362741c703de2f37aab116f70fea3cd05b2b54fed0badfa28fd27dd",
     "app/movement-costa-rica.tsx": "98fd5fa91bf6a4b3ae4a9c3ee3d8cea8674abffdf5c326a8dc3cc8c5d9984dfb",
@@ -55,10 +55,11 @@
     "components/ui/switch.tsx": "386d4d4deb39f34126f9700fe9bf5393d238485dd94018bba9d154dda84c62ae",
     "components/ui/table.tsx": "20e5a7f224959c6b75802995706a97e9da171f693d4b6b1b436388fcd9df96f3",
     "components/ui/tabs.tsx": "865d0194331b9b2be36723fa79d3575dc83078b4cb941cafee87cb72fc2cff46",
-    "github/admin.tsx": "b71fb8c65204d9721c9c9d16edbdfb88b63275567b10b249cf11a1c89f9efffc",
-    "github/config.public.json": "3ba1e30479eb52518df95c0da17c8a9d5a646beffb67846ca6b05400c685a945",
+    "github/admin.tsx": "29461b3369ca009e5cdac3e5541f21d9f4a30021467576d0ef658d8f05a87f44",
+    "github/config.public.json": "293c58de80b6beedf6a1d0b96874787b645ec9d6bd321df1296f9fe460074e6b",
     "github/index.html": "fd340334f04792bf4791ef681c18b315489b93cc2f613536ad807d4a92905862",
-    "github/main.tsx": "c48981d9416b8f9824e4610a4fb445e380d07f0023b6f3a65a31d2db82e8e1c8",
+    "github/invitations.tsx": "0c948e1535466c7fc76cc839e7409fccdedb6a62232e70d31afad22bda682e94",
+    "github/main.tsx": "519c4aacad434eb99df96cfd2d633e59eb0c9067ca07347931bae5943e536a43",
     "github/maintenance.tsx": "835d6357879f2f831e06a77e0199b9dfd81365c3ee65dcf72c082e54ca652af7",
     "github/pilot.tsx": "39042a349be5f2d3d2d1d0760cc20c639d117e77ef8f9c0f18a5be5652a25ae5",
     "lib/commitment-review.ts": "0793538ad22268549c4964794923a1f0bfebc5837e3897a496d1945cdf26d57c",
@@ -98,6 +99,7 @@
     "supabase/migrations/20260916221507_pilot_metrics.sql": "4543f7810c6442b17484417c01cef636d3bafd168c77ff01d0dde5c00cdf80d3",
     "supabase/migrations/20260917042604_neca_feedback_alpha9.sql": "4db96c2951c22137aecb3ac04138d98de5e24c1eb2e30f05f316fdf2d9447be8",
     "supabase/migrations/20260917200200_rosary_order_and_commitment_removal.sql": "094420929adf453dc6683e0e49724893cbbaf77285a687ef17a0ce0ff3837677",
+    "supabase/migrations/20260918054033_pilot_invitations.sql": "6589c9198271099a2cc40182173e65d9b4f60e36e45e5a9df8507e58a458c772",
     "supabase/schema.sql": "c49ebc51f33501e7ff063b3b35d95eb002769653c37452354a1942e3b45044d0",
     "vite.github.config.ts": "384ffa9e0b1fe188e48038b906445d0b8539c74ebda3a96a8d036ddf02805352"
   },
