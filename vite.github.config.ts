@@ -1,9 +1,12 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import path from 'node:path';
+import {randomBytes} from 'node:crypto';
 import { readFileSync, mkdirSync, copyFileSync, writeFileSync } from 'node:fs';
 
+const buildId=randomBytes(16).toString('hex');
 export default defineConfig({
+  define:{__ALIANZA_BUILD_ID__:JSON.stringify(buildId)},
   root: path.resolve('github'), base: './', publicDir: false,
   resolve: { alias: { '@': path.resolve('.') }, dedupe: ['react','react-dom'] },
   plugins: [react(), {name:'exclude-unreviewed-prototype', transform(_code,id){
@@ -16,7 +19,7 @@ export default defineConfig({
     try{config=JSON.parse(readFileSync('github/config.local.json','utf8'));}catch{}
     if(config.publishableKey && !config.publishableKey.startsWith('sb_publishable_'))throw new Error('Use only a Supabase publishable key. Secret and legacy keys are rejected.');
     if(config.url && !/^https:\/\/[a-z0-9-]+\.supabase\.co$/.test(config.url))throw new Error('Invalid Supabase project URL');
-    writeFileSync(dir+'/config.json',JSON.stringify(config));
+    writeFileSync(dir+'/config.json',JSON.stringify({...config,buildId}));
     writeFileSync(dir+'/.nojekyll','');
     writeFileSync(dir+'/manifest.webmanifest',JSON.stringify({name:'Alianza · Fe y Amor',short_name:'Alianza',start_url:'./',display:'standalone',theme_color:'#142c46',background_color:'#f5f7fa',icons:[{src:'./icon.png',sizes:'1254x1254',type:'image/png'}]}));
   }}],

@@ -1,5 +1,6 @@
 import {LogoViewer} from '../app/logo-viewer';
 import {MaintenanceBoundary} from './maintenance';
+import {AppUpdateNotice} from './app-update';
 import {APP_VERSION} from '../app/version';
 import React, {useEffect,useMemo,useState,useRef} from 'react';
 import {createRoot} from 'react-dom/client';
@@ -93,6 +94,6 @@ async function start(){const root=createRoot(document.getElementById('root')!);i
   const client=createClient(c.url,c.publishableKey,{global:{headers:{'X-Client-Info':'alianza/'+APP_VERSION}},auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,storageKey:'alianza-auth'}});
   const hash=new URLSearchParams(location.hash.slice(1));const token=hash.get('token_hash');const type=hash.get('type');
   const invitationProof=readInvitationProof(location.hash);if(invitationProof)savedInvitation(invitationProof);
-  root.render(<MaintenanceBoundary client={client} initialActive={!!c.maintenance}>{token&&(type==='invite'||type==='recovery')?<Invitation client={client} token={token} type={type} emailRecoveryEnabled={!!c.emailRecoveryEnabled} invitationsEnabled={!!c.invitationManagementEnabled}/>:<Login client={client} setupPassword={setupPassword} emailRecoveryEnabled={!!c.emailRecoveryEnabled} invitationsEnabled={!!c.invitationManagementEnabled}/>}</MaintenanceBoundary>);
+  root.render(<MaintenanceBoundary client={client} initialActive={!!c.maintenance}><AppUpdateNotice/>{token&&(type==='invite'||type==='recovery')?<Invitation client={client} token={token} type={type} emailRecoveryEnabled={!!c.emailRecoveryEnabled} invitationsEnabled={!!c.invitationManagementEnabled}/>:<Login client={client} setupPassword={setupPassword} emailRecoveryEnabled={!!c.emailRecoveryEnabled} invitationsEnabled={!!c.invitationManagementEnabled}/>}</MaintenanceBoundary>);
 }catch(e){root.render(<main className="gate"><LockKeyhole size={36}/><h1>Alianza · Fe y Amor</h1><p>{(e as Error).message}</p><button className="primary" onClick={()=>location.reload()}>Volver a intentar</button></main>);}}
 void start();
