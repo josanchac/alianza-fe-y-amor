@@ -4,21 +4,21 @@ const React=await import('react');
 const {render,screen,fireEvent,cleanup,waitFor}=await import('@testing-library/react');
 const {InvitationAdmin,InvitationEntryGate,savedInvitation,readInvitationProof}=await import('../github/invitations.tsx');
 const calls=[];
-let mailReady=true;
-const client={rpc:async()=>({data:{people:[{id:null,email:'active@example.test',label:'',version:0,state:'active',delivery:null}]},error:null}),functions:{invoke:async(name,{body})=>{calls.push(body);return {data:body.action==='status'?{mailReady}:{result:'requested'},error:null};}}};
+let manualLinks=true;
+const client={rpc:async()=>({data:{people:[{id:null,email:'active@example.test',label:'',version:0,state:'active',delivery:null}]},error:null}),functions:{invoke:async(name,{body})=>{calls.push(body);return {data:body.action==='status'?{manualLinks}:{result:'generated',link:'https://app.example.test/#synthetic-token',email:'new@example.test'},error:null};}}};
 try{
  render(React.createElement(InvitationAdmin,{client}));
  await screen.findByText('active@example.test');
  assert.equal(screen.queryByRole('button',{name:'Renovar invitación'}),null);
  fireEvent.change(screen.getByLabelText('Correo de la persona'),{target:{value:'new@example.test'}});
- fireEvent.click(screen.getByRole('button',{name:'Invitar a una persona'}));
+ fireEvent.click(screen.getByRole('button',{name:'Crear invitación'}));
  assert(!calls.some(c=>c.action==='invite'));
- fireEvent.click(screen.getByRole('button',{name:'Confirmar y enviar'}));
- await screen.findByText('Envío solicitado al correo indicado. No equivale a entrega confirmada.');
- assert.equal(calls.filter(c=>c.action==='invite').length,1);
- cleanup();mailReady=false;
+ fireEvent.click(screen.getByRole('button',{name:'Confirmar y crear enlace'}));
+ await screen.findByText('Enlace listo para compartir con la persona indicada.');
+ assert.equal(calls.filter(c=>c.action==='invite').length,1);assert.equal(screen.getByLabelText('Enlace privado').value,'https://app.example.test/#synthetic-token');let copied='';Object.defineProperty(navigator,'clipboard',{configurable:true,value:{writeText:async value=>{copied=value;}}});fireEvent.click(screen.getByRole('button',{name:'Copiar enlace'}));await screen.findByText('Enlace copiado.');assert.equal(copied,'https://app.example.test/#synthetic-token');
+ cleanup();manualLinks=false;
  render(React.createElement(InvitationAdmin,{client}));await screen.findByText('active@example.test');
- assert(screen.getByRole('button',{name:'Invitar a una persona'}).disabled);cleanup();
+ assert(screen.getByRole('button',{name:'Crear invitación'}).disabled);cleanup();
  assert.equal(readInvitationProof('#invite_proof=bad'),null);
  savedInvitation({id:'00000000-0000-4000-8000-000000000001',proof:'a'.repeat(64)});
  const entryCalls=[];
@@ -33,5 +33,5 @@ try{
  render(React.createElement(InvitationEntryGate,{client:cancelled,onSignOut(){}},'Private workspace'));
  await waitFor(()=>assert(screen.getByText(/Esta invitación venció/)));
  assert.equal(screen.queryByText('Private workspace'),null);
- console.log('PASS invitation UI: recipient confirmation, no active-account reset, delivery distinction, disabled mail, private gate and optional metrics');
+ console.log('PASS invitation UI: recipient confirmation, no active-account reset, manual copy, unavailable generator, private gate and optional metrics');
 }finally{cleanup();dom.window.close();}

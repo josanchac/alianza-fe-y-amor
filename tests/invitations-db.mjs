@@ -50,7 +50,8 @@ try{
  await db.exec('reset role');await db.query("update auth.users set email='legacy@example.test' where id=$1",[id(2)]);
  await db.query("update alianza_private.pilot_invitations set updated_at=now()-interval '2 minutes' where email='legacy@example.test'");
  await as(null,'service_role');const newer={...request('renew','legacy@example.test',2),proofHash:digest('c'.repeat(64))};const renewed=await op(newer);assert(renewed.confirmed);
- await op({actor:id(1),action:'finish',requestId:pending.requestId,result:'error'});
+ assert.equal((await op({actor:id(1),action:'finish',requestId:pending.requestId,result:'error'})).current,false);
+ assert.equal((await op({actor:id(1),action:'finish',requestId:newer.requestId,result:'requested'})).current,true);
  await as(2);await assert.rejects(()=>entry({action:'accept',id:r.id,proof,metrics:false}),e=>e.code==='42501');
  await entry({action:'accept',id:r.id,proof:'c'.repeat(64),metrics:false});
  await db.exec('reset role');assert.deepEqual((await db.query('select row_to_json(m) v from alianza_private.members m where id=$1',[id(2)])).rows[0].v,before,'Renewal preserves original identity and pair');

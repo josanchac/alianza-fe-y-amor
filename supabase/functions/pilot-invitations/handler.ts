@@ -1,6 +1,6 @@
-// No provider credentials, tokens or full Auth responses leave this backend.
+// Only the intended single-use activation URL is returned to a verified administrator.
 export type InvitationConfig = {
-  supabaseUrl: string; serviceKey: string; appUrl: string; mailReady: boolean;
+  supabaseUrl: string; serviceKey: string; appUrl: string;
 };
 const uuid = /^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i;
 export function createInvitationHandler(config: InvitationConfig, transport: typeof fetch = fetch) {
@@ -35,14 +35,12 @@ export function createInvitationHandler(config: InvitationConfig, transport: typ
       let input: any;
       try { input=JSON.parse(raw); } catch { return reply(400,{error:'invalid_request'}); }
       if (!input || typeof input !== 'object' || Array.isArray(input)) return reply(400,{error:'invalid_request'});
-      if (input.action === 'status' && Object.keys(input).length===1) return reply(200,{mailReady:config.mailReady});
+      if (input.action === 'status' && Object.keys(input).length===1) return reply(200,{manualLinks:true});
       if (!['invite','renew','cancel'].includes(input.action)
         || Object.keys(input).some(key=>!['action','email','label','version','requestId'].includes(key))
         || typeof input.email!=='string' || input.email.length>254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input.email.trim())
         || !uuid.test(input.requestId ?? '') || !Number.isSafeInteger(input.version) || input.version<0
         || (input.label!==undefined && (typeof input.label!=='string' || input.label.length>80))) return reply(400,{error:'invalid_request'});
-      // Cancellation remains available even when email delivery is unavailable.
-      if (input.action!=='cancel' && !config.mailReady) return reply(503,{error:'mail_not_configured'});
       const proof = Array.from(crypto.getRandomValues(new Uint8Array(32)),n=>n.toString(16).padStart(2,'0')).join('');
       const digest = await crypto.subtle.digest('SHA-256',new TextEncoder().encode(proof));
       const proofHash = Array.from(new Uint8Array(digest),n=>n.toString(16).padStart(2,'0')).join('');
@@ -56,17 +54,22 @@ export function createInvitationHandler(config: InvitationConfig, transport: typ
       if (prepared.value.replay || input.action==='cancel') return reply(200,{result:prepared.value.result,replay:!!prepared.value.replay});
       const redirect=new URL(config.appUrl);
       redirect.hash=new URLSearchParams({pilot_invite:prepared.value.id,invite_proof:proof}).toString();
-      // Auth email templates must use RedirectTo + TokenHash, preserving this fragment.
-      // A confirmed but unfinished invite resumes through a recovery email to its owner.
-      const path=prepared.value.confirmed?'recover':'invite';
+      const type=prepared.value.confirmed?'recovery':'invite';
       let result='unknown';
+      let activationToken='';
       try {
-        const sent=await call(`/auth/v1/${path}?redirect_to=${encodeURIComponent(redirect.href)}`,{email:prepared.value.email});
-        result=sent.response.ok?'requested':sent.response.status>=500?'unknown':'error';
-      } catch { /* An uncertain send must not be automatically sent twice. */ }
-      try { const finished=await call('/rest/v1/rpc/alianza_invitation_operator',{p:{actor,action:'finish',requestId:input.requestId,result}}); if (!finished.response.ok) result='unknown'; }
+        const generated=await call('/auth/v1/admin/generate_link',{type,email:prepared.value.email,redirect_to:config.appUrl});
+        if(generated.response.ok&&typeof generated.value?.hashed_token==='string'&&generated.value.hashed_token.length>20){
+          activationToken=generated.value.hashed_token;result='requested';
+        }else result=generated.response.status>=500?'unknown':'error';
+      } catch { /* Never retry generation implicitly after an ambiguous timeout. */ }
+      let current=false;
+      try { const finished=await call('/rest/v1/rpc/alianza_invitation_operator',{p:{actor,action:'finish',requestId:input.requestId,result}}); current=finished.response.ok&&finished.value?.current===true; if (!finished.response.ok) result='unknown'; }
       catch { result='unknown'; }
-      return reply(200,{result});
+      // A cancellation, newer generation or acceptance may have won the race.
+      if(result!=='requested'||!current||!activationToken)return reply(200,{result:result==='requested'?'unknown':result});
+      redirect.hash=new URLSearchParams({pilot_invite:prepared.value.id,invite_proof:proof,token_hash:activationToken,type}).toString();
+      return reply(200,{result:'generated',link:redirect.href,email:prepared.value.email});
     } catch { return reply(503,{error:'temporarily_unavailable'}); }
   };
 }

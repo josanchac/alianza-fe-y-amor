@@ -1,36 +1,32 @@
-# Invitaciones individuales — implementación local
+# Invitaciones individuales con enlace manual
 
-Estado: no publicada. No se han enviado correos ni modificado cuentas reales.
+Implementación autorizada para el piloto: crear, copiar, renovar y cancelar desde el módulo de administrador, sin depender de SMTP. No se generan enlaces para cuentas ya activadas. No hay eliminación ni asignación administrativa de pareja.
 
-## Alcance
+## Flujo
 
-El administrador puede listar correo/estado, invitar, renovar y cancelar una invitación pendiente. El envío requiere confirmar el destinatario. No recibe enlaces de sesión ni contraseñas. Las cuentas activadas usan recuperación por su titular. No hay eliminación ni asignación administrativa de pareja.
-
-La entrada crea un espacio individual; conserva la vinculación voluntaria existente. Las cuentas e historiales anteriores no se recrean. Las personas incorporadas mediante este flujo eligen métricas opcionales, desmarcadas por defecto y revocables; el piloto anterior mantiene su acuerdo existente.
+El administrador confirma el correo, genera el enlace y lo copia para compartirlo directamente con la persona. El enlace se muestra únicamente en la respuesta y en memoria de esa pantalla; al salir, debe renovarlo para obtener otro. La persona configura su contraseña y entra a su espacio individual. Vincularse como pareja sigue siendo voluntario y bilateral.
 
 ## Seguridad y límites
 
-- Edge valida identidad y rol; SQL vuelve a comprobar permisos. Operaciones administrativas reservadas a service_role; tablas privadas con RLS.
-- Cada solicitud tiene identificador idempotente, versión y límite de frecuencia. Un resultado incierto no dispara un segundo correo automáticamente.
-- La prueba de activación se guarda como SHA-256, vence en 24 horas y rota al renovar. Cancelar/renovar invalida el acceso a **Alianza**, incluso con una sesión Auth obtenida del enlace anterior. No equivale a revocar globalmente todos los tokens de Supabase Auth.
-- El acceso a datos, pareja, comunidad y métricas se bloquea en servidor para invitaciones gestionadas pendientes/canceladas. La aceptación comprueba correo confirmado y prueba; la contraseña se configura en el flujo de interfaz, no es una garantía independiente de la RPC.
-- La entrega se presenta como solicitada, fallida o desconocida, nunca como correo recibido. No se dispone de webhooks de entrega.
-- Usuarios ajenos a este flujo siguen sujetos al sistema previo de membresía; deshabilitar registros públicos y no crear miembros por vías alternativas durante el piloto.
+- Auth verifica la sesión; Edge y SQL comprueban el rol de administrador. La clave privilegiada permanece exclusivamente en servidor. Tablas privadas con RLS y permisos restringidos.
+- Se usa `POST /auth/v1/admin/generate_link`, nunca `/invite` ni `/recover`. El resultado contiene solo el enlace necesario, correo y estado; no contraseñas ni claves. Referencia: https://supabase.com/docs/reference/javascript/auth-admin-generatelink
+- El enlace es una credencial privada: quien lo tenga puede activar la cuenta. Compartirlo manualmente no verifica la propiedad del correo. Se comunica explícitamente en la interfaz.
+- Cada solicitud tiene identificador idempotente, versión y límite de frecuencia. Un resultado incierto no genera otro enlace automáticamente; la misma solicitud no vuelve a exponer el enlace. El administrador puede renovar respetando el límite.
+- La prueba de Alianza se guarda como SHA-256 y vence en 24 horas. El plazo efectivo también depende del vencimiento nativo de Auth, que puede ser menor. La interfaz distingue el límite de activación del plazo del enlace.
+- Renovar/cancelar invalida la activación anterior en Alianza, incluso con una sesión Auth previa. No equivale a revocación global de todos los tokens nativos de Auth. Una comprobación transaccional final impide entregar un enlace que perdió una carrera con cancelación, renovación o aceptación.
+- La entrada requiere identidad Auth confirmada y la prueba vigente. Configurar contraseña es parte de la interfaz, no una garantía independiente de la RPC. No se exponen enlaces para cuentas ya aceptadas.
+- Las cuentas, contenido y parejas existentes se conservan. Las personas nuevas eligen métricas opcionales, desmarcadas por defecto; el piloto anterior mantiene su acuerdo.
 
-## Requisitos antes de activar
+## Publicación y comprobación
 
-1. Confirmar con el propietario remitente y SMTP de Supabase Auth. No se ha contratado ni configurado proveedor nuevo. Mantener `ALIANZA_INVITATION_MAIL_READY=false` hasta completar todas las comprobaciones.
-2. Ensayar en un proyecto de prueba con cuentas desechables: destinatario nuevo, invitado previo sin confirmar, confirmado sin terminar, expiración, cancelación, reenvío, apertura doble, correo distinto y concurrencia real. Las pruebas locales PGlite y mocks no sustituyen Auth/SMTP/PostgREST.
-3. Configurar `ALIANZA_APP_URL` con la URL HTTPS exacta de la aplicación y sin query/fragmento. Autorizar exclusivamente el destino correspondiente en Auth. Verificar que se conserva el fragmento de activación.
-4. Plantillas personalizadas de **Invite user** y **Reset password** deben usar `RedirectTo` y `TokenHash`, no `ConfirmationURL`, para no perder la prueba. Para invitaciones gestionadas, el destino ya contiene `#pilot_invite=…&invite_proof=…`; añadir `&token_hash={{ .TokenHash }}&type=invite` o `&token_hash={{ .TokenHash }}&type=recovery`. La recuperación ordinaria sin ese fragmento debe conservar su propia plantilla/rama con `#token_hash=…&type=recovery`. Probar ambas ramas: no pegar una plantilla única que rompa recuperación normal. Escapar atributos HTML, sin seguimiento de enlaces.
-5. Verificar TTL nativo de Auth y documentar que el plazo efectivo es el menor entre Auth y las 24 horas de Alianza. Comprobar políticas antiabuso y límites SMTP del proveedor.
-6. Aplicar migración `20260918054033_pilot_invitations.sql` con mantenimiento y checkpoint privado siguiendo el procedimiento existente. No usar reset, eliminación de cuentas ni migraciones históricas modificadas.
-7. Desplegar `pilot-invitations` con autenticación de JWT activa. Secrets servidor: `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `ALIANZA_APP_URL`, `ALIANZA_INVITATION_MAIL_READY`. Nunca claves privilegiadas en frontend/repositorio/chat. Comprobar compatibilidad del verificador de JWT del proyecto antes del despliegue.
-8. Habilitar `invitationManagementEnabled: true` en configuración pública solo tras backend, correo y pruebas de extremo a extremo. Por defecto, al faltar la propiedad, está apagado.
-9. Probar en móvil y escritorio: admin, activación, recuperación, cerrar sesión/cambiar cuenta, métricas opcionales, espacio individual y solicitud de pareja aceptada por ambas personas. Revisar que logs/analytics no reciban fragmentos/tokens/correos.
+Aplicar ambas migraciones de invitaciones con mantenimiento, checkpoint privado y comparación exacta de los registros anteriores. Desplegar `pilot-invitations` usando los secrets estándar `SUPABASE_URL` y `SUPABASE_SERVICE_ROLE_KEY`. El destino HTTPS está fijado al sitio publicado. No requiere plantillas, secretos SMTP ni remitente.
 
-No hay push, despliegue, correo real ni renovación de una persona concreta incluidos en esta implementación local.
+La función implementa autenticación propia mediante `/auth/v1/user` y autorización por RPC antes de procesar solicitudes. El verificador JWT de gateway puede deshabilitarse para admitir las claves de firma del proyecto sin omitir estas comprobaciones.
+
+Habilitar el panel después de comprobar migraciones, permisos, despliegue y respuesta denegada sin sesión. Las pruebas automatizadas cubren UI/copia, permisos, conservación de datos, renovación, cancelación, concurrencia lógica, reintento y fallos ambiguos. No sustituyen una activación real de punta a punta en un dispositivo; esa comprobación debe distinguirse de las verificaciones locales y del despliegue. No se renuevan cuentas reales para probar.
+
+La recuperación de cuentas ya activadas por correo sigue deshabilitada y no forma parte de este cambio.
 
 ## Verificación documental
 
-Estos cambios son controles de producto y privacidad, no contenido doctrinal. Se revisaron las nuevas etiquetas, el aviso de métricas y el mantenimiento del espacio individual; no se modificaron oraciones, guías ni atribuciones pastorales. La actualización del manifiesto documental refleja únicamente este alcance.
+Son controles de producto y privacidad. Se revisaron las etiquetas, límites y avisos; no cambian oraciones, guías ni atribuciones pastorales. Se conserva el espacio individual y el vínculo opcional.
