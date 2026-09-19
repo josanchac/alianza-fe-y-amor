@@ -64,6 +64,7 @@ try{
  assert.equal((await rpc(personClient,'data')).user.coupleId,null);
  assert((await make().auth.verifyOtp({token_hash:first.get('token_hash'),type:'invite'})).error,'Native token single use');
  assert.equal((await invoke(operation('renew',email,1))).status,409,'No administrative recovery for accepted accounts');
+ const support=await personClient.rpc('alianza_pilot_support',{p:{action:'submit',id:crypto.randomUUID(),message:'Rayo sintético'}});assert(!support.error);assert((await personClient.rpc('alianza_pilot_support',{p:{action:'list'}})).error);assert(!(await admin.client.rpc('alianza_pilot_support',{p:{action:'list'}})).error);const pulse=await admin.client.rpc('alianza_pilot_pulse');assert(!pulse.error);assert.equal(pulse.data.weeks.length,8);
  pass('Real handler, Auth and PostgREST create a one-use invitation without SMTP and activate an individual account');
  const legacy=await person('prior-unconfirmed',{confirmed:false});
  const before=(await sql.query('select row_to_json(m) v from alianza_private.members m where id=$1',[legacy.id])).rows[0].v;

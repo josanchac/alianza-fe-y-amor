@@ -10,21 +10,22 @@ export function InvitationAdmin({client}:{client:SupabaseClient}) {
  const [email,setEmail]=useState(''),[label,setLabel]=useState(''),[error,setError]=useState(''),[message,setMessage]=useState('');
  const [proposal,setProposal]=useState<Operation|null>(null),[retry,setRetry]=useState<Operation|null>(null);
  const [link,setLink]=useState(''),[recipient,setRecipient]=useState('');
- const lock=useRef(false),alive=useRef(true);
+ const lock=useRef(false),alive=useRef(true),refreshVersion=useRef(0);
+ const [search,setSearch]=useState(''),[filter,setFilter]=useState('all');
  async function invoke(body:object){
   const r=await client.functions.invoke('pilot-invitations',{body});
   if(r.error){let code='';try{code=(await r.error.context?.json())?.error;}catch{}throw Error(errors[code]||'No pudimos confirmar la operación. Actualizá la lista o reintentá la misma solicitud.');}
   return r.data;
  }
  async function refresh(){
-  setPeople([]);setReady(false);setError('');
+  const version=++refreshVersion.current;setPeople([]);setReady(false);setError('');
   try{
    const [r,capabilities]=await Promise.all([client.rpc('alianza_invitation_list'),invoke({action:'status'})]);
    if(r.error||!Array.isArray(r.data?.people))throw Error('No se pudo cargar la lista o ya no tenés acceso.');
-   if(alive.current){setPeople(r.data.people);setManualLinks(capabilities.manualLinks===true);setReady(true);}
-  }catch(e){if(alive.current){setLink('');setRecipient('');setManualLinks(false);setError((e as Error).message);}}
+   if(alive.current&&version===refreshVersion.current){setPeople(r.data.people);setManualLinks(capabilities.manualLinks===true);setReady(true);}
+  }catch(e){if(alive.current&&version===refreshVersion.current){setLink('');setRecipient('');setManualLinks(false);setError((e as Error).message);}}
  }
- useEffect(()=>{alive.current=true;void refresh();return()=>{alive.current=false;};},[client]);
+ useEffect(()=>{alive.current=true;void refresh();return()=>{alive.current=false;refreshVersion.current++;};},[client]);
  async function execute(op:Operation){
   if(lock.current)return;lock.current=true;setBusy(true);setError('');setMessage('');setLink('');setRecipient('');setProposal(null);
   try{
@@ -37,6 +38,7 @@ export function InvitationAdmin({client}:{client:SupabaseClient}) {
   finally{lock.current=false;if(alive.current)setBusy(false);}
  }
  function propose(action:Operation['action'],target=email,version=0){setProposal({action,email:target.trim().toLowerCase(),label,version,requestId:crypto.randomUUID()});setMessage('');}
+ const visiblePeople=people.filter(p=>(!search||`${p.label} ${p.email}`.toLowerCase().includes(search.toLowerCase().trim()))&&(filter==='all'||p.state===filter||(filter==='accepted'&&p.state==='active')||(filter==='pending'&&p.state==='legacy_pending')));
  return <section className="invitation-admin" aria-label="Personas e invitaciones">
   <h2>Personas e invitaciones</h2><p>Cada persona empieza con su propio espacio. Vincularse como pareja es opcional y requiere aceptación de ambos.</p>
   <p className="muted">Solo correo y estado de acceso. Sin contenido espiritual ni contraseñas. Los enlaces de activación son privados.</p>
@@ -57,7 +59,9 @@ export function InvitationAdmin({client}:{client:SupabaseClient}) {
    <button disabled={busy} onClick={()=>void execute(proposal)}>{proposal.action==='cancel'?'Sí, cancelar invitación':'Confirmar y crear enlace'}</button>
    <button disabled={busy} onClick={()=>setProposal(null)}>Volver sin cambios</button>
   </section>}
-  {ready&&<ul className="invitation-list">{people.map(p=><li key={p.email}>
+  {ready&&<div className="invitation-filters"><label>Buscar participante<input type="search" value={search} onChange={e=>setSearch(e.target.value)} placeholder="Nombre o correo"/></label><label>Estado<select value={filter} onChange={e=>setFilter(e.target.value)}><option value="all">Todos</option><option value="pending">Pendientes</option><option value="expired">Vencidas</option><option value="accepted">Activadas</option><option value="cancelled">Canceladas</option></select></label></div>}
+  {ready&&<p aria-live="polite">{visiblePeople.length} de {people.length} participantes</p>}{ready&&!visiblePeople.length&&<p>No hay participantes con esta búsqueda y estado.</p>}
+  {ready&&<ul className="invitation-list">{visiblePeople.map(p=><li key={p.email}>
    <strong>{p.label||p.email}</strong>{p.label&&<span>{p.email}</span>}<span>{states[p.state]||'Estado desconocido'}</span>
    {p.delivery&&p.state!=='accepted'&&p.state!=='cancelled'&&<small>{delivery[p.delivery]}</small>}
    {p.expiresAt&&p.state==='pending'&&<small>Límite de activación: {new Date(p.expiresAt).toLocaleString('es-CR')}</small>}

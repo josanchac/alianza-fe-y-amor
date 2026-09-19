@@ -7,3 +7,5 @@ for(const name of Object.getOwnPropertyNames(dom.window)){if(!(name in globalThi
 window.matchMedia=()=>({matches:false,addEventListener(){},removeEventListener(){}});
 globalThis.ResizeObserver=class{observe(){}unobserve(){}disconnect(){}};
 HTMLElement.prototype.scrollIntoView=()=>{};
+
+window.scrollTo=()=>{};

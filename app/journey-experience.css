@@ -43,3 +43,23 @@
 .logo-viewer-trigger{border:0;background:transparent;color:inherit;padding:0;cursor:zoom-in;max-width:100%}.logo-viewer-trigger:focus-visible{outline:2px solid #8c7545;outline-offset:5px;border-radius:8px}.logo-viewer{width:min(640px,calc(100% - 24px))!important;max-width:640px!important;max-height:92dvh;overflow:auto;display:flex!important;flex-direction:column;align-items:center;gap:12px;padding:48px 24px 28px!important;background:#f7f8fb;border-radius:24px!important}.logo-viewer-close{position:absolute;right:12px;top:12px;min-width:44px;min-height:44px}.logo-viewer-image{display:block;width:auto;max-width:100%;height:min(55dvh,460px);object-fit:contain}.logo-viewer .brand-word{font-size:clamp(2rem,8vw,3rem);text-align:center}.logo-viewer .brand-word span{font-size:.875rem;letter-spacing:.24em}.desktop-brand>.logo-viewer-trigger>img{width:180px;height:220px;object-fit:contain}.topbar .logo-viewer-trigger.brand-link{display:flex;text-align:left;align-items:center;text-decoration:none}.auth-card>.logo-viewer-trigger{display:block;margin:0 auto}.home-brand .logo-viewer-trigger{display:block;margin:0 auto}
 
 .rosary-suggestion{display:flex;align-items:flex-start;gap:12px;padding:14px 16px;background:#f2f1e9;border:1px solid #e5dfcf;border-radius:14px;color:#66512c}.rosary-suggestion>svg{flex-shrink:0;margin-top:3px}.rosary-suggestion strong{font-size:1rem;font-weight:600;line-height:1.4}.rosary-suggestion p{font-size:.875rem;line-height:1.5;margin:4px 0 0;color:#586773}
+
+/* One footer reserve; readable headings never compete with a fixed emblem. */
+.workspace .today-heading{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px}
+.workspace .today-heading>div:first-child{grid-column:1/-1}
+.workspace .today-heading h1{overflow-wrap:normal;word-break:normal}
+.workspace .today-heading>.symbol-progress{width:72px;height:72px;margin:0}
+.workspace .today-heading .day-count{justify-self:end}
+.workspace .schedule-explainer summary{min-height:44px;cursor:pointer;align-content:center;font-size:1rem}
+.workspace .pane .text-button,.workspace .pane .soft-button,.workspace .pane .primary{font-size:1rem}
+.workspace .bottom-nav.community-nav [role=tab]{font-size:.875rem!important}
+.workspace .frequency-chip{font-size:.875rem;white-space:normal}
+.workspace .app-menu-copy small,.workspace .rhythm-reflection small{font-size:.875rem}
+@media(max-width:760px){.workspace .main-tabs{padding-bottom:0}.workspace .pane{padding-bottom:1.5rem!important}.workspace .footer{padding:12px 0 20px}.app-shell{min-height:0;padding-bottom:calc(88px + env(safe-area-inset-bottom))}}
+.invitation-filters{display:grid;grid-template-columns:minmax(0,1fr) minmax(110px,.5fr);gap:12px;margin:16px 0}.invitation-filters select{min-height:48px;padding:10px;border:1px solid #a5b1bc;border-radius:10px;background:white;font:inherit;width:100%}
+
+.workspace .habit-copy>p,.workspace .habit-copy details,.workspace .r-card>p,.workspace .r-status,.workspace .r-action{font-size:1rem}
+
+.workspace .today-heading .symbol-progress svg,.workspace .today-heading .symbol-progress img{width:52px;height:52px}
+
+@media(max-width:760px){.user-environment .app-shell{padding-bottom:0}.workspace .footer{display:none}}

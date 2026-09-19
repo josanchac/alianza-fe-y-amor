@@ -1,6 +1,6 @@
-import {TreeDeciduous,Heart,Cross,Flame,Anchor,Mountain,Sun,Star,Flower2,Sprout,Bird,Church,Compass,Waves,BookOpen} from 'lucide-react';
+import {Zap,TreeDeciduous,Heart,Cross,Flame,Anchor,Mountain,Sun,Star,Flower2,Sprout,Bird,Church,Compass,Waves,BookOpen} from 'lucide-react';
 export {PERSONAL_SYMBOLS} from '@/lib/personal-symbols';
-const icons={heart:Heart,tree:TreeDeciduous,cross:Cross,flame:Flame,anchor:Anchor,mountain:Mountain,sun:Sun,star:Star,flower:Flower2,sprout:Sprout,bird:Bird,church:Church,compass:Compass,waves:Waves,book:BookOpen};
+const icons={lightning:Zap,heart:Heart,tree:TreeDeciduous,cross:Cross,flame:Flame,anchor:Anchor,mountain:Mountain,sun:Sun,star:Star,flower:Flower2,sprout:Sprout,bird:Bird,church:Church,compass:Compass,waves:Waves,book:BookOpen};
 export function PersonalSymbol({symbol,image,size=20}:{symbol?:string;image?:string;size?:number}){
  if(image&&image.length<=30000&&/^data:image\/jpeg;base64,\/9j\/[A-Za-z0-9+/]*={0,2}$/.test(image))return <img src={image} alt="Mi símbolo" width={size} height={size} style={{objectFit:'contain',borderRadius:4}}/>;
  if(!symbol)return null;

@@ -1,0 +1,12 @@
+import {createContext,useContext,useEffect,useRef,useState} from 'react';
+export type SupportRequest={id:string;message:string;state:string;version:number;createdAt:string;email?:string};
+export type SupportAPI=(p:Record<string,unknown>)=>Promise<{requests?:SupportRequest[];id?:string;state?:string}>;
+export const PilotSupportContext=createContext<SupportAPI|null>(null);
+export const supportStates:Record<string,string>={pending:'Pendiente',review:'En revisión',done:'Resuelta'};
+export function SupportForm(){
+ const api=useContext(PilotSupportContext),[message,setMessage]=useState(''),[sent,setSent]=useState(false),[busy,setBusy]=useState(false),[error,setError]=useState(''),[requests,setRequests]=useState<SupportRequest[]>([]);
+ const requestId=useRef(crypto.randomUUID()),lock=useRef(false);
+ useEffect(()=>{let alive=true;if(api)void api({action:'mine'}).then(r=>{if(alive)setRequests(r.requests??[])}).catch(()=>{if(alive)setError('No pudimos consultar tus solicitudes.');});return()=>{alive=false;};},[api]);
+ async function send(){if(!api||lock.current||message.trim().length<2)return;lock.current=true;setBusy(true);setError('');try{const r=await api({action:'submit',id:requestId.current,message:message.trim()});setRequests(old=>[{id:r.id!,message:message.trim(),state:r.state!,version:1,createdAt:new Date().toISOString()},...old.filter(x=>x.id!==r.id)]);setSent(true);setMessage('');requestId.current=crypto.randomUUID();}catch{setError('No pudimos confirmar el envío. Tu mensaje se conserva; podés reintentar.');}finally{lock.current=false;setBusy(false);}}
+ return <section className="support-form"><label>¿Qué símbolo te gustaría?<input maxLength={180} disabled={busy} value={message} onChange={e=>{setMessage(e.target.value);requestId.current=crypto.randomUUID();setSent(false)}}/></label><p>Al enviar, el administrador verá este mensaje y tu correo. Escribí solo el símbolo que solicitás.</p><button type="button" className="soft-button" disabled={!api||busy||message.trim().length<2} onClick={()=>void send()}>{busy?'Enviando…':'Enviar solicitud'}</button>{sent&&<p role="status">Solicitud recibida. Podés consultar su estado aquí.</p>}{error&&<p role="alert">{error}</p>}{requests.length>0&&<details><summary>Mis solicitudes ({requests.length})</summary><ul>{requests.map(r=><li key={r.id}><strong>{r.message}</strong> · {supportStates[r.state]}</li>)}</ul></details>}</section>;
+}

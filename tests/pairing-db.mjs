@@ -79,7 +79,7 @@ await db.exec('reset role;set role alianza_metrics');for(const table of ['pair_i
 console.log('PASS Cancellation, rejection, expiration, nonmember denial, nonenumerating creation and metrics isolation');
 await db.exec('reset role');
 const symbols=[...((await readFile('lib/personal-symbols.ts','utf8')).matchAll(/\['([^']+)','[^']+'\]/g))].map(m=>m[1]);
-assert.equal(symbols.length,16);
+assert.equal(symbols.length,17);
 for(const symbol of symbols)assert.equal((await db.query("select alianza_private.valid_record('profile','me',$1::jsonb) ok",[JSON.stringify({name:'Fixture',ideal:'',shareSchedule:false,shareNotes:false,symbol})])).rows[0].ok,true,symbol);
 for(const symbol of ['unknown',null,42])assert.equal((await db.query("select alianza_private.valid_record('profile','me',$1::jsonb) ok",[JSON.stringify({name:'Fixture',ideal:'',shareSchedule:false,shareNotes:false,symbol})])).rows[0].ok,false);
 await as(d);const symbolState=await data(),symbolProfile=symbolState.own.find(r=>r.kind==='profile');
