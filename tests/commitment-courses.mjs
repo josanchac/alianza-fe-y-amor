@@ -1,0 +1,47 @@
+import assert from 'node:assert/strict';
+import {dom} from './dom.mjs';
+import React from 'react';
+import {render,screen,fireEvent,cleanup} from '@testing-library/react';
+import {HabitFields} from '../app/habit-fields.tsx';
+import {SpacesBar} from '../app/spaces.tsx';
+import {courseProgress,isActiveOn} from '../lib/schedule.ts';
+import {rhythmProgress} from '../lib/rhythm.ts';
+import {commitmentTotals} from '../lib/commitment-totals.ts';
+const row=(kind,key,data)=>({kind,key,data,owner:'test',version:1,updated:''});
+const f={period:'day',target:1,unit:'days',course:{start:'2026-09-01',days:9}};
+const habit=row('habit','novena',{active:true,frequency:f});
+const rows=[habit,row('habit_plan','novena',{versions:[{...f,from:'2026-09-01',active:true}]}),...Array.from({length:8},(_,i)=>row('checks','2026-09-'+String(i+1).padStart(2,'0'),{novena:'done'}))];
+assert.equal(courseProgress(rows,'novena','2026-09-09').day,9);
+assert.equal(isActiveOn(rows,habit,'2026-08-31'),false);
+assert.equal(rhythmProgress(rows,'2026-09-09','2026-09-09','day').total,1);
+rows.push(row('checks','2026-09-09',{novena:'done'}));
+assert.equal(courseProgress(rows,'novena','2026-09-09').complete,true);
+assert.equal(isActiveOn(rows,habit,'2026-09-10'),false);
+assert.equal(commitmentTotals(rows,'novena','2026-09-01','2026-09-30','2026-09-30').target,9);
+const paused=rows.filter(r=>r.kind!=='checks'||r.key<'2026-09-03');
+assert.equal(courseProgress(paused,'novena','2026-09-05').paused,true);
+assert.equal(rhythmProgress(paused,'2026-09-05','2026-09-05','day').total,0);
+const versions=paused.find(r=>r.kind==='habit_plan').data.versions;
+versions.push({...f,from:'2026-09-05',active:true,course:{...f.course,resumedOn:'2026-09-05'}});
+assert.equal(courseProgress(paused,'novena','2026-09-05').day,3);
+assert.equal(courseProgress(paused,'novena','2026-09-05').paused,false);
+versions.push({...f,from:'2026-09-06',active:true,course:{start:'2026-09-06',days:9}});
+assert.equal(courseProgress(paused,'novena','2026-09-06').day,1);
+assert.equal(courseProgress(paused,'novena','2026-09-02').done,2);
+const scheduled=row('habit','exercise',{active:true,frequency:{period:'day',target:1,weekdays:[1,3]}});
+assert.equal(isActiveOn([scheduled],scheduled,'2026-09-21'),true);
+assert.equal(isActiveOn([scheduled],scheduled,'2026-09-22'),false);
+try{
+ let value;function Form(){const[data,set]=React.useState({title:'Ejercicio',moment:'Durante el día',active:true,anchor:'',minimum:'',frequency:{period:'week',target:3,unit:'times'}});value=data;return React.createElement(HabitFields,{data,first:false,step:1,field:(k,v)=>set({...data,[k]:v})});}
+ render(React.createElement(Form));assert(screen.getByRole('checkbox',{name:'Permitir más de una vez al día'}).checked);
+ fireEvent.change(screen.getByRole('combobox',{name:'Frecuencia'}),{target:{value:'course'}});
+ assert.equal(screen.queryByRole('checkbox',{name:'Permitir más de una vez al día'}),null);
+ assert.equal(screen.getByRole('spinbutton',{name:'Durante cuántos días'}).value,'9');
+ assert.equal(value.frequency.unit,'days');assert.equal(value.frequency.target,1);
+ fireEvent.change(screen.getByRole('combobox',{name:'Frecuencia'}),{target:{value:'month'}});
+ assert(screen.getByRole('checkbox',{name:'Permitir más de una vez al día'}));assert.equal(screen.queryByRole('spinbutton',{name:'Durante cuántos días'}),null);
+ cleanup();let chosen;
+ render(React.createElement(SpacesBar,{value:'personal',onChange:v=>chosen=v,config:{enabled:['personal','couple'],start:'personal'},onSave:async()=>true,busy:false}));
+ const couple=screen.getByRole('button',{name:'En pareja',exact:true});fireEvent.click(couple);assert.equal(chosen,'couple');assert(screen.getByRole('group',{name:'Cambiar espacio'}));
+ console.log('PASS nine-day completion, pause/resume/restart history, fixed totals, scheduled weekdays, progressive fields, repeated occurrences retained and space selector');
+}finally{cleanup();dom.window.close();}

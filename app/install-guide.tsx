@@ -50,7 +50,7 @@ export function InstallSteps(){
 }
 
 export function InstallGuide({open,onOpenChange}:{open:boolean;onOpenChange:(v:boolean)=>void}){
- return <Dialog open={open} onOpenChange={onOpenChange}><DialogContent className="editor-dialog install-dialog" showCloseButton={false}><DialogTitle className="dialog-title">Instalar Alianza en tu teléfono</DialogTitle><DialogDescription>Te mostramos dónde tocar, paso a paso.</DialogDescription><InstallSteps/><button className="text-button" onClick={()=>onOpenChange(false)}>Cerrar la guía</button></DialogContent></Dialog>;
+ return <Dialog open={open} onOpenChange={onOpenChange}><DialogContent className="editor-dialog install-dialog" showCloseButton={false}><DialogTitle className="dialog-title">Instalar Alianza en tu teléfono</DialogTitle><DialogDescription>Te mostramos dónde tocar, paso a paso.</DialogDescription><InstallSteps/><button className="action-button" data-action="navigation" onClick={()=>onOpenChange(false)}>Cerrar la guía</button></DialogContent></Dialog>;
 }
 
 export function InstallPage(){return <main className="install-page"><section className="card install-page-card"><Smartphone size={28}/><h1>Instalar Alianza en tu teléfono</h1><p>Abrí Alianza tocando su ícono, como tus otras apps. Elegí tu teléfono para empezar.</p><InstallSteps/><a className="primary" href={APP_ADDRESS}>Volver a Alianza</a></section></main>;}

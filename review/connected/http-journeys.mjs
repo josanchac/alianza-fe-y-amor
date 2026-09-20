@@ -1,0 +1,40 @@
+import{readFileSync}from'node:fs';import assert from'node:assert/strict';import{randomUUID}from'node:crypto';
+const c=JSON.parse(readFileSync(process.argv[2])),cfg=JSON.parse(readFileSync(new URL('./config.json',import.meta.url)));
+assert.equal(cfg.url,'https://xhfqcrmekfjclgazrvrm.supabase.co');
+async function rpc(user,name,arg){const r=await fetch(cfg.url+'/rest/v1/rpc/'+name,{method:'POST',headers:{apikey:cfg.publishableKey,Authorization:'Bearer '+c.users[user].token,'Content-Type':'application/json'},body:JSON.stringify(arg),signal:AbortSignal.timeout(20000)});const v=await r.json();if(!r.ok){const e=Error(name+': '+v.code);e.code=v.code;throw e;}return v;}
+const data=(u,p=null)=>rpc(u,'alianza_data',{payload:p});
+const save=async(kind,key,value,version=0)=>{const s=await data(0);return data(0,{kind,key,data:value,version,dataEpoch:s.user.dataEpoch,relationshipVersion:s.user.relationshipVersion});};
+const today=(await data(0)).today;
+const base={title:'Compromiso sintético',moment:'Durante el día',active:true,anchor:'',minimum:''};
+if(process.argv[3]!=='resume'){
+await save('habit','qa-day',{...base,frequency:{period:'day',target:2,unit:'times'}});
+await save('habit','qa-month',{...base,frequency:{period:'month',target:2,unit:'times'}});
+let checks=await save('checks',today,{'qa-day':1,'qa-month':2});
+checks=await save('checks',today,{'qa-day':1,'qa-month':3},checks.record.version);
+assert.equal(checks.record.data['qa-day'],1,'monthly extra preserves daily count');
+await assert.rejects(()=>save('checks',today,{'qa-day':2,'qa-month':3},checks.record.version-1),e=>e.code==='PT409');
+await save('prayers','me',{personalIdeal:'Texto privado sintético',marriageIdeal:'',homeShrine:'',alliance:''});
+console.log('PASS HTTP repeated counts, independent daily/monthly values and conflict protection');
+}
+const pair=async(u,p)=>{const s=await data(u);return rpc(u,'alianza_relationship',{payload:{relationshipVersion:s.user.relationshipVersion,dataEpoch:s.user.dataEpoch,...p}});};
+const invitation=(await pair(0,{action:'create_request',email:c.users[1].email})).state.invitations[0];
+assert.equal((await data(1)).user.coupleId,null);
+await pair(1,{action:'accept_request',id:invitation.id});
+assert((await data(1)).user.coupleId);assert.equal((await data(1)).partner.records.length,0);
+console.log('PASS HTTP mutual pairing and default private records');
+const support=(u,p)=>rpc(u,'alianza_pilot_support',{p});const id=randomUUID();
+await support(1,{action:'submit',id,message:'Símbolo de rayo, prueba sintética'});
+await assert.rejects(()=>support(1,{action:'list'}),e=>e.code==='42501');
+assert((await support(0,{action:'list'})).requests.some(x=>x.id===id));
+await support(0,{action:'update',id,state:'review',version:1});
+assert.equal((await support(1,{action:'mine'})).requests.find(x=>x.id===id).state,'review');
+const pulse=await rpc(0,'alianza_pilot_pulse',{});assert(!JSON.stringify(pulse).includes('@'));
+console.log('PASS HTTP support author/admin visibility and aggregate pulse');
+const group=(u,p={})=>rpc(u,'alianza_community',{payload:{dataEpoch:1,...p}});
+const g=(await group(0,{action:'group_create',name:'Curso sintético conectado',displayName:'Administrador'})).groups[0];
+assert.equal((await group(1)).groups.length,0);
+await assert.rejects(()=>group(1,{action:'purpose_create',groupId:g.id,title:'No autorizado'}));
+const token=(await group(0,{action:'invite_create',groupId:g.id})).token;
+await group(1,{action:'invite_join',token,displayName:'Participante sintético'});
+assert.equal((await group(1)).groups[0].id,g.id);
+console.log('PASS HTTP group creation, isolation and voluntary join');

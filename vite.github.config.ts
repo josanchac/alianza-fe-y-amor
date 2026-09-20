@@ -4,9 +4,10 @@ import path from 'node:path';
 import {randomBytes} from 'node:crypto';
 import { readFileSync, mkdirSync, copyFileSync, writeFileSync } from 'node:fs';
 
+const massRelay=process.env.MASS_READINGS_RELAY!=='disabled';
 const buildId=randomBytes(16).toString('hex');
 export default defineConfig({
-  define:{__ALIANZA_BUILD_ID__:JSON.stringify(buildId)},
+  define:{__EVANGELIZO_REVIEW__:massRelay,__MASS_SUPABASE_RELAY__:massRelay,__ALIANZA_BUILD_ID__:JSON.stringify(buildId)},
   root: path.resolve('github'), base: './', publicDir: false,
   resolve: { alias: { '@': path.resolve('.') }, dedupe: ['react','react-dom'] },
   plugins: [react(), {name:'exclude-unreviewed-prototype', transform(_code,id){

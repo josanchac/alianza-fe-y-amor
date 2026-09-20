@@ -1,5 +1,9 @@
 # Historial de versiones de Alianza
 
+## Pendiente de publicación
+
+- Las etiquetas Diario, Semanal y Mensual conservan la palabra completa y pasan a otra línea si no caben junto al título; se mantiene el tamaño de letra.
+
 ## 0.2.0-alpha.9 — 2026-09-17 (preparada para publicación)
 
 - Una sola vista para compromisos diarios, semanales y mensuales, con cadencia y significado de la marca visibles.

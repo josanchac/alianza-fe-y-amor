@@ -67,7 +67,7 @@ export function InvitationAdmin({client}:{client:SupabaseClient}) {
    {p.expiresAt&&p.state==='pending'&&<small>Límite de activación: {new Date(p.expiresAt).toLocaleString('es-CR')}</small>}
    {!['active','accepted'].includes(p.state)&&<div>
     <button className="soft-button" disabled={busy||!manualLinks} onClick={()=>propose(p.id?'renew':'invite',p.email,p.version)}>{p.state==='pending'?'Generar enlace nuevo':'Renovar invitación'}</button>
-    {p.id&&['pending','expired'].includes(p.state)&&<button className="text-button" disabled={busy} onClick={()=>propose('cancel',p.email,p.version)}>Cancelar invitación</button>}
+    {p.id&&['pending','expired'].includes(p.state)&&<button className="action-button" data-action="sensitive" disabled={busy} onClick={()=>propose('cancel',p.email,p.version)}>Cancelar invitación</button>}
    </div>}
   </li>)}</ul>}
   <p>Las cuentas activadas conservan su acceso. Este módulo no genera enlaces para ellas.</p>
@@ -101,5 +101,5 @@ export function InvitationEntryGate({client,onSignOut,children}:{client:Supabase
  <label><input type="checkbox" checked={metrics} onChange={e=>setMetrics(e.target.checked)}/>Quiero aportar métricas de uso al piloto</label><p>Podés cambiar esta elección en Mi espacio. No es necesario aceptar para usar Alianza.</p></>}
  <button className="primary" disabled={busy} onClick={()=>void accept()}>{busy?'Preparando tu espacio…':'Entrar a mi espacio individual'}</button></>:
  state!=='loading'&&<p>{state==='error'?'No pudimos verificar el acceso. Recargá para intentar de nuevo.':'Esta invitación venció, fue cancelada o falta abrir el enlace completo. Pedí a quien administra Alianza que renueve tu invitación y usá el enlace más reciente.'}</p>}
- {error&&<p role="alert">{error}</p>}<button className="text-button" onClick={onSignOut}>Cerrar sesión</button></section></main>;
+ {error&&<p role="alert">{error}</p>}<button className="action-button" data-action="navigation" onClick={onSignOut}>Cerrar sesión</button></section></main>;
 }

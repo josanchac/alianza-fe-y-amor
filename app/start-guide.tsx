@@ -11,7 +11,7 @@ export function StartCard({role,onCreate,onCouple,linked=false}:{role:string;lin
   <p>Un acto concreto que quieras llevar a tu día. Podés empezar sin tener un ideal definido.</p>
   <button className="primary" onClick={()=>onCreate()}><Plus size={18}/>Crear mi primer compromiso</button>
   <details className="optional-details"><summary>Necesito una idea para empezar</summary><p>Son ejemplos de la app para redactar un acto concreto, no puntos obligatorios. Adaptá y guardá solo el que elijás.</p><p className="form-hint"><a href="https://schoenstatt.org.br/faca-um-planejamento-espiritual/" target="_blank" rel="noreferrer">Consultar la orientación del Movimiento de Schoenstatt Brasil (portugués)</a></p><div className="idea-list">{suggestedHabits(role).map(h=><button className="idea-button" key={h.title} onClick={()=>onCreate(h)}><span>{h.title}</span><ArrowRight size={18}/></button>)}</div></details>
-  {linked&&<button className="text-button" onClick={onCouple}>Prefiero empezar con las 4 Rs <ArrowRight size={16}/></button>}
+  {linked&&<button className="action-button" data-action="secondary" onClick={onCouple}>Prefiero empezar con las 4 Rs <ArrowRight size={16}/></button>}
   <p className="start-private"><LockKeyhole size={15}/> Tu horario es personal. Vos decidís si lo compartís.</p>
  </section>;
 }

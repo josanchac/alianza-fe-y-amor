@@ -14,17 +14,22 @@ async function request(init){if(init?.method!=='POST')return Response.json(fixtu
 try{
  render(React.createElement(Journal,{dataRequest:request,onSignOut(){}}));
  await screen.findByRole('heading',{name:'Mis compromisos'});
- assert(screen.getByLabelText('1 de 2 compromisos marcados hoy'));
+ assert(screen.getByLabelText('1 de 1 compromisos diarios'));
  await screen.findByText('Dos rosarios al mes');
  assert(screen.getByText('Mensual'));
- fireEvent.click(screen.getByRole('button',{name:'Registrar una ocasión'}));
+ assert.equal(screen.queryByRole('button',{name:'Agregar otro'})===null,true);
+ assert.equal(screen.getAllByRole('checkbox').length,2);
+ fireEvent.click(screen.getByRole('checkbox',{name:'Dos rosarios al mes'}));
  await waitFor(()=>assert.equal(fixture.own.find(r=>r.kind==='checks').data.rosary,1));
- fireEvent.click(await screen.findByRole('button',{name:'Registrar otra ocasión'}));
+ fireEvent.click(await screen.findByRole('button',{name:'Agregar otro'}));
  await waitFor(()=>assert.equal(fixture.own.find(r=>r.kind==='checks').data.rosary,2));
  await waitFor(()=>assert(screen.getByText(/2 de 2 veces/)));
- fireEvent.click(screen.getByRole('button',{name:'Deshacer una ocasión'}));
+ fireEvent.click(screen.getByRole('button',{name:'Deshacer último'}));
  await waitFor(()=>assert.equal(fixture.own.find(r=>r.kind==='checks').data.rosary,1));
- assert(screen.getByLabelText('2 de 2 compromisos marcados hoy'));
+ assert(screen.getByLabelText('1 de 1 compromisos diarios'));
+ fireEvent.click(screen.getByRole('checkbox',{name:'Dos rosarios al mes'}));
+ await waitFor(()=>assert.equal(screen.queryByRole('button',{name:'Agregar otro'})===null,true));
+ assert.equal(screen.getByRole('checkbox',{name:'Dos rosarios al mes'}).getAttribute('aria-checked'),'false');
  cleanup();
  render(React.createElement(ReflectionSummary,{rows:[row('journal',today,{gratitude:'Por la familia',offering:'Mi esfuerzo',meditation:'Una palabra que guardo'})],start:month+'-01',end:today}));
  assert(screen.getByRole('heading',{name:'Mis agradecimientos'}).parentElement.textContent.includes('Por la familia'));

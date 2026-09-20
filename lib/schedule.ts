@@ -1,13 +1,29 @@
 import {type RecordItem} from './domain.ts';
 import {rangeFor,shift} from './reports.ts';
-export type Frequency={period:'day'|'week'|'month';target:number;unit?:'days'|'times'};
+export type Frequency={period:'day'|'week'|'month';target:number;unit?:'days'|'times';weekdays?:number[];course?:{start:string;days:number;resumedOn?:string}};
 export type Plan=Frequency&{from:string;active:boolean};
 export const daily:Frequency={period:'day',target:1};
-export function frequencyLabel(f:Frequency=daily){return f.period==='day'?'Cada día':`${f.target} ${f.unit==='times'?(f.target===1?'vez':'veces'):(f.target===1?'día':'días')} por ${f.period==='week'?'semana':'mes'}`;}
+export function frequencyLabel(f:Frequency=daily){return f.course?`${f.course.days} días · desde ${f.course.start}`:f.weekdays?f.weekdays.map(d=>['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'][d]).join(' · '):f.period==='day'?(f.unit==='times'?`${f.target} ${f.target===1?'vez':'veces'} al día`:'Cada día'):`${f.target} ${f.unit==='times'?(f.target===1?'vez':'veces'):(f.target===1?'día':'días')} por ${f.period==='week'?'semana':'mes'}`;}
 export function registeredCount(value:unknown){return value==='done'?1:typeof value==='number'&&Number.isInteger(value)&&value>0?value:0;}
 export function plansFor(rows:RecordItem[],key:string):Plan[]{return rows.find(r=>r.kind==='habit_plan'&&r.key===key)?.data.versions??[];}
 export function planAt(plans:Plan[],date:string){return [...plans].reverse().find(p=>p.from<=date);}
-export function isActiveOn(rows:RecordItem[],habit:RecordItem,date:string){const plans=plansFor(rows,habit.key);return rows.some(r=>r.kind==='checks'&&r.key===date&&r.data[habit.key])||(plans.length?!!planAt(plans,date)?.active:habit.data.active);}
+export function courseProgress(rows:RecordItem[],key:string,date:string,frequency?:Frequency){
+ const f=frequency??planAt(plansFor(rows,key),date),course=f?.course;if(!course)return null;
+ const checks=rows.filter(r=>r.kind==='checks'&&r.key>=course.start&&r.key<=date);
+ const before=checks.filter(r=>r.key<date&&registeredCount(r.data[key])>0).length;
+ const doneToday=checks.some(r=>r.key===date&&registeredCount(r.data[key])>0);
+ const previous=shift(date,-1);
+ return {day:Math.min(before+1,course.days),done:before+Number(doneToday),total:course.days,doneToday,finishedBefore:before>=course.days,complete:before+Number(doneToday)>=course.days,
+ paused:date>course.start&&!doneToday&&before<course.days&&!checks.some(r=>r.key===previous&&registeredCount(r.data[key])>0)&&course.resumedOn!==date};
+}
+export function isActiveOn(rows:RecordItem[],habit:RecordItem,date:string){
+ if(rows.some(r=>r.kind==='checks'&&r.key===date&&r.data[habit.key]))return true;
+ const plans=plansFor(rows,habit.key),at=plans.length?planAt(plans,date):{...habit.data.frequency,active:habit.data.active};
+ if(!at?.active)return false;
+ if(at.weekdays&&!at.weekdays.includes(new Date(date+'T12:00:00Z').getUTCDay()))return false;
+ if(at.course&&(date<at.course.start||courseProgress(rows,habit.key,date,at)?.finishedBefore))return false;
+ return true;
+}
 export function wasActiveBetween(rows:RecordItem[],key:string,start:string,end:string){const plans=plansFor(rows,key);return plans.some((p,i)=>p.active&&p.from<=end&&(!plans[i+1]||plans[i+1].from>start));}
 export function monthBefore(month:string){const d=new Date(month+'-01T12:00:00Z');d.setUTCMonth(d.getUTCMonth()-1);return d.toISOString().slice(0,7);}
 export function monthLabel(month:string){return new Intl.DateTimeFormat('es-CR',{month:'long',year:'numeric',timeZone:'UTC'}).format(new Date(month+'-01T12:00:00Z'));}
@@ -56,6 +72,7 @@ export function progressLabel(p:PeriodProgress){
 // remains conservative when a period includes missing history or plan changes.
 export function liveProgressFor(rows:RecordItem[],key:string,date:string,today:string){
  const historical=progressFor(rows,key,date,today),plans=plansFor(rows,key),at=planAt(plans,date);
+ if(at?.period==='day'&&historical.target===0)return {...historical,label:progressLabel(historical)};
  if(!at?.active)return {...historical,label:progressLabel(historical)};
  let since=plans.findIndex(p=>p===at);
  while(since>0){const previous=plans[since-1];if(!previous.active||previous.period!==at.period||previous.target!==at.target||(previous.unit??'days')!==(at.unit??'days'))break;since--;}
@@ -65,7 +82,7 @@ export function liveProgressFor(rows:RecordItem[],key:string,date:string,today:s
  const unit=at.unit==='times'?(target===1?'vez':'veces'):(target===1?'día':'días');
  const period=at.period==='week'?'esta semana':at.period==='month'?'este mes':'hoy';
  const partial=start>historical.start;
- return {...historical,done,target,percent:Math.min(100,Math.round(100*done/target)),extra:Math.max(0,done-target),label:`${done} de ${target} ${unit} ${period}${partial?' · desde '+start.slice(8)+'/'+start.slice(5,7):''}`};
+ return {...historical,done,target,percent:Math.min(100,Math.round(100*done/target)),extra:Math.max(0,done-target),label:`${Math.min(done,target)} de ${target} ${unit} ${period}${done>=target?' · cumplido':''}${partial?' · desde '+start.slice(8)+'/'+start.slice(5,7):''}`};
 }
 
 export function hasHabitHistory(rows:RecordItem[],key:string){

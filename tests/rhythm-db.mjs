@@ -29,11 +29,38 @@ try{
  await assert.rejects(()=>save('checks',today,{rosary:1,daily:2},count.record.version),e=>e.code==='22023');
  await assert.rejects(()=>save('checks',today,{rosary:0},count.record.version),e=>e.code==='22023');
  await assert.rejects(()=>save('habit','bad',{...base,frequency:{period:'month',target:100,unit:'times'}}),e=>e.code==='22023');
- await assert.rejects(()=>save('habit','bad',{...base,frequency:{period:'day',target:1,unit:'times'}}),e=>e.code==='22023');
+ await assert.rejects(()=>save('habit','bad',{...base,frequency:{period:'day',target:100,unit:'times'}}),e=>e.code==='22023');
+ await assert.rejects(()=>save('habit','bad',{...base,frequency:{period:'day',target:2}}),e=>e.code==='22023');
+ const repeated=await save('habit','daily-repeat',{...base,frequency:{period:'day',target:2,unit:'times'}});
+ const repeatedPlan=(await data()).own.find(r=>r.kind==='habit_plan'&&r.key==='daily-repeat').data.versions.at(-1);
+ assert.equal(repeatedPlan.period,'day');assert.equal(repeatedPlan.target,2);assert.equal(repeatedPlan.unit,'times');
+ count=await save('checks',today,{rosary:1,'daily-repeat':2},count.record.version);
+ await assert.rejects(()=>save('checks',today,{rosary:1,'daily-repeat':3},count.record.version-1),e=>e.code==='PT409');
+ count=await save('checks',today,{rosary:1,'daily-repeat':3},count.record.version);
+ assert.equal(count.record.data['daily-repeat'],3);
+ count=await save('checks',today,{rosary:1,'daily-repeat':'done'},count.record.version);
+ assert.equal(count.record.data['daily-repeat'],3);
+ count=await save('checks',today,{rosary:1,'daily-repeat':2},count.record.version);
+ await assert.rejects(()=>save('checks',today,{rosary:1,'daily-repeat':100},count.record.version),e=>e.code==='22023');
+ await save('habit','daily-repeat',{...base,frequency:{period:'day',target:1}},repeated.record.version);
+ await assert.rejects(()=>save('checks',today,{rosary:1,'daily-repeat':3},count.record.version),e=>e.code==='22023');
+ assert.equal((await data()).own.find(r=>r.kind==='checks'&&r.key===today).data['daily-repeat'],2);
  await save('journal',today,{offering:'Mi día',meditation:'Una luz',gratitude:'Mi familia'});
  await save('prayers','me',{personalIdeal:'Oración personal',marriageIdeal:'',homeShrine:'Oración del Santuario Hogar',alliance:''});
  await save('preferences','experience',{focus:'schedule',lastSeenRelease:'neca-feedback-2026-09-17'});
  await assert.rejects(()=>save('prayers','bad',{personalIdeal:'',marriageIdeal:'',homeShrine:'',alliance:'',extra:'no'}),e=>e.code==='22023');
+ // Extended frequencies are validated by the same owner-scoped RPC.
+ const weekday=new Date(today+'T12:00:00Z').getUTCDay();
+ await save('habit','specific',{...base,frequency:{period:'day',target:1,weekdays:[weekday]}});
+ await save('habit','other-day',{...base,frequency:{period:'day',target:1,weekdays:[(weekday+1)%7]}});
+ count=await save('checks',today,{specific:'done'},count.record.version);
+ await assert.rejects(()=>save('checks',today,{specific:'done','other-day':'done'},count.record.version),e=>e.code==='22023');
+ await save('habit','novena',{...base,frequency:{period:'day',target:1,unit:'days',course:{start:today,days:9}}});
+ count=await save('checks',today,{specific:'done',novena:'done'},count.record.version);
+ await assert.rejects(()=>save('checks',today,{novena:2},count.record.version),e=>e.code==='22023');
+ for(const frequency of [{period:'week',target:1,weekdays:[1]},{period:'day',target:1,weekdays:[]},{period:'day',target:1,weekdays:[1,1]},{period:'day',target:1,weekdays:[7]},{period:'day',target:1,course:{start:today,days:366}},{period:'day',target:1,unit:'times',course:{start:today,days:9}},{period:'day',target:1,course:{start:'2026-02-30',days:9}}]){
+  await assert.rejects(()=>save('habit','invalid-course',{...base,frequency}),e=>e.code==='22023');
+ }
  await as(2);await assert.rejects(()=>save('checks',today,{rosary:2}),e=>e.code==='22023');const second=await data();assert(!(second.own.some(r=>r.kind==='checks')));assert(!(second.own.some(r=>r.kind==='prayers')));
  console.log('PASS occurrence validation, meditation and private prayers, historical unit plans, repeated daily occasions, stale writes, legacy completion preservation, numeric correction and cross-account isolation');
 }catch(e){console.error('FAIL',e.message,e.code??'',e.where??'');process.exitCode=1;}finally{await db.close();}

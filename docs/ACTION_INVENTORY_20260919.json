@@ -1,0 +1,2434 @@
+[
+  {
+    "file": "app/app-panel.tsx",
+    "line": 8,
+    "tag": "button",
+    "class": "\"app-menu-row\"",
+    "label": "",
+    "onClick": true
+  },
+  {
+    "file": "app/app-panel.tsx",
+    "line": 13,
+    "tag": "DialogClose",
+    "class": "",
+    "label": "",
+    "onClick": false
+  },
+  {
+    "file": "app/app-panel.tsx",
+    "line": 13,
+    "tag": "button",
+    "class": "\"icon-button\"",
+    "label": "\"Cerrar panel\"",
+    "onClick": false
+  },
+  {
+    "file": "app/choice-chips.tsx",
+    "line": 2,
+    "tag": "button",
+    "class": "",
+    "label": "",
+    "onClick": true
+  },
+  {
+    "file": "app/commitment-review.tsx",
+    "line": 9,
+    "tag": "summary",
+    "class": "",
+    "label": "Decidir mi próximo paso (opcional)",
+    "onClick": false
+  },
+  {
+    "file": "app/commitment-review.tsx",
+    "line": 15,
+    "tag": "button",
+    "class": "\"text-button\"",
+    "label": "Explorar un próximo paso",
+    "onClick": true
+  },
+  {
+    "file": "app/commitment-review.tsx",
+    "line": 15,
+    "tag": "button",
+    "class": "\"text-button\"",
+    "label": "Ajustar este compromiso",
+    "onClick": true
+  },
+  {
+    "file": "app/commitment-review.tsx",
+    "line": 16,
+    "tag": "button",
+    "class": "\"text-button\"",
+    "label": "",
+    "onClick": true
+  },
+  {
+    "file": "app/community.tsx",
+    "line": 93,
+    "tag": "button",
+    "class": "\"primary\"",
+    "label": "",
+    "onClick": false
+  },
+  {
+    "file": "app/community.tsx",
+    "line": 161,
+    "tag": "button",
+    "class": "\"quick-mark\"",
+    "label": "{'Registrar ocasión: '+p.title}",
+    "onClick": true
+  },
+  {
+    "file": "app/community.tsx",
+    "line": 161,
+    "tag": "button",
+    "class": "\"text-button purpose-detail\"",
+    "label": "Ver mis registros",
+    "onClick": true
+  },
+  {
+    "file": "app/community.tsx",
+    "line": 164,
+    "tag": "button",
+    "class": "\"text-button\"",
+    "label": "Cerrar detalle",
+    "onClick": true
+  },
+  {
+    "file": "app/community.tsx",
+    "line": 171,
+    "tag": "button",
+    "class": "\"primary\"",
+    "label": "Participar en el propósito",
+    "onClick": true
+  },
+  {
+    "file": "app/community.tsx",
+    "line": 191,
+    "tag": "button",
+    "class": "\"text-button\"",
+    "label": "Cambiar día",
+    "onClick": true
+  },
+  {
+    "file": "app/community.tsx",
+    "line": 203,
+    "tag": "button",
+    "class": "\"primary purpose-action\"",
+    "label": "Lo viví",
+    "onClick": true
+  },
+  {
+    "file": "app/community.tsx",
+    "line": 226,
+    "tag": "button",
+    "class": "\"text-button\"",
+    "label": "Deshacer una ocasión",
+    "onClick": true
+  },
+  {
+    "file": "app/community.tsx",
+    "line": 433,
+    "tag": "button",
+    "class": "{done?'decade-done':''}",
+    "label": "{`Decena ${n}: ${MYSTERIES[r.mystery].items[n-1]}${done?', completada':''}`}",
+    "onClick": true
+  },
+  {
+    "file": "app/community.tsx",
+    "line": 458,
+    "tag": "button",
+    "class": "\"soft-button\"",
+    "label": "",
+    "onClick": true
+  },
+  {
+    "file": "app/community.tsx",
+    "line": 470,
+    "tag": "button",
+    "class": "\"text-button\"",
+    "label": "Reservar",
+    "onClick": true
+  },
+  {
+    "file": "app/community.tsx",
+    "line": 482,
+    "tag": "button",
+    "class": "\"text-button\"",
+    "label": "Liberar",
+    "onClick": true
+  },
+  {
+    "file": "app/community.tsx",
+    "line": 504,
+    "tag": "summary",
+    "class": "",
+    "label": "Marcar un compromiso de hoy",
+    "onClick": false
+  },
+  {
+    "file": "app/community.tsx",
+    "line": 557,
+    "tag": "summary",
+    "class": "",
+    "label": "Administrar este encuentro",
+    "onClick": false
+  },
+  {
+    "file": "app/community.tsx",
+    "line": 558,
+    "tag": "button",
+    "class": "\"text-button\"",
+    "label": "Cancelar el encuentro",
+    "onClick": true
+  },
+  {
+    "file": "app/community.tsx",
+    "line": 592,
+    "tag": "button",
+    "class": "",
+    "label": "{`Avemaría ${i + 1}`}",
+    "onClick": true
+  },
+  {
+    "file": "app/community.tsx",
+    "line": 606,
+    "tag": "summary",
+    "class": "",
+    "label": "Oraciones para consultar",
+    "onClick": false
+  },
+  {
+    "file": "app/community.tsx",
+    "line": 625,
+    "tag": "a",
+    "class": "",
+    "label": "Consultar los misterios · Santa Sede",
+    "onClick": false
+  },
+  {
+    "file": "app/community.tsx",
+    "line": 633,
+    "tag": "button",
+    "class": "\"primary\"",
+    "label": "Terminé de rezar esta decena",
+    "onClick": true
+  },
+  {
+    "file": "app/community.tsx",
+    "line": 643,
+    "tag": "button",
+    "class": "\"text-button\"",
+    "label": "Ya la recé por mi cuenta",
+    "onClick": true
+  },
+  {
+    "file": "app/confession-guide.tsx",
+    "line": 16,
+    "tag": "button",
+    "class": "\"prayer-entry\"",
+    "label": "",
+    "onClick": false
+  },
+  {
+    "file": "app/confession-guide.tsx",
+    "line": 17,
+    "tag": "DialogClose",
+    "class": "",
+    "label": "",
+    "onClick": false
+  },
+  {
+    "file": "app/confession-guide.tsx",
+    "line": 17,
+    "tag": "button",
+    "class": "\"icon-button\"",
+    "label": "\"Cerrar preparación\"",
+    "onClick": false
+  },
+  {
+    "file": "app/confession-guide.tsx",
+    "line": 22,
+    "tag": "button",
+    "class": "\"text-button\"",
+    "label": "Atrás",
+    "onClick": true
+  },
+  {
+    "file": "app/confession-guide.tsx",
+    "line": 22,
+    "tag": "button",
+    "class": "\"primary\"",
+    "label": "",
+    "onClick": true
+  },
+  {
+    "file": "app/confession-guide.tsx",
+    "line": 22,
+    "tag": "button",
+    "class": "\"primary\"",
+    "label": "Finalizar",
+    "onClick": true
+  },
+  {
+    "file": "app/confession-guide.tsx",
+    "line": 23,
+    "tag": "summary",
+    "class": "",
+    "label": "Orientación y fuentes",
+    "onClick": false
+  },
+  {
+    "file": "app/confession-guide.tsx",
+    "line": 23,
+    "tag": "a",
+    "class": "",
+    "label": "Catecismo, 2052–2055",
+    "onClick": false
+  },
+  {
+    "file": "app/confession-guide.tsx",
+    "line": 23,
+    "tag": "a",
+    "class": "",
+    "label": "Catecismo, 1451–1460 · Contrición, examen, confesión y reparación",
+    "onClick": false
+  },
+  {
+    "file": "app/donation.tsx",
+    "line": 23,
+    "tag": "button",
+    "class": "\"donate-button\"",
+    "label": "Donar",
+    "onClick": true
+  },
+  {
+    "file": "app/donation.tsx",
+    "line": 47,
+    "tag": "button",
+    "class": "\"soft-button\"",
+    "label": "Copiar",
+    "onClick": true
+  },
+  {
+    "file": "app/donation.tsx",
+    "line": 70,
+    "tag": "a",
+    "class": "",
+    "label": "sitio de Schoenstatt Costa Rica",
+    "onClick": false
+  },
+  {
+    "file": "app/formation-guide.tsx",
+    "line": 12,
+    "tag": "a",
+    "class": "",
+    "label": "(PDF)",
+    "onClick": false
+  },
+  {
+    "file": "app/formation-guide.tsx",
+    "line": 15,
+    "tag": "summary",
+    "class": "",
+    "label": "Repasar el sentido del horario espiritual",
+    "onClick": false
+  },
+  {
+    "file": "app/formation-guide.tsx",
+    "line": 15,
+    "tag": "a",
+    "class": "",
+    "label": "Horario espiritual · Schoenstatt Brasil (portugués)",
+    "onClick": false
+  },
+  {
+    "file": "app/formation-guide.tsx",
+    "line": 19,
+    "tag": "button",
+    "class": "\"soft-button\"",
+    "label": "Ayudame a formularlo",
+    "onClick": true
+  },
+  {
+    "file": "app/formation-guide.tsx",
+    "line": 20,
+    "tag": "button",
+    "class": "\"text-button\"",
+    "label": "Atrás",
+    "onClick": true
+  },
+  {
+    "file": "app/formation-guide.tsx",
+    "line": 20,
+    "tag": "button",
+    "class": "\"soft-button\"",
+    "label": "Siguiente",
+    "onClick": true
+  },
+  {
+    "file": "app/formation-guide.tsx",
+    "line": 20,
+    "tag": "button",
+    "class": "\"soft-button\"",
+    "label": "Usar como borrador",
+    "onClick": true
+  },
+  {
+    "file": "app/formation-guide.tsx",
+    "line": 27,
+    "tag": "summary",
+    "class": "",
+    "label": "¿Y si todavía no tenemos ideal matrimonial?",
+    "onClick": false
+  },
+  {
+    "file": "app/groups-workspace.tsx",
+    "line": 22,
+    "tag": "button",
+    "class": "\"text-button\"",
+    "label": "Quitar imagen del símbolo",
+    "onClick": true
+  },
+  {
+    "file": "app/groups-workspace.tsx",
+    "line": 22,
+    "tag": "button",
+    "class": "\"text-button\"",
+    "label": "Quitar foto",
+    "onClick": true
+  },
+  {
+    "file": "app/groups-workspace.tsx",
+    "line": 31,
+    "tag": "button",
+    "class": "\"card home-option\"",
+    "label": "",
+    "onClick": true
+  },
+  {
+    "file": "app/groups-workspace.tsx",
+    "line": 31,
+    "tag": "button",
+    "class": "\"soft-button\"",
+    "label": "Crear grupo",
+    "onClick": true
+  },
+  {
+    "file": "app/groups-workspace.tsx",
+    "line": 31,
+    "tag": "button",
+    "class": "\"soft-button\"",
+    "label": "Tengo una invitación",
+    "onClick": true
+  },
+  {
+    "file": "app/groups-workspace.tsx",
+    "line": 31,
+    "tag": "button",
+    "class": "\"primary\"",
+    "label": "Abrir mi invitación",
+    "onClick": true
+  },
+  {
+    "file": "app/groups-workspace.tsx",
+    "line": 31,
+    "tag": "button",
+    "class": "\"text-button\"",
+    "label": "Mis grupos",
+    "onClick": true
+  },
+  {
+    "file": "app/groups-workspace.tsx",
+    "line": 32,
+    "tag": "button",
+    "class": "",
+    "label": "Mi participación",
+    "onClick": true
+  },
+  {
+    "file": "app/groups-workspace.tsx",
+    "line": 32,
+    "tag": "button",
+    "class": "",
+    "label": "Organizar",
+    "onClick": true
+  },
+  {
+    "file": "app/groups-workspace.tsx",
+    "line": 33,
+    "tag": "button",
+    "class": "\"soft-button\"",
+    "label": "Editar identidad y fotos",
+    "onClick": true
+  },
+  {
+    "file": "app/groups-workspace.tsx",
+    "line": 33,
+    "tag": "button",
+    "class": "\"soft-button\"",
+    "label": "Permisos y responsabilidades",
+    "onClick": true
+  },
+  {
+    "file": "app/groups-workspace.tsx",
+    "line": 33,
+    "tag": "button",
+    "class": "\"soft-button\"",
+    "label": "Crear invitación",
+    "onClick": true
+  },
+  {
+    "file": "app/groups-workspace.tsx",
+    "line": 33,
+    "tag": "button",
+    "class": "\"text-button\"",
+    "label": "Transferir coordinación principal",
+    "onClick": true
+  },
+  {
+    "file": "app/groups-workspace.tsx",
+    "line": 34,
+    "tag": "button",
+    "class": "",
+    "label": "",
+    "onClick": true
+  },
+  {
+    "file": "app/groups-workspace.tsx",
+    "line": 35,
+    "tag": "button",
+    "class": "\"soft-button\"",
+    "label": "Nuevo propósito",
+    "onClick": true
+  },
+  {
+    "file": "app/groups-workspace.tsx",
+    "line": 35,
+    "tag": "button",
+    "class": "\"text-button\"",
+    "label": "Editar propósito",
+    "onClick": true
+  },
+  {
+    "file": "app/groups-workspace.tsx",
+    "line": 36,
+    "tag": "button",
+    "class": "\"primary\"",
+    "label": "Iniciar rosario del grupo",
+    "onClick": true
+  },
+  {
+    "file": "app/groups-workspace.tsx",
+    "line": 37,
+    "tag": "button",
+    "class": "\"soft-button\"",
+    "label": "Proponer una intención",
+    "onClick": true
+  },
+  {
+    "file": "app/groups-workspace.tsx",
+    "line": 37,
+    "tag": "button",
+    "class": "\"primary\"",
+    "label": "Ofrecer un aporte",
+    "onClick": true
+  },
+  {
+    "file": "app/groups-workspace.tsx",
+    "line": 37,
+    "tag": "button",
+    "class": "\"text-button\"",
+    "label": "Deshacer un aporte de hoy",
+    "onClick": true
+  },
+  {
+    "file": "app/groups-workspace.tsx",
+    "line": 38,
+    "tag": "button",
+    "class": "\"soft-button\"",
+    "label": "",
+    "onClick": true
+  },
+  {
+    "file": "app/groups-workspace.tsx",
+    "line": 38,
+    "tag": "a",
+    "class": "",
+    "label": "Abrir material",
+    "onClick": false
+  },
+  {
+    "file": "app/groups-workspace.tsx",
+    "line": 38,
+    "tag": "button",
+    "class": "\"soft-button\"",
+    "label": "",
+    "onClick": true
+  },
+  {
+    "file": "app/groups-workspace.tsx",
+    "line": 38,
+    "tag": "button",
+    "class": "\"soft-button\"",
+    "label": "",
+    "onClick": true
+  },
+  {
+    "file": "app/groups-workspace.tsx",
+    "line": 38,
+    "tag": "button",
+    "class": "\"text-button\"",
+    "label": "Asignar un encargo",
+    "onClick": true
+  },
+  {
+    "file": "app/groups-workspace.tsx",
+    "line": 39,
+    "tag": "button",
+    "class": "\"soft-button\"",
+    "label": "Compartir aviso o material",
+    "onClick": true
+  },
+  {
+    "file": "app/groups-workspace.tsx",
+    "line": 39,
+    "tag": "a",
+    "class": "",
+    "label": "Abrir material",
+    "onClick": false
+  },
+  {
+    "file": "app/groups-workspace.tsx",
+    "line": 40,
+    "tag": "button",
+    "class": "\"group-history-item\"",
+    "label": "",
+    "onClick": true
+  },
+  {
+    "file": "app/groups-workspace.tsx",
+    "line": 42,
+    "tag": "button",
+    "class": "\"text-button\"",
+    "label": "Salir del grupo",
+    "onClick": true
+  },
+  {
+    "file": "app/groups-workspace.tsx",
+    "line": 45,
+    "tag": "button",
+    "class": "\"soft-button\"",
+    "label": "Consultar invitación",
+    "onClick": true
+  },
+  {
+    "file": "app/groups-workspace.tsx",
+    "line": 53,
+    "tag": "button",
+    "class": "\"soft-button\"",
+    "label": "Copiar enlace",
+    "onClick": true
+  },
+  {
+    "file": "app/groups-workspace.tsx",
+    "line": 53,
+    "tag": "button",
+    "class": "\"text-button\"",
+    "label": "Revocar invitaciones vigentes",
+    "onClick": true
+  },
+  {
+    "file": "app/groups-workspace.tsx",
+    "line": 55,
+    "tag": "button",
+    "class": "\"primary\"",
+    "label": "Confirmar salida",
+    "onClick": true
+  },
+  {
+    "file": "app/habit-fields.tsx",
+    "line": 9,
+    "tag": "summary",
+    "class": "",
+    "label": "Más opciones (opcional)",
+    "onClick": false
+  },
+  {
+    "file": "app/home.tsx",
+    "line": 8,
+    "tag": "button",
+    "class": "\"card home-option\"",
+    "label": "",
+    "onClick": true
+  },
+  {
+    "file": "app/home.tsx",
+    "line": 8,
+    "tag": "button",
+    "class": "\"primary\"",
+    "label": "Continuar",
+    "onClick": true
+  },
+  {
+    "file": "app/home.tsx",
+    "line": 8,
+    "tag": "button",
+    "class": "\"text-button\"",
+    "label": "Elegir otro comienzo",
+    "onClick": true
+  },
+  {
+    "file": "app/home.tsx",
+    "line": 9,
+    "tag": "button",
+    "class": "\"text-button\"",
+    "label": "Explorar mi horario sin elegir todavía",
+    "onClick": true
+  },
+  {
+    "file": "app/home.tsx",
+    "line": 12,
+    "tag": "button",
+    "class": "\"soft-button\"",
+    "label": "Entendido",
+    "onClick": true
+  },
+  {
+    "file": "app/install-guide.tsx",
+    "line": 12,
+    "tag": "button",
+    "class": "\"soft-button\"",
+    "label": "",
+    "onClick": true
+  },
+  {
+    "file": "app/install-guide.tsx",
+    "line": 35,
+    "tag": "button",
+    "class": "",
+    "label": "iPhone · Apple",
+    "onClick": true
+  },
+  {
+    "file": "app/install-guide.tsx",
+    "line": 35,
+    "tag": "button",
+    "class": "",
+    "label": "Android",
+    "onClick": true
+  },
+  {
+    "file": "app/install-guide.tsx",
+    "line": 45,
+    "tag": "button",
+    "class": "\"soft-button\"",
+    "label": "",
+    "onClick": true
+  },
+  {
+    "file": "app/install-guide.tsx",
+    "line": 46,
+    "tag": "button",
+    "class": "\"soft-button\"",
+    "label": "Atrás",
+    "onClick": true
+  },
+  {
+    "file": "app/install-guide.tsx",
+    "line": 46,
+    "tag": "button",
+    "class": "\"primary\"",
+    "label": "Siguiente",
+    "onClick": true
+  },
+  {
+    "file": "app/install-guide.tsx",
+    "line": 48,
+    "tag": "summary",
+    "class": "",
+    "label": "No encuentro la opción",
+    "onClick": false
+  },
+  {
+    "file": "app/install-guide.tsx",
+    "line": 48,
+    "tag": "a",
+    "class": "\"text-button\"",
+    "label": "Ver la ayuda de",
+    "onClick": false
+  },
+  {
+    "file": "app/install-guide.tsx",
+    "line": 53,
+    "tag": "button",
+    "class": "\"text-button\"",
+    "label": "Cerrar la guía",
+    "onClick": true
+  },
+  {
+    "file": "app/install-guide.tsx",
+    "line": 56,
+    "tag": "a",
+    "class": "\"primary\"",
+    "label": "Volver a Alianza",
+    "onClick": false
+  },
+  {
+    "file": "app/journal.tsx",
+    "line": 102,
+    "tag": "button",
+    "class": "\"primary\"",
+    "label": "Abrir mi espacio",
+    "onClick": true
+  },
+  {
+    "file": "app/journal.tsx",
+    "line": 103,
+    "tag": "button",
+    "class": "\"primary\"",
+    "label": "Volver a intentar",
+    "onClick": true
+  },
+  {
+    "file": "app/journal.tsx",
+    "line": 103,
+    "tag": "button",
+    "class": "\"text-button\"",
+    "label": "Entrar con otra cuenta",
+    "onClick": true
+  },
+  {
+    "file": "app/journal.tsx",
+    "line": 118,
+    "tag": "button",
+    "class": "\"brand-link brand-home\"",
+    "label": "\"Alianza · Ir al inicio\"",
+    "onClick": true
+  },
+  {
+    "file": "app/journal.tsx",
+    "line": 118,
+    "tag": "button",
+    "class": "\"help-button\"",
+    "label": "Ayuda",
+    "onClick": true
+  },
+  {
+    "file": "app/journal.tsx",
+    "line": 119,
+    "tag": "button",
+    "class": "",
+    "label": "Reintentar",
+    "onClick": true
+  },
+  {
+    "file": "app/journal.tsx",
+    "line": 123,
+    "tag": "button",
+    "class": "\"icon-button\"",
+    "label": "\"Día anterior\"",
+    "onClick": true
+  },
+  {
+    "file": "app/journal.tsx",
+    "line": 123,
+    "tag": "button",
+    "class": "\"icon-button\"",
+    "label": "\"Día siguiente\"",
+    "onClick": true
+  },
+  {
+    "file": "app/journal.tsx",
+    "line": 123,
+    "tag": "button",
+    "class": "\"text-button\"",
+    "label": "Hoy",
+    "onClick": true
+  },
+  {
+    "file": "app/journal.tsx",
+    "line": 124,
+    "tag": "button",
+    "class": "\"text-button\"",
+    "label": "Mi espacio",
+    "onClick": true
+  },
+  {
+    "file": "app/journal.tsx",
+    "line": 124,
+    "tag": "button",
+    "class": "\"soft-button\"",
+    "label": "Rezar",
+    "onClick": true
+  },
+  {
+    "file": "app/journal.tsx",
+    "line": 124,
+    "tag": "button",
+    "class": "\"soft-button\"",
+    "label": "Mi camino",
+    "onClick": true
+  },
+  {
+    "file": "app/journal.tsx",
+    "line": 125,
+    "tag": "button",
+    "class": "",
+    "label": "",
+    "onClick": true
+  },
+  {
+    "file": "app/journal.tsx",
+    "line": 127,
+    "tag": "summary",
+    "class": "",
+    "label": "Cómo se registra mi avance",
+    "onClick": false
+  },
+  {
+    "file": "app/journal.tsx",
+    "line": 131,
+    "tag": "button",
+    "class": "\"icon-button\"",
+    "label": "\"Editar mi propósito particular\"",
+    "onClick": true
+  },
+  {
+    "file": "app/journal.tsx",
+    "line": 135,
+    "tag": "Checkbox",
+    "class": "\"habit-check\"",
+    "label": "",
+    "onClick": false
+  },
+  {
+    "file": "app/journal.tsx",
+    "line": 135,
+    "tag": "button",
+    "class": "\"text-button\"",
+    "label": "Abrir ayuda de oración",
+    "onClick": true
+  },
+  {
+    "file": "app/journal.tsx",
+    "line": 135,
+    "tag": "button",
+    "class": "\"soft-button\"",
+    "label": "",
+    "onClick": true
+  },
+  {
+    "file": "app/journal.tsx",
+    "line": 135,
+    "tag": "button",
+    "class": "\"text-button\"",
+    "label": "Deshacer una ocasión",
+    "onClick": true
+  },
+  {
+    "file": "app/journal.tsx",
+    "line": 135,
+    "tag": "summary",
+    "class": "",
+    "label": "Mi anotación de apoyo",
+    "onClick": false
+  },
+  {
+    "file": "app/journal.tsx",
+    "line": 135,
+    "tag": "button",
+    "class": "\"text-button habit-edit\"",
+    "label": "{'Editar: '+h.data.title}",
+    "onClick": false
+  },
+  {
+    "file": "app/journal.tsx",
+    "line": 135,
+    "tag": "DropdownMenuItem",
+    "class": "",
+    "label": "Editar compromiso",
+    "onClick": true
+  },
+  {
+    "file": "app/journal.tsx",
+    "line": 135,
+    "tag": "DropdownMenuItem",
+    "class": "",
+    "label": "",
+    "onClick": true
+  },
+  {
+    "file": "app/journal.tsx",
+    "line": 135,
+    "tag": "DropdownMenuItem",
+    "class": "",
+    "label": "Me costó",
+    "onClick": true
+  },
+  {
+    "file": "app/journal.tsx",
+    "line": 135,
+    "tag": "DropdownMenuItem",
+    "class": "",
+    "label": "Hoy no aplicaba",
+    "onClick": true
+  },
+  {
+    "file": "app/journal.tsx",
+    "line": 135,
+    "tag": "DropdownMenuItem",
+    "class": "",
+    "label": "Quitar registro",
+    "onClick": true
+  },
+  {
+    "file": "app/journal.tsx",
+    "line": 135,
+    "tag": "DropdownMenuItem",
+    "class": "",
+    "label": "Anotar o revisar este compromiso",
+    "onClick": true
+  },
+  {
+    "file": "app/journal.tsx",
+    "line": 135,
+    "tag": "button",
+    "class": "\"rhythm-reflection\"",
+    "label": "",
+    "onClick": true
+  },
+  {
+    "file": "app/journal.tsx",
+    "line": 136,
+    "tag": "button",
+    "class": "\"add-button\"",
+    "label": "Añadir compromiso",
+    "onClick": true
+  },
+  {
+    "file": "app/journal.tsx",
+    "line": 138,
+    "tag": "button",
+    "class": "\"next-card\"",
+    "label": "",
+    "onClick": true
+  },
+  {
+    "file": "app/journal.tsx",
+    "line": 145,
+    "tag": "button",
+    "class": "",
+    "label": "Las 4 Rs",
+    "onClick": true
+  },
+  {
+    "file": "app/journal.tsx",
+    "line": 145,
+    "tag": "button",
+    "class": "",
+    "label": "Rosario",
+    "onClick": true
+  },
+  {
+    "file": "app/journal.tsx",
+    "line": 145,
+    "tag": "button",
+    "class": "",
+    "label": "Nuestro ideal",
+    "onClick": true
+  },
+  {
+    "file": "app/journal.tsx",
+    "line": 145,
+    "tag": "button",
+    "class": "",
+    "label": "Nuestro recorrido",
+    "onClick": true
+  },
+  {
+    "file": "app/journal.tsx",
+    "line": 145,
+    "tag": "button",
+    "class": "\"r-action\"",
+    "label": "",
+    "onClick": true
+  },
+  {
+    "file": "app/journal.tsx",
+    "line": 145,
+    "tag": "button",
+    "class": "\"group-history-item\"",
+    "label": "",
+    "onClick": true
+  },
+  {
+    "file": "app/journal.tsx",
+    "line": 146,
+    "tag": "button",
+    "class": "",
+    "label": "Reintentar",
+    "onClick": true
+  },
+  {
+    "file": "app/journal.tsx",
+    "line": 147,
+    "tag": "button",
+    "class": "\"prayer-entry\"",
+    "label": "",
+    "onClick": true
+  },
+  {
+    "file": "app/journal.tsx",
+    "line": 148,
+    "tag": "button",
+    "class": "\"text-button\"",
+    "label": "Volver a Oración",
+    "onClick": true
+  },
+  {
+    "file": "app/journal.tsx",
+    "line": 149,
+    "tag": "button",
+    "class": "\"text-button\"",
+    "label": "Volver a Oración",
+    "onClick": true
+  },
+  {
+    "file": "app/journal.tsx",
+    "line": 151,
+    "tag": "button",
+    "class": "\"text-button\"",
+    "label": "Mi espacio",
+    "onClick": true
+  },
+  {
+    "file": "app/journal.tsx",
+    "line": 152,
+    "tag": "button",
+    "class": "",
+    "label": "Reintentar",
+    "onClick": true
+  },
+  {
+    "file": "app/journal.tsx",
+    "line": 153,
+    "tag": "button",
+    "class": "",
+    "label": "",
+    "onClick": true
+  },
+  {
+    "file": "app/journal.tsx",
+    "line": 153,
+    "tag": "button",
+    "class": "\"text-button\"",
+    "label": "Editar",
+    "onClick": true
+  },
+  {
+    "file": "app/journal.tsx",
+    "line": 153,
+    "tag": "button",
+    "class": "\"soft-button\"",
+    "label": "Mi camino y mi ideal",
+    "onClick": true
+  },
+  {
+    "file": "app/journal.tsx",
+    "line": 153,
+    "tag": "button",
+    "class": "\"soft-button\"",
+    "label": "Agregar o editar mis oraciones",
+    "onClick": true
+  },
+  {
+    "file": "app/journal.tsx",
+    "line": 153,
+    "tag": "button",
+    "class": "\"soft-button\"",
+    "label": "Elegir mi símbolo",
+    "onClick": true
+  },
+  {
+    "file": "app/journal.tsx",
+    "line": 157,
+    "tag": "button",
+    "class": "\"text-button\"",
+    "label": "Editar y retomar",
+    "onClick": true
+  },
+  {
+    "file": "app/journal.tsx",
+    "line": 158,
+    "tag": "button",
+    "class": "\"soft-button\"",
+    "label": "Cambiar mi contraseña",
+    "onClick": true
+  },
+  {
+    "file": "app/journal.tsx",
+    "line": 159,
+    "tag": "button",
+    "class": "\"soft-button\"",
+    "label": "Añadir al calendario",
+    "onClick": true
+  },
+  {
+    "file": "app/journal.tsx",
+    "line": 161,
+    "tag": "button",
+    "class": "\"soft-button\"",
+    "label": "Descargar mis registros",
+    "onClick": true
+  },
+  {
+    "file": "app/journal.tsx",
+    "line": 166,
+    "tag": "button",
+    "class": "\"text-button\"",
+    "label": "Actualizar registros",
+    "onClick": true
+  },
+  {
+    "file": "app/journal.tsx",
+    "line": 166,
+    "tag": "button",
+    "class": "\"text-button\"",
+    "label": "Cerrar sesión",
+    "onClick": true
+  },
+  {
+    "file": "app/journal.tsx",
+    "line": 169,
+    "tag": "button",
+    "class": "\"primary\"",
+    "label": "",
+    "onClick": true
+  },
+  {
+    "file": "app/journal.tsx",
+    "line": 179,
+    "tag": "summary",
+    "class": "",
+    "label": "Sobre esta revisión",
+    "onClick": false
+  },
+  {
+    "file": "app/journal.tsx",
+    "line": 181,
+    "tag": "summary",
+    "class": "",
+    "label": "Ideas y preguntas para este encuentro",
+    "onClick": false
+  },
+  {
+    "file": "app/journal.tsx",
+    "line": 181,
+    "tag": "button",
+    "class": "\"soft-button\"",
+    "label": "Crear recordatorio recurrente",
+    "onClick": true
+  },
+  {
+    "file": "app/journal.tsx",
+    "line": 182,
+    "tag": "button",
+    "class": "\"text-button\"",
+    "label": "Actualizar versión disponible",
+    "onClick": true
+  },
+  {
+    "file": "app/journal.tsx",
+    "line": 182,
+    "tag": "button",
+    "class": "\"text-button habit-remove\"",
+    "label": "",
+    "onClick": true
+  },
+  {
+    "file": "app/journal.tsx",
+    "line": 182,
+    "tag": "button",
+    "class": "\"text-button\"",
+    "label": "Atrás",
+    "onClick": true
+  },
+  {
+    "file": "app/journal.tsx",
+    "line": 182,
+    "tag": "button",
+    "class": "\"soft-button\"",
+    "label": "Cerrar",
+    "onClick": true
+  },
+  {
+    "file": "app/journal.tsx",
+    "line": 182,
+    "tag": "button",
+    "class": "\"primary\"",
+    "label": "",
+    "onClick": false
+  },
+  {
+    "file": "app/logo-viewer.tsx",
+    "line": 5,
+    "tag": "button",
+    "class": "{'logo-viewer-trigger '+className}",
+    "label": "\"Ver logo de Alianza en grande\"",
+    "onClick": false
+  },
+  {
+    "file": "app/logo-viewer.tsx",
+    "line": 5,
+    "tag": "DialogClose",
+    "class": "",
+    "label": "",
+    "onClick": false
+  },
+  {
+    "file": "app/logo-viewer.tsx",
+    "line": 5,
+    "tag": "button",
+    "class": "\"icon-button logo-viewer-close\"",
+    "label": "\"Cerrar logo\"",
+    "onClick": false
+  },
+  {
+    "file": "app/month-review.tsx",
+    "line": 15,
+    "tag": "button",
+    "class": "\"primary\"",
+    "label": "",
+    "onClick": true
+  },
+  {
+    "file": "app/month-review.tsx",
+    "line": 15,
+    "tag": "button",
+    "class": "\"text-button\"",
+    "label": "Retomar el propósito anterior",
+    "onClick": true
+  },
+  {
+    "file": "app/month-review.tsx",
+    "line": 18,
+    "tag": "button",
+    "class": "\"text-button\"",
+    "label": "Revisar",
+    "onClick": true
+  },
+  {
+    "file": "app/movement-costa-rica.tsx",
+    "line": 6,
+    "tag": "a",
+    "class": "\"soft-button\"",
+    "label": "",
+    "onClick": false
+  },
+  {
+    "file": "app/movement-costa-rica.tsx",
+    "line": 19,
+    "tag": "button",
+    "class": "\"primary\"",
+    "label": "Volver a mi espacio",
+    "onClick": true
+  },
+  {
+    "file": "app/my-path.tsx",
+    "line": 51,
+    "tag": "button",
+    "class": "\"text-button\"",
+    "label": "Cambiar mi punto de partida",
+    "onClick": true
+  },
+  {
+    "file": "app/my-path.tsx",
+    "line": 62,
+    "tag": "button",
+    "class": "\"soft-button\"",
+    "label": "",
+    "onClick": true
+  },
+  {
+    "file": "app/my-path.tsx",
+    "line": 77,
+    "tag": "button",
+    "class": "\"primary\"",
+    "label": "Escribir o revisar mi ideal",
+    "onClick": true
+  },
+  {
+    "file": "app/my-path.tsx",
+    "line": 107,
+    "tag": "button",
+    "class": "\"soft-button\"",
+    "label": "Guardar y continuar otro día",
+    "onClick": true
+  },
+  {
+    "file": "app/pairing-requests.tsx",
+    "line": 18,
+    "tag": "button",
+    "class": "\"primary\"",
+    "label": "Continuar",
+    "onClick": false
+  },
+  {
+    "file": "app/pairing-requests.tsx",
+    "line": 19,
+    "tag": "button",
+    "class": "\"primary\"",
+    "label": "Enviar solicitud",
+    "onClick": true
+  },
+  {
+    "file": "app/pairing-requests.tsx",
+    "line": 19,
+    "tag": "button",
+    "class": "\"text-button\"",
+    "label": "Probar otro correo",
+    "onClick": true
+  },
+  {
+    "file": "app/pairing-requests.tsx",
+    "line": 30,
+    "tag": "button",
+    "class": "\"soft-button\"",
+    "label": "Compartir enlace",
+    "onClick": true
+  },
+  {
+    "file": "app/pairing-requests.tsx",
+    "line": 30,
+    "tag": "button",
+    "class": "\"text-button\"",
+    "label": "Copiar enlace",
+    "onClick": true
+  },
+  {
+    "file": "app/pairing-requests.tsx",
+    "line": 32,
+    "tag": "button",
+    "class": "\"soft-button\"",
+    "label": "Sí, cancelar solicitud",
+    "onClick": true
+  },
+  {
+    "file": "app/pairing-requests.tsx",
+    "line": 32,
+    "tag": "button",
+    "class": "\"text-button\"",
+    "label": "Conservar solicitud",
+    "onClick": true
+  },
+  {
+    "file": "app/pairing-requests.tsx",
+    "line": 32,
+    "tag": "button",
+    "class": "\"text-button\"",
+    "label": "Cancelar solicitud",
+    "onClick": true
+  },
+  {
+    "file": "app/pairing-requests.tsx",
+    "line": 39,
+    "tag": "button",
+    "class": "\"text-button\"",
+    "label": "Cómo me reconoce mi pareja",
+    "onClick": true
+  },
+  {
+    "file": "app/pairing-requests.tsx",
+    "line": 39,
+    "tag": "button",
+    "class": "\"primary\"",
+    "label": "Guardar preferencia",
+    "onClick": false
+  },
+  {
+    "file": "app/pairing-requests.tsx",
+    "line": 47,
+    "tag": "button",
+    "class": "\"pair-inbox-notice\"",
+    "label": "",
+    "onClick": true
+  },
+  {
+    "file": "app/pairing-requests.tsx",
+    "line": 49,
+    "tag": "button",
+    "class": "\"primary\"",
+    "label": "Ir a nuestro espacio",
+    "onClick": true
+  },
+  {
+    "file": "app/pairing-requests.tsx",
+    "line": 49,
+    "tag": "button",
+    "class": "\"primary\"",
+    "label": "Aceptar vinculación",
+    "onClick": true
+  },
+  {
+    "file": "app/pairing-requests.tsx",
+    "line": 49,
+    "tag": "button",
+    "class": "\"text-button\"",
+    "label": "Rechazar solicitud",
+    "onClick": true
+  },
+  {
+    "file": "app/pairing-requests.tsx",
+    "line": 49,
+    "tag": "button",
+    "class": "\"text-button\"",
+    "label": "Ver otras solicitudes",
+    "onClick": true
+  },
+  {
+    "file": "app/pairing-requests.tsx",
+    "line": 49,
+    "tag": "button",
+    "class": "\"soft-button pair-person\"",
+    "label": "",
+    "onClick": true
+  },
+  {
+    "file": "app/pairing.tsx",
+    "line": 15,
+    "tag": "button",
+    "class": "\"text-button\"",
+    "label": "Administrar desvinculación",
+    "onClick": true
+  },
+  {
+    "file": "app/pairing.tsx",
+    "line": 15,
+    "tag": "button",
+    "class": "\"soft-button\"",
+    "label": "Confirmar desvinculación",
+    "onClick": true
+  },
+  {
+    "file": "app/pairing.tsx",
+    "line": 15,
+    "tag": "button",
+    "class": "\"text-button\"",
+    "label": "Conservar vinculación",
+    "onClick": true
+  },
+  {
+    "file": "app/pairing.tsx",
+    "line": 16,
+    "tag": "button",
+    "class": "\"primary\"",
+    "label": "Continuar individualmente",
+    "onClick": true
+  },
+  {
+    "file": "app/pairing.tsx",
+    "line": 16,
+    "tag": "button",
+    "class": "\"soft-button\"",
+    "label": "Quiero usarla en pareja",
+    "onClick": true
+  },
+  {
+    "file": "app/pairing.tsx",
+    "line": 16,
+    "tag": "button",
+    "class": "\"text-button\"",
+    "label": "Tengo un código de vinculación",
+    "onClick": true
+  },
+  {
+    "file": "app/pairing.tsx",
+    "line": 18,
+    "tag": "button",
+    "class": "\"soft-button\"",
+    "label": "Revisar invitación",
+    "onClick": false
+  },
+  {
+    "file": "app/pairing.tsx",
+    "line": 18,
+    "tag": "button",
+    "class": "\"primary\"",
+    "label": "Aceptar vinculación",
+    "onClick": true
+  },
+  {
+    "file": "app/pairing.tsx",
+    "line": 18,
+    "tag": "button",
+    "class": "\"text-button\"",
+    "label": "Rechazar invitación",
+    "onClick": true
+  },
+  {
+    "file": "app/pairing.tsx",
+    "line": 19,
+    "tag": "button",
+    "class": "\"text-button\"",
+    "label": "Volver a mis opciones",
+    "onClick": true
+  },
+  {
+    "file": "app/pairing.tsx",
+    "line": 28,
+    "tag": "summary",
+    "class": "",
+    "label": "Nuestro ideal matrimonial · opcional",
+    "onClick": false
+  },
+  {
+    "file": "app/pairing.tsx",
+    "line": 29,
+    "tag": "button",
+    "class": "\"primary\"",
+    "label": "Guardar borrador matrimonial",
+    "onClick": false
+  },
+  {
+    "file": "app/pairing.tsx",
+    "line": 29,
+    "tag": "button",
+    "class": "\"text-button\"",
+    "label": "Cancelar edición",
+    "onClick": true
+  },
+  {
+    "file": "app/pairing.tsx",
+    "line": 29,
+    "tag": "button",
+    "class": "\"soft-button\"",
+    "label": "",
+    "onClick": true
+  },
+  {
+    "file": "app/pairing.tsx",
+    "line": 29,
+    "tag": "button",
+    "class": "\"text-button\"",
+    "label": "",
+    "onClick": true
+  },
+  {
+    "file": "app/pairing.tsx",
+    "line": 34,
+    "tag": "summary",
+    "class": "",
+    "label": "Mi historial matrimonial anterior",
+    "onClick": false
+  },
+  {
+    "file": "app/pairing.tsx",
+    "line": 34,
+    "tag": "button",
+    "class": "\"text-button\"",
+    "label": "Consultar archivo del",
+    "onClick": true
+  },
+  {
+    "file": "app/pairing.tsx",
+    "line": 34,
+    "tag": "summary",
+    "class": "",
+    "label": "·",
+    "onClick": false
+  },
+  {
+    "file": "app/personal-rosary.tsx",
+    "line": 82,
+    "tag": "button",
+    "class": "\"soft-button\"",
+    "label": "",
+    "onClick": true
+  },
+  {
+    "file": "app/personal-rosary.tsx",
+    "line": 82,
+    "tag": "button",
+    "class": "\"soft-button\"",
+    "label": "",
+    "onClick": true
+  },
+  {
+    "file": "app/personal-rosary.tsx",
+    "line": 82,
+    "tag": "button",
+    "class": "\"soft-button\"",
+    "label": "Rezar las letanías",
+    "onClick": true
+  },
+  {
+    "file": "app/personal-rosary.tsx",
+    "line": 82,
+    "tag": "button",
+    "class": "\"primary\"",
+    "label": "Terminar",
+    "onClick": true
+  },
+  {
+    "file": "app/personal-rosary.tsx",
+    "line": 85,
+    "tag": "button",
+    "class": "\"soft-button\"",
+    "label": "Al inicio",
+    "onClick": true
+  },
+  {
+    "file": "app/personal-rosary.tsx",
+    "line": 85,
+    "tag": "button",
+    "class": "\"soft-button\"",
+    "label": "Después de los cinco misterios",
+    "onClick": true
+  },
+  {
+    "file": "app/personal-rosary.tsx",
+    "line": 85,
+    "tag": "button",
+    "class": "\"soft-button\"",
+    "label": "Habituales",
+    "onClick": true
+  },
+  {
+    "file": "app/personal-rosary.tsx",
+    "line": 85,
+    "tag": "button",
+    "class": "\"soft-button\"",
+    "label": "Hija, Madre y Esposa",
+    "onClick": true
+  },
+  {
+    "file": "app/personal-rosary.tsx",
+    "line": 85,
+    "tag": "button",
+    "class": "\"primary\"",
+    "label": "",
+    "onClick": true
+  },
+  {
+    "file": "app/personal-rosary.tsx",
+    "line": 85,
+    "tag": "button",
+    "class": "\"text-button\"",
+    "label": "Descartar este rosario",
+    "onClick": true
+  },
+  {
+    "file": "app/personal-rosary.tsx",
+    "line": 88,
+    "tag": "button",
+    "class": "\"text-button\"",
+    "label": "",
+    "onClick": true
+  },
+  {
+    "file": "app/personal-rosary.tsx",
+    "line": 90,
+    "tag": "button",
+    "class": "\"primary\"",
+    "label": "Seguir rezando",
+    "onClick": true
+  },
+  {
+    "file": "app/personal-rosary.tsx",
+    "line": 90,
+    "tag": "button",
+    "class": "\"soft-button\"",
+    "label": "",
+    "onClick": true
+  },
+  {
+    "file": "app/personal-rosary.tsx",
+    "line": 91,
+    "tag": "button",
+    "class": "\"soft-button\"",
+    "label": "A−",
+    "onClick": true
+  },
+  {
+    "file": "app/personal-rosary.tsx",
+    "line": 91,
+    "tag": "button",
+    "class": "\"soft-button\"",
+    "label": "A+",
+    "onClick": true
+  },
+  {
+    "file": "app/personal-rosary.tsx",
+    "line": 91,
+    "tag": "button",
+    "class": "\"primary\"",
+    "label": "Volver al rezo",
+    "onClick": true
+  },
+  {
+    "file": "app/personal-rosary.tsx",
+    "line": 91,
+    "tag": "button",
+    "class": "\"text-button\"",
+    "label": "Descartar este rosario",
+    "onClick": true
+  },
+  {
+    "file": "app/personal-rosary.tsx",
+    "line": 91,
+    "tag": "a",
+    "class": "\"quiet-source\"",
+    "label": "Oraciones · Holy Rosary Parish",
+    "onClick": false
+  },
+  {
+    "file": "app/personal-rosary.tsx",
+    "line": 91,
+    "tag": "a",
+    "class": "\"quiet-source\"",
+    "label": "Acto de contrición · Santa Sede",
+    "onClick": false
+  },
+  {
+    "file": "app/personal-rosary.tsx",
+    "line": 91,
+    "tag": "a",
+    "class": "\"quiet-source\"",
+    "label": "Letanías · Santa Sede",
+    "onClick": false
+  },
+  {
+    "file": "app/personal-rosary.tsx",
+    "line": 93,
+    "tag": "button",
+    "class": "\"text-button prayer-expand\"",
+    "label": "",
+    "onClick": true
+  },
+  {
+    "file": "app/personal-rosary.tsx",
+    "line": 96,
+    "tag": "button",
+    "class": "\"primary prayer-advance\"",
+    "label": "",
+    "onClick": true
+  },
+  {
+    "file": "app/personal-rosary.tsx",
+    "line": 96,
+    "tag": "button",
+    "class": "\"text-button\"",
+    "label": "Atrás",
+    "onClick": true
+  },
+  {
+    "file": "app/personal-rosary.tsx",
+    "line": 96,
+    "tag": "button",
+    "class": "\"text-button\"",
+    "label": "Opciones",
+    "onClick": true
+  },
+  {
+    "file": "app/pilot-support.tsx",
+    "line": 11,
+    "tag": "button",
+    "class": "\"soft-button\"",
+    "label": "",
+    "onClick": true
+  },
+  {
+    "file": "app/pilot-support.tsx",
+    "line": 11,
+    "tag": "summary",
+    "class": "",
+    "label": "Mis solicitudes ( )",
+    "onClick": false
+  },
+  {
+    "file": "app/reflection-summary.tsx",
+    "line": 8,
+    "tag": "button",
+    "class": "\"text-button\"",
+    "label": "",
+    "onClick": true
+  },
+  {
+    "file": "app/reports.tsx",
+    "line": 22,
+    "tag": "summary",
+    "class": "",
+    "label": "Ver compromiso por compromiso",
+    "onClick": false
+  },
+  {
+    "file": "app/reports.tsx",
+    "line": 22,
+    "tag": "summary",
+    "class": "",
+    "label": "Ver mis reflexiones",
+    "onClick": false
+  },
+  {
+    "file": "app/reports.tsx",
+    "line": 22,
+    "tag": "button",
+    "class": "\"primary\"",
+    "label": "Escribir mi revisión",
+    "onClick": true
+  },
+  {
+    "file": "app/reports.tsx",
+    "line": 22,
+    "tag": "button",
+    "class": "\"soft-button\"",
+    "label": "Preparar reporte para mi asesor",
+    "onClick": true
+  },
+  {
+    "file": "app/reports.tsx",
+    "line": 23,
+    "tag": "button",
+    "class": "\"primary\"",
+    "label": "",
+    "onClick": true
+  },
+  {
+    "file": "app/rhythm-progress.tsx",
+    "line": 5,
+    "tag": "button",
+    "class": "{'rhythm-'+period}",
+    "label": "",
+    "onClick": true
+  },
+  {
+    "file": "app/spaces.tsx",
+    "line": 8,
+    "tag": "button",
+    "class": "",
+    "label": "",
+    "onClick": true
+  },
+  {
+    "file": "app/spaces.tsx",
+    "line": 8,
+    "tag": "button",
+    "class": "\"text-button\"",
+    "label": "Mis espacios",
+    "onClick": true
+  },
+  {
+    "file": "app/spaces.tsx",
+    "line": 9,
+    "tag": "button",
+    "class": "",
+    "label": "",
+    "onClick": true
+  },
+  {
+    "file": "app/spaces.tsx",
+    "line": 9,
+    "tag": "button",
+    "class": "",
+    "label": "",
+    "onClick": true
+  },
+  {
+    "file": "app/spaces.tsx",
+    "line": 9,
+    "tag": "button",
+    "class": "\"primary\"",
+    "label": "Guardar mis espacios",
+    "onClick": true
+  },
+  {
+    "file": "app/start-guide.tsx",
+    "line": 12,
+    "tag": "button",
+    "class": "\"primary\"",
+    "label": "Crear mi primer compromiso",
+    "onClick": true
+  },
+  {
+    "file": "app/start-guide.tsx",
+    "line": 13,
+    "tag": "summary",
+    "class": "",
+    "label": "Necesito una idea para empezar",
+    "onClick": false
+  },
+  {
+    "file": "app/start-guide.tsx",
+    "line": 13,
+    "tag": "a",
+    "class": "",
+    "label": "Consultar la orientación del Movimiento de Schoenstatt Brasil (portugués)",
+    "onClick": false
+  },
+  {
+    "file": "app/start-guide.tsx",
+    "line": 13,
+    "tag": "button",
+    "class": "\"idea-button\"",
+    "label": "",
+    "onClick": true
+  },
+  {
+    "file": "app/start-guide.tsx",
+    "line": 14,
+    "tag": "button",
+    "class": "\"text-button\"",
+    "label": "Prefiero empezar con las 4 Rs",
+    "onClick": true
+  },
+  {
+    "file": "app/start-guide.tsx",
+    "line": 24,
+    "tag": "button",
+    "class": "\"app-menu-row\"",
+    "label": "Registrar un compromiso",
+    "onClick": true
+  },
+  {
+    "file": "app/start-guide.tsx",
+    "line": 24,
+    "tag": "button",
+    "class": "\"app-menu-row\"",
+    "label": "Rezar o preparar mi confesión",
+    "onClick": true
+  },
+  {
+    "file": "app/start-guide.tsx",
+    "line": 24,
+    "tag": "button",
+    "class": "\"app-menu-row\"",
+    "label": "Trabajar mi ideal personal",
+    "onClick": true
+  },
+  {
+    "file": "app/start-guide.tsx",
+    "line": 24,
+    "tag": "button",
+    "class": "\"app-menu-row\"",
+    "label": "Vivir las 4 Rs en pareja",
+    "onClick": true
+  },
+  {
+    "file": "app/start-guide.tsx",
+    "line": 24,
+    "tag": "button",
+    "class": "\"app-menu-row\"",
+    "label": "Consultar mis registros",
+    "onClick": true
+  },
+  {
+    "file": "app/start-guide.tsx",
+    "line": 24,
+    "tag": "button",
+    "class": "\"app-menu-row\"",
+    "label": "Privacidad y preferencias",
+    "onClick": true
+  },
+  {
+    "file": "app/start-guide.tsx",
+    "line": 24,
+    "tag": "button",
+    "class": "\"app-menu-row\"",
+    "label": "Instalar Alianza en mi teléfono",
+    "onClick": true
+  },
+  {
+    "file": "app/start-guide.tsx",
+    "line": 25,
+    "tag": "summary",
+    "class": "",
+    "label": "Problemas para volver a entrar",
+    "onClick": false
+  },
+  {
+    "file": "app/start-guide.tsx",
+    "line": 26,
+    "tag": "button",
+    "class": "\"soft-button\"",
+    "label": "Volver",
+    "onClick": true
+  },
+  {
+    "file": "app/symbol-picker.tsx",
+    "line": 18,
+    "tag": "button",
+    "class": "",
+    "label": "Sin símbolo",
+    "onClick": true
+  },
+  {
+    "file": "app/symbol-picker.tsx",
+    "line": 18,
+    "tag": "button",
+    "class": "",
+    "label": "",
+    "onClick": true
+  },
+  {
+    "file": "app/symbol-picker.tsx",
+    "line": 19,
+    "tag": "summary",
+    "class": "",
+    "label": "No encuentro mi símbolo",
+    "onClick": false
+  },
+  {
+    "file": "app/symbol-picker.tsx",
+    "line": 20,
+    "tag": "summary",
+    "class": "",
+    "label": "Solicitar un símbolo",
+    "onClick": false
+  },
+  {
+    "file": "app/symbol-picker.tsx",
+    "line": 21,
+    "tag": "button",
+    "class": "\"text-button\"",
+    "label": "Quitar imagen",
+    "onClick": true
+  },
+  {
+    "file": "github/admin.tsx",
+    "line": 60,
+    "tag": "button",
+    "class": "\"text-button\"",
+    "label": "← Volver a mi espacio",
+    "onClick": true
+  },
+  {
+    "file": "github/admin.tsx",
+    "line": 64,
+    "tag": "button",
+    "class": "",
+    "label": "Uso del piloto",
+    "onClick": true
+  },
+  {
+    "file": "github/admin.tsx",
+    "line": 64,
+    "tag": "button",
+    "class": "",
+    "label": "Personas e invitaciones",
+    "onClick": true
+  },
+  {
+    "file": "github/admin.tsx",
+    "line": 64,
+    "tag": "button",
+    "class": "",
+    "label": "Solicitudes y mejoras",
+    "onClick": true
+  },
+  {
+    "file": "github/admin.tsx",
+    "line": 66,
+    "tag": "summary",
+    "class": "",
+    "label": "Detalle de uso de los últimos 30 días",
+    "onClick": false
+  },
+  {
+    "file": "github/admin.tsx",
+    "line": 66,
+    "tag": "summary",
+    "class": "",
+    "label": "Medición general voluntaria",
+    "onClick": false
+  },
+  {
+    "file": "github/admin.tsx",
+    "line": 75,
+    "tag": "button",
+    "class": "\"primary\"",
+    "label": "",
+    "onClick": true
+  },
+  {
+    "file": "github/admin.tsx",
+    "line": 137,
+    "tag": "summary",
+    "class": "",
+    "label": "Cómo interpretar estos indicadores",
+    "onClick": false
+  },
+  {
+    "file": "github/admin.tsx",
+    "line": 226,
+    "tag": "button",
+    "class": "",
+    "label": "Uso y mejora",
+    "onClick": true
+  },
+  {
+    "file": "github/admin.tsx",
+    "line": 231,
+    "tag": "summary",
+    "class": "",
+    "label": "Ayudar a mejorar Alianza",
+    "onClick": false
+  },
+  {
+    "file": "github/admin.tsx",
+    "line": 267,
+    "tag": "button",
+    "class": "\"soft-button\"",
+    "label": "",
+    "onClick": true
+  },
+  {
+    "file": "github/app-update.tsx",
+    "line": 31,
+    "tag": "button",
+    "class": "\"soft-button\"",
+    "label": "Actualizar Alianza",
+    "onClick": true
+  },
+  {
+    "file": "github/invitations.tsx",
+    "line": 45,
+    "tag": "button",
+    "class": "\"soft-button\"",
+    "label": "Actualizar invitaciones",
+    "onClick": true
+  },
+  {
+    "file": "github/invitations.tsx",
+    "line": 47,
+    "tag": "button",
+    "class": "",
+    "label": "Copiar enlace",
+    "onClick": true
+  },
+  {
+    "file": "github/invitations.tsx",
+    "line": 47,
+    "tag": "button",
+    "class": "",
+    "label": "Ocultar enlace",
+    "onClick": true
+  },
+  {
+    "file": "github/invitations.tsx",
+    "line": 48,
+    "tag": "button",
+    "class": "",
+    "label": "Reintentar la misma solicitud",
+    "onClick": true
+  },
+  {
+    "file": "github/invitations.tsx",
+    "line": 54,
+    "tag": "button",
+    "class": "\"primary\"",
+    "label": "Crear invitación",
+    "onClick": false
+  },
+  {
+    "file": "github/invitations.tsx",
+    "line": 59,
+    "tag": "button",
+    "class": "",
+    "label": "",
+    "onClick": true
+  },
+  {
+    "file": "github/invitations.tsx",
+    "line": 60,
+    "tag": "button",
+    "class": "",
+    "label": "Volver sin cambios",
+    "onClick": true
+  },
+  {
+    "file": "github/invitations.tsx",
+    "line": 69,
+    "tag": "button",
+    "class": "\"soft-button\"",
+    "label": "",
+    "onClick": true
+  },
+  {
+    "file": "github/invitations.tsx",
+    "line": 70,
+    "tag": "button",
+    "class": "\"text-button\"",
+    "label": "Cancelar invitación",
+    "onClick": true
+  },
+  {
+    "file": "github/invitations.tsx",
+    "line": 102,
+    "tag": "button",
+    "class": "\"primary\"",
+    "label": "",
+    "onClick": true
+  },
+  {
+    "file": "github/invitations.tsx",
+    "line": 104,
+    "tag": "button",
+    "class": "\"text-button\"",
+    "label": "Cerrar sesión",
+    "onClick": true
+  },
+  {
+    "file": "github/main.tsx",
+    "line": 75,
+    "tag": "button",
+    "class": "\"primary\"",
+    "label": "Volver a entrar",
+    "onClick": true
+  },
+  {
+    "file": "github/main.tsx",
+    "line": 78,
+    "tag": "button",
+    "class": "",
+    "label": "{visible?'Ocultar contraseña':'Mostrar contraseña'}",
+    "onClick": true
+  },
+  {
+    "file": "github/main.tsx",
+    "line": 80,
+    "tag": "button",
+    "class": "\"primary\"",
+    "label": "",
+    "onClick": false
+  },
+  {
+    "file": "github/main.tsx",
+    "line": 81,
+    "tag": "summary",
+    "class": "",
+    "label": "¿Es mi primera vez?",
+    "onClick": false
+  },
+  {
+    "file": "github/main.tsx",
+    "line": 81,
+    "tag": "button",
+    "class": "\"text-button\"",
+    "label": "",
+    "onClick": true
+  },
+  {
+    "file": "github/main.tsx",
+    "line": 81,
+    "tag": "a",
+    "class": "\"text-button\"",
+    "label": "Instalar Alianza en mi teléfono",
+    "onClick": false
+  },
+  {
+    "file": "github/main.tsx",
+    "line": 87,
+    "tag": "button",
+    "class": "\"primary\"",
+    "label": "",
+    "onClick": true
+  },
+  {
+    "file": "github/main.tsx",
+    "line": 87,
+    "tag": "a",
+    "class": "\"text-button\"",
+    "label": "Ya tengo contraseña",
+    "onClick": false
+  },
+  {
+    "file": "github/main.tsx",
+    "line": 98,
+    "tag": "button",
+    "class": "\"primary\"",
+    "label": "Volver a intentar",
+    "onClick": true
+  },
+  {
+    "file": "github/maintenance.tsx",
+    "line": 23,
+    "tag": "button",
+    "class": "\"primary\"",
+    "label": "Actualizar Alianza",
+    "onClick": true
+  },
+  {
+    "file": "github/pilot-pulse.tsx",
+    "line": 13,
+    "tag": "button",
+    "class": "",
+    "label": "Actualizar tendencias",
+    "onClick": true
+  },
+  {
+    "file": "github/pilot-pulse.tsx",
+    "line": 13,
+    "tag": "summary",
+    "class": "",
+    "label": "Ver cifras y cobertura",
+    "onClick": false
+  },
+  {
+    "file": "github/pilot-pulse.tsx",
+    "line": 13,
+    "tag": "summary",
+    "class": "",
+    "label": "Cómo cuidamos la privacidad",
+    "onClick": false
+  },
+  {
+    "file": "github/pilot.tsx",
+    "line": 9,
+    "tag": "button",
+    "class": "\"soft-button\"",
+    "label": "",
+    "onClick": true
+  },
+  {
+    "file": "github/support-admin.tsx",
+    "line": 9,
+    "tag": "button",
+    "class": "",
+    "label": "Actualizar solicitudes",
+    "onClick": true
+  },
+  {
+    "file": "github/support-admin.tsx",
+    "line": 9,
+    "tag": "button",
+    "class": "",
+    "label": "",
+    "onClick": true
+  },
+  {
+    "file": "components/ui/alert-dialog.tsx",
+    "line": 155,
+    "tag": "Button",
+    "class": "",
+    "label": "",
+    "onClick": false
+  },
+  {
+    "file": "components/ui/alert-dialog.tsx",
+    "line": 173,
+    "tag": "Button",
+    "class": "",
+    "label": "",
+    "onClick": false
+  },
+  {
+    "file": "components/ui/dialog.tsx",
+    "line": 117,
+    "tag": "Button",
+    "class": "",
+    "label": "Cerrar",
+    "onClick": false
+  }
+]

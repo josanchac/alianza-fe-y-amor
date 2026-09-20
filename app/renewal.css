@@ -114,3 +114,10 @@ html body .rosary-focus button{min-height:48px}
 .occurrence-controls{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem;margin:.65rem 0}
 .reflection-summary article+article{border-top:1px solid #dce3e7;padding-top:1rem;margin-top:1rem}
 .reflection-summary time{font-size:.85rem;color:#5e717b}
+/* Approved light space selector; selection remains explicit without solid fill. */
+.space-switcher-label{flex:1 1 100%;font-size:1rem;color:#52656b}
+.space-switcher .space-buttons{flex:0 1 auto}
+.space-switcher .space-buttons button{flex:0 1 auto;padding:10px 14px;border-radius:12px;font-size:1rem;background:#fff;color:#203b49;border-color:#bdcccf}
+.space-switcher .space-buttons button[aria-pressed=true],.space-default .space-buttons button[aria-pressed=true]{background:#e9f0f2;color:#203b49;border-color:#829da7;box-shadow:none}
+.space-selected-check{visibility:hidden}.space-buttons button[aria-pressed=true] .space-selected-check{visibility:visible}
+.course-controls{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.weekday-options{display:flex;gap:10px;flex-wrap:wrap}.weekday-options label{display:flex!important;align-items:center;gap:8px;min-height:44px}.weekday-options input{width:22px!important;height:22px}.course-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.course-fields input{min-width:0;width:100%}@media(max-width:400px){.course-fields{grid-template-columns:1fr}}

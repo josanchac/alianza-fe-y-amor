@@ -1,0 +1,152 @@
+{
+  "date": "2026-09-20",
+  "base": "8a666b5fb6bc9f2f84d065a64801c3ee258a1886",
+  "status": "partial-review-not-release-clearance",
+  "files": [
+    {
+      "path": "app/commitment-review.tsx",
+      "sha256": "be4b4c58007bfb89b9730cf66d8e2c7d0049f95e3e8137aefdd13811205ed424",
+      "scope": "reviewed-action-presentation-only"
+    },
+    {
+      "path": "app/community.tsx",
+      "sha256": "7cd19ce5d4fc2e3f9ae54281b6217f865b488432e4fa0bfcb7e36c2ef0153700",
+      "scope": "reviewed-action-presentation-only"
+    },
+    {
+      "path": "app/confession-guide.tsx",
+      "sha256": "37d58c4d44a1d122b1d67c5b7758116ed0d482c904ebc2b081f65454480ba15d",
+      "scope": "reviewed-action-presentation-only"
+    },
+    {
+      "path": "app/formation-guide.tsx",
+      "sha256": "491aeb4e568d8e1d1900bdf9ceae0ffcce66af4c46c5db6047ea3e33eed85457",
+      "scope": "reviewed-action-presentation-only"
+    },
+    {
+      "path": "app/groups-workspace.tsx",
+      "sha256": "4fe6ce30b35a739fc27132a4ecf9c0d56ada332039431bbafda3e2a4d5a5cdc0",
+      "scope": "reviewed-action-presentation-only"
+    },
+    {
+      "path": "app/habit-fields.tsx",
+      "sha256": "1dabd94b83dad3901acc06fb09f0e6429a29f925811fe8236b1346a663e4b2b3",
+      "scope": "reviewed-product-rule"
+    },
+    {
+      "path": "app/home.tsx",
+      "sha256": "7158c2516c7f38932d426483e740fc092f771e6ecd49132be45a1be9cf4e13ad",
+      "scope": "reviewed-action-presentation-only"
+    },
+    {
+      "path": "app/install-guide.tsx",
+      "sha256": "f646fef2fa459e0cbc7ee733b14fe78a5c0c9bd747b5e820b43ee8efb7a94309",
+      "scope": "reviewed-action-presentation-only"
+    },
+    {
+      "path": "app/journal.tsx",
+      "sha256": "1601db39aa1884f1aed3a1e299a90510653230bd312ec15faf6e51c5798e6eaa",
+      "scope": "reviewed-product-rule"
+    },
+    {
+      "path": "app/mass.tsx",
+      "sha256": "79eb2c18fefa90303f85c61cd1db3d02f3b86a45f92078eae2ac4c493bc6f836",
+      "scope": "mass-pending-documentary-validation"
+    },
+    {
+      "path": "app/month-review.tsx",
+      "sha256": "998e4b60ff737b187216c167d47d05420480176d6575b323d45e5915c81cf6a7",
+      "scope": "reviewed-action-presentation-only"
+    },
+    {
+      "path": "app/my-path.tsx",
+      "sha256": "a76c7f6e9c6337e435b960a0bbef06afd72bc36d2e73b8e98c78eb67d1634f63",
+      "scope": "reviewed-action-presentation-only"
+    },
+    {
+      "path": "app/pairing-requests.tsx",
+      "sha256": "c6703bcc5c9ed965a18ad201d6038675419b2c8f44338652d9719fc0ce34f13e",
+      "scope": "reviewed-action-presentation-only"
+    },
+    {
+      "path": "app/pairing.tsx",
+      "sha256": "399cf70e4fca8273233de004193fbdd5f5cb8d91d67e1bc483d5bf622bcfb2f2",
+      "scope": "reviewed-action-presentation-only"
+    },
+    {
+      "path": "app/personal-rosary.tsx",
+      "sha256": "302b33583b557b18c4232043ac3ebbcd15c34ed186d2d7575ab4fac6ff2375c0",
+      "scope": "reviewed-action-presentation-only"
+    },
+    {
+      "path": "app/reflection-summary.tsx",
+      "sha256": "58ea2fc6a797fb388d1f4f4f0dc3afefc3507de9167048ec8511ce0597e92200",
+      "scope": "reviewed-action-presentation-only"
+    },
+    {
+      "path": "app/spaces.tsx",
+      "sha256": "8b4c9a599b425b4addfa626172620a73774cb22b0c8a341e02e7a265f7903a5a",
+      "scope": "reviewed-action-presentation-only"
+    },
+    {
+      "path": "app/start-guide.tsx",
+      "sha256": "baffcd7196df2e96646ba2914fc0131f0c267ff17305daf8f28901463d991468",
+      "scope": "reviewed-action-presentation-only"
+    },
+    {
+      "path": "app/symbol-picker.tsx",
+      "sha256": "ffbd346e6d22761379398f79b1aa56745c25b885e977e26ab33561f958f66188",
+      "scope": "reviewed-action-presentation-only"
+    },
+    {
+      "path": "app/symbol-progress.tsx",
+      "sha256": "1cc582f8252af4d0d288e439abe9a7baecc177887177f2c7a540530e8ad6c898",
+      "scope": "reviewed-product-rule"
+    },
+    {
+      "path": "github/admin.tsx",
+      "sha256": "cca77e96bbb4fab84fd1347305d268afed4fa1648187ba7dfcf8df010edfd47f",
+      "scope": "reviewed-action-presentation-only"
+    },
+    {
+      "path": "github/invitations.tsx",
+      "sha256": "f8c604159f01a8aa58b1e25cbb3bca69e5dc50134a0bcc7f79934e8a9a6a4bd8",
+      "scope": "reviewed-action-presentation-only"
+    },
+    {
+      "path": "github/main.tsx",
+      "sha256": "ea84d34a472b2092282eb2a4b9210bb60364e3ed3993115df7633237e2daf63c",
+      "scope": "reviewed-action-presentation-only"
+    },
+    {
+      "path": "lib/mass.ts",
+      "sha256": "8b2bad8a1c2376828b38db8d191111f4f8d2ab3b13dbbcea1f73b92bfcb868dd",
+      "scope": "mass-pending-documentary-validation"
+    },
+    {
+      "path": "lib/rhythm.ts",
+      "sha256": "b9026e95eea0d3c9944bc35741acf68f58cda4f51c1a59618b72de9f484451cd",
+      "scope": "reviewed-product-rule"
+    },
+    {
+      "path": "lib/schedule.ts",
+      "sha256": "dc6d1e6c7d04567af6bc8d366975b471f6a7a9157ba1c65f0f653384f2eb3a40",
+      "scope": "reviewed-product-rule"
+    },
+    {
+      "path": "supabase/migrations/20260920011333_daily_occurrences.sql",
+      "sha256": "a29b3f268898cf53c1ee76c97f286081b2fd76941a081e678a3f149ba330135c",
+      "scope": "reviewed-product-rule"
+    },
+    {
+      "path": "app/evangelizo-review.tsx",
+      "sha256": "461f32cce26ce902fab3a9d7b5637cea55d714dfe37cb141b835e13d0f830123",
+      "scope": "mass-provider-preview-pending-documentary-validation"
+    },
+    {
+      "path": "lib/evangelizo.ts",
+      "sha256": "d9cac7ef26ba7c4038e94fcd982dafbf6e4fca5a2e79d2fdd666f572dabf7fa3",
+      "scope": "mass-provider-preview-pending-documentary-validation"
+    }
+  ]
+}

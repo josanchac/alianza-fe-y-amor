@@ -95,3 +95,19 @@ No hay estimación ni fecha de publicación comprometida. El bloqueo del navegad
 - [alpha.9](RELEASE_0.2.0-alpha.9.md) y [alpha.10](RELEASE_0.2.0-alpha.10.md).
 - [Operación](DEPLOYMENT.md), [reinicio personal](PERSONAL_RESET.md) y [entrada liviana](LIGHT_ENTRY_RELEASE.md).
 - [Revisión histórica](JOURNEY_REVIEW.md) y [comunidad](COMMUNITY_RELEASE.md); sus pendientes se contrastan con entregas posteriores.
+
+## Actualización 2026-09-20 — aprobación de compromisos integrados
+- **Implementado en revisión:** selector Cambiar espacio, lectura serena, frecuencias específicas, cursos/novenas y coexistencia con registros repetidos/extras. Ver `APPROVED_COMMITMENTS_20260920.md`.
+- **Verificado automáticamente:** reglas de progreso, formulario, validación PostgreSQL local y regresiones de registros múltiples; la aprobación del dummy no equivale a validación humana de la integración.
+- **Pendiente:** cotejo documental, revisión móvil integrada y aplicar migración en entorno conectado antes del piloto.
+- **Publicado:** ninguna de estas nuevas reglas se ha desplegado para participantes. Sitio privado sintético se actualiza por separado y no cambia datos reales.
+
+
+## Actualización posterior: integración conectada v14
+La aprobación visual de la integración fue recibida. La migración de cursos ya se aplicó y verificó exclusivamente en Supabase de pruebas; /connected/ fue actualizado con las nuevas frecuencias y lecturas mediante relay. Esto sustituye los estados anteriores de migración remota pendiente y ruta conectada antigua. Piloto sin publicar ni migrar. Estado y pendientes detallados: [INTEGRATED_VERIFICATION_20260920.md](INTEGRATED_VERIFICATION_20260920.md).
+
+## Servicio de lecturas listo para prueba autenticada
+Implementado: relay Supabase para lecturas y cliente opt-in de GitHub Pages; aclaraciones IGMR 51–52 en detalle de Misa.
+Verificado: pruebas unitarias del relay/cliente, suite Misa, tipado, compilación; endpoint de pruebas rechaza solicitudes no autorizadas.
+Pendiente: carga de extremo a extremo con sesión válida y Safari, cotejo de variantes, control documental global, servicio/migraciones en producción y autorización final.
+Publicado: únicamente función mass-readings v1 en Supabase aislado; frontend privado sigue v14, piloto intacto.

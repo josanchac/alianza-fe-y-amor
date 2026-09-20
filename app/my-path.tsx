@@ -48,7 +48,7 @@ export function MyPath({
       <p className="eyebrow">MI CAMINO</p>
       <h2>Mi ideal personal</h2>
       {ideal && <p className="ideal-line">{ideal}</p>}
-      {!choosing&&<button className="text-button" onClick={()=>setChoosing(true)}>Cambiar mi punto de partida</button>}
+      {!choosing&&<button className="action-button" data-action="secondary" onClick={()=>setChoosing(true)}>Cambiar mi punto de partida</button>}
       {choosing&&<div
         className="choice-row"
         role="group"

@@ -12,7 +12,7 @@ export function CommitmentReviewFields({data,today,field}:{data:CommitmentReview
 export function CommitmentReviewSummary({own,draft,habit,today,edit,explore}:{own:RecordItem[];draft:CommitmentReview;habit:RecordItem;today:string;edit:Edit;explore:()=>void}){
  const key=commitmentReviewKey(draft),saved=own.find(r=>r.kind==='habit_review'&&r.key===key)?.data as CommitmentReview|undefined;
  return <div className="commitment-review"><p>{draft.period==='week'?'Semana':'Mes'} · {draft.start} — {draft.end}</p>
- {saved&&<><p className="preserve">{saved.note}</p><p>{assessmentLabels[saved.assessment]}</p>{saved.end<today&&saved.nextStep!=='keep'&&<><p>{nextStepLabels[saved.nextStep]}</p>{saved.nextStep==='explore'?<button className="text-button" onClick={explore}>Explorar un próximo paso</button>:<button className="text-button" onClick={()=>edit('habit',habit.key,'Editar compromiso',habit.data)}>Ajustar este compromiso</button>}</>}</>}
- <button className="text-button" onClick={()=>edit('habit_review',key,'Revisar: '+habit.data.title,draft)}>{saved?'Editar mi nota y valoración':'Anotar o valorar este período'}</button>
+ {saved&&<><p className="preserve">{saved.note}</p><p>{assessmentLabels[saved.assessment]}</p>{saved.end<today&&saved.nextStep!=='keep'&&<><p>{nextStepLabels[saved.nextStep]}</p>{saved.nextStep==='explore'?<button className="action-button" data-action="navigation" onClick={explore}>Explorar un próximo paso</button>:<button className="action-button" data-action="secondary" onClick={()=>edit('habit',habit.key,'Editar compromiso',habit.data)}>Ajustar este compromiso</button>}</>}</>}
+ <button className="action-button" data-action="secondary" onClick={()=>edit('habit_review',key,'Revisar: '+habit.data.title,draft)}>{saved?'Editar mi nota y valoración':'Anotar o valorar este período'}</button>
  </div>;
 }

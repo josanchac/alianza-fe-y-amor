@@ -18,8 +18,8 @@ try{
  assert.equal(writes.length,1);assert.equal(writes[0].kind,'spaces');
  fireEvent.click(screen.getByRole('button',{name:'Crear mi primer compromiso'}));await screen.findByRole('dialog');
  fireEvent.change(screen.getByLabelText('¿Qué quiero cultivar?'),{target:{value:'Ejercicio elegido'}});
- fireEvent.click(screen.getByRole('button',{name:'Continuar',exact:true}));fireEvent.click(screen.getByRole('button',{name:'Por semana',exact:true}));
- assert.equal(screen.getByLabelText('Cantidad de días').value,'3');
+ fireEvent.click(screen.getByRole('button',{name:'Continuar',exact:true}));fireEvent.change(screen.getByRole('combobox',{name:'Frecuencia'}),{target:{value:'week'}});
+ assert.equal(screen.getByLabelText('Cantidad de veces').value,'3');
  fireEvent.click(screen.getByRole('button',{name:'Guardar',exact:true}));await screen.findByRole('checkbox',{name:'Ejercicio elegido'});
  assert.deepEqual(writes[1].data.frequency,{period:'week',target:3,unit:'days'});
  cleanup();mount();await screen.findByRole('heading',{name:'Mis compromisos'});await screen.findByRole('checkbox',{name:'Ejercicio elegido'});assert.equal(writes.length,2);

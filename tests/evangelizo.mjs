@@ -1,0 +1,50 @@
+import assert from 'node:assert/strict';
+import {dom} from './dom.mjs';
+import React from 'react';
+import {render,screen,fireEvent,cleanup,act} from '@testing-library/react';
+import {parseEvangelizo,loadEvangelizo,configureReadingTransport} from '../lib/evangelizo.ts';
+import {EvangelizoReview} from '../app/evangelizo-review.tsx';
+// Synthetic text only. Provider responses and sacred texts are not test fixtures.
+const xml=(date='20260920')=>`<data-set><evangelizo><date>${date}</date><litugic_t>Celebración de prueba</litugic_t>${['reading_text1','reading_text2','reading_gospel'].map(t=>`<${t}_st>Referencia de prueba</${t}_st><${t}><![CDATA[Inicio<br>FIN SINTÉTICO<script>BAD</script>]]></${t}>`).join('')}</evangelizo></data-set>`;
+const original=globalThis.fetch;
+try{
+ const parsed=parseEvangelizo(xml(),'2026-09-20');assert.equal(parsed.readings.length,3);assert.equal(parsed.readings[0].text,'Inicio\nFIN SINTÉTICO');
+ for(const bad of [xml('20260921'),'<bad',xml().replace('<date>','<date>20260920</date><date>'),xml().replace('<reading_gospel_st>Referencia de prueba</reading_gospel_st>',''),'<!DOCTYPE x>'+xml()])assert.throws(()=>parseEvangelizo(bad,'2026-09-20'));
+ globalThis.__EVANGELIZO_SAME_ORIGIN__=true;
+ globalThis.fetch=async(endpoint,options)=>{assert.equal(endpoint,'/api/mass-readings?date=2026-09-20');assert.equal(options.credentials,'same-origin');return new Response(xml());};
+ await loadEvangelizo('2026-09-20','2026-09-20',new AbortController().signal);
+ delete globalThis.__EVANGELIZO_SAME_ORIGIN__;
+ let transportCalls=0;
+ configureReadingTransport(async(date,signal)=>{transportCalls++;assert.equal(date,'2026-09-20');assert(signal instanceof AbortSignal);return new Response(xml());});
+ globalThis.fetch=async()=>{throw Error('Provider must not be requested directly');};
+ await loadEvangelizo('2026-09-20','2026-09-20',new AbortController().signal);
+ assert.equal(transportCalls,1);configureReadingTransport(undefined);
+
+ let calls=0;
+ globalThis.fetch=async()=>{calls++;return new Response(xml());};
+ await assert.rejects(loadEvangelizo('2027-01-01','2026-09-20',new AbortController().signal));assert.equal(calls,0);
+ render(React.createElement(EvangelizoReview,{date:'2026-09-20',today:'2026-09-20',kind:'vigil'}));assert.equal(calls,0);cleanup();
+ globalThis.fetch=async()=>new Response('',{status:503});
+ render(React.createElement(EvangelizoReview,{date:'2026-09-20',today:'2026-09-20',kind:'general'}));
+ await screen.findByRole('button',{name:'Reintentar'});globalThis.fetch=async()=>new Response(xml());fireEvent.click(screen.getByRole('button',{name:'Reintentar'}));
+ fireEvent.click(await screen.findByRole('button',{name:'Primera lectura'}));assert(screen.getByText('Inicio FIN SINTÉTICO'));fireEvent.click(screen.getByRole('button',{name:'Evangelio'}));assert.equal(screen.getByRole('button',{name:'Primera lectura'}).getAttribute('aria-expanded'),'false');cleanup();
+ let resolveFirst;
+ globalThis.fetch=()=>new Promise(resolve=>{resolveFirst=resolve;});
+ const view=render(React.createElement(EvangelizoReview,{date:'2026-09-20',today:'2026-09-20',kind:'general'}));
+ globalThis.fetch=async()=>new Response(xml('20260921'));
+ view.rerender(React.createElement(EvangelizoReview,{date:'2026-09-21',today:'2026-09-20',kind:'general'}));await screen.findByRole('button',{name:'Evangelio'});
+ await act(async()=>resolveFirst(new Response(xml())));
+ assert.equal(screen.getByRole('link',{name:'Ver fuente en Evangelizo'}).href,'https://evangeliodeldia.org/SP/gospel/2026-09-21');
+ cleanup();
+ globalThis.__EVANGELIZO_REVIEW__=true;
+ globalThis.fetch=async()=>new Response(xml());
+ const {Mass}=await import('../app/mass.tsx');
+ render(React.createElement(Mass,{now:()=>new Date('2026-09-20T12:00:00Z')}));
+ fireEvent.click(screen.getByRole('button',{name:/Liturgia de la Palabra/}));
+ fireEvent.click(await screen.findByRole('button',{name:'Primera lectura'}));
+ assert.equal(screen.getByRole('button',{name:'Primera lectura'}).getAttribute('aria-expanded'),'true');
+ fireEvent.click(screen.getByRole('button',{name:'Homilía',exact:true}));
+ assert.equal(screen.getByRole('button',{name:'Primera lectura'}).getAttribute('aria-expanded'),'false');
+ delete globalThis.__EVANGELIZO_REVIEW__;
+ console.log('PASS XML/date/incomplete/duplicate/markup checks, range and special-date guards, retry, accordion and stale response cancellation');
+}finally{globalThis.fetch=original;cleanup();dom.window.close();}

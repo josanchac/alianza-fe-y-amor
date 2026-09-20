@@ -1,0 +1,70 @@
+import assert from 'node:assert/strict';
+import {dom} from './dom.mjs';
+const React=await import('react');
+const {render,screen,fireEvent,cleanup,waitFor,within}=await import('@testing-library/react');
+const {default:Journal}=await import('../app/journal.tsx');
+const {HabitFields}=await import('../app/habit-fields.tsx');
+const {localDate}=await import('../lib/domain.ts');
+const today=localDate();
+const row=(kind,key,data)=>({owner:'synthetic',kind,key,data,version:1,updated:''});
+const habit=(key,period,target,unit)=>[row('habit',key,{title:key,moment:'Durante el día',active:true,anchor:'',minimum:'',frequency:{period,target,...(unit?{unit}:{})}}),row('habit_plan',key,{versions:[{from:today.slice(0,7)+'-01',active:true,period,target,...(unit?{unit}:{})}]})];
+const fixture={user:{id:'synthetic',role:'member',email:'test@example.test',relationshipVersion:1,dataEpoch:1,coupleId:null},own:[row('profile','me',{name:'Test',ideal:'',shareSchedule:false,shareNotes:false}),...habit('Mañana','day',1),...habit('Noche','day',1),...habit('Rosarios','month',2,'times'),row('checks',today,{Mañana:'done',Rosarios:2})],shared:[],partner:null,today};
+const writes=[];
+async function request(init){if(init?.method!=='POST')return Response.json(fixture);const p=JSON.parse(init.body);writes.push(p);const record={...row(p.kind,p.key,p.data),version:p.version+1};fixture.own=[...fixture.own.filter(r=>r.kind!==p.kind||r.key!==p.key),record];return Response.json({record});}
+try{
+ render(React.createElement(Journal,{dataRequest:request,onSignOut(){}}));
+ const daily=await screen.findByRole('progressbar',{name:'Compromisos diarios'});
+ assert.equal(daily.getAttribute('aria-valuemax'),'2');assert.equal(daily.getAttribute('aria-valuenow'),'1');
+ fireEvent.click(screen.getByRole('button',{name:'Agregar otro'}));
+ await waitFor(()=>assert.equal(fixture.own.find(r=>r.kind==='checks').data.Rosarios,3));
+ assert(screen.getByText('+1 adicional'));
+ assert(screen.getByRole('progressbar',{name:'Rosarios'}).classList.contains('has-additional'));
+ assert.equal(daily.getAttribute('aria-valuenow'),'1');
+ assert.equal(screen.getByRole('progressbar',{name:'Rosarios'}).getAttribute('aria-valuemax'),'2');
+ await waitFor(()=>assert.equal(screen.getByRole('button',{name:'Deshacer último'}).disabled,false));
+ fireEvent.click(screen.getByRole('button',{name:'Deshacer último'}));
+ await waitFor(()=>assert.equal(screen.queryByText('+1 adicional')===null,true));
+ assert.equal(writes.at(-1).data.Rosarios,2);
+ cleanup();
+ fixture.own.find(r=>r.kind==='checks').data.Mañana='skip';
+ fixture.own.find(r=>r.kind==='checks').data.Noche='skip';
+ render(React.createElement(Journal,{dataRequest:request,onSignOut(){}}));
+ await screen.findByRole('heading',{name:'Mis compromisos'});
+ assert.equal(screen.queryByRole('progressbar',{name:'Compromisos diarios'})===null,true);
+ assert(screen.getByText(/Sin compromisos diarios/));
+ cleanup();
+ fixture.own.find(r=>r.kind==='habit'&&r.key==='Noche').data.frequency={period:'day',target:2,unit:'times'};
+ fixture.own.find(r=>r.kind==='habit_plan'&&r.key==='Noche').data.versions[0]={from:today.slice(0,7)+'-01',active:true,period:'day',target:2,unit:'times'};
+ fixture.own.find(r=>r.kind==='checks').data={Mañana:'done',Noche:1,Rosarios:2};
+ render(React.createElement(Journal,{dataRequest:request,onSignOut(){}}));
+ const partialDaily=await screen.findByRole('progressbar',{name:'Compromisos diarios'});
+ assert.equal(partialDaily.getAttribute('aria-valuenow'),'1.5');
+ const nightRow=screen.getByRole('progressbar',{name:'Noche'}).closest('.habit-row');
+ fireEvent.click(within(nightRow).getByRole('button',{name:'Agregar otro'}));
+ await waitFor(()=>assert.equal(partialDaily.getAttribute('aria-valuenow'),'2'));
+ assert.equal(screen.getByRole('progressbar',{name:'Rosarios'}).getAttribute('aria-valuenow'),'2');
+ await waitFor(()=>assert.equal(within(nightRow).getByRole('button',{name:'Agregar otro'}).disabled,false));
+ fireEvent.click(within(nightRow).getByRole('button',{name:'Agregar otro'}));
+ await within(nightRow).findByText('+1 adicional');
+ assert.equal(partialDaily.getAttribute('aria-valuenow'),'2');
+ cleanup();
+ let edited;
+ function Form(){const [data,set]=React.useState({title:'Ejercicio',moment:'Durante el día',active:true,anchor:'',minimum:'',frequency:{period:'week',target:3}});edited=data;return React.createElement(HabitFields,{data,first:false,step:1,field:(k,v)=>set({...data,[k]:v})});}
+ render(React.createElement(Form));
+ const toggle=screen.getByRole('checkbox',{name:'Permitir más de una vez al día'});
+ assert.equal(toggle.checked,false);fireEvent.click(toggle);assert.equal(edited.frequency.unit,'times');assert.equal(edited.frequency.target,3);
+ fireEvent.click(toggle);assert.equal(edited.frequency.unit,'days');assert.equal(edited.frequency.target,3);
+ fireEvent.change(screen.getByRole('combobox',{name:'Frecuencia'}),{target:{value:'day'}});
+ assert.equal(toggle.checked,false);fireEvent.click(toggle);
+ fireEvent.change(screen.getByRole('spinbutton',{name:'Cantidad de veces'}),{target:{value:'2'}});
+ assert.deepEqual(edited.frequency,{period:'day',target:2,unit:'times'});
+ fireEvent.click(toggle);assert.equal(edited.frequency.target,1);
+ for(const [label,max] of [['week',7],['month',28]]){
+  fireEvent.change(screen.getByRole('combobox',{name:'Frecuencia'}),{target:{value:label}});
+  fireEvent.click(toggle);
+  fireEvent.change(screen.getByRole('spinbutton',{name:'Cantidad de veces'}),{target:{value:'99'}});
+  fireEvent.click(toggle);
+  assert.equal(edited.frequency.target,max,'Disabling repetitions must leave a valid distinct-day target');
+ }
+ console.log('PASS actual Journal daily denominator, independent monthly extras, fixed target, halo/undo, repeat checkbox defaults and preservation of target');
+}finally{cleanup();dom.window.close();}

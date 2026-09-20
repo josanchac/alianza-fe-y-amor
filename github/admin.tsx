@@ -57,7 +57,7 @@ export function AdminPanel({
   };
   return (
     <main className="admin-page">
-      <button className="text-button" onClick={onBack}>
+      <button className="action-button" data-action="navigation" onClick={onBack}>
         ← Volver a mi espacio
       </button>
       <h1>Uso y mejora de Alianza</h1>

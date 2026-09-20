@@ -1,0 +1,10 @@
+{
+  "purpose": "Synthetic integration tests only",
+  "organization": "Alianza App",
+  "projectName": "alianza-pruebas",
+  "projectId": "xhfqcrmekfjclgazrvrm",
+  "region": "us-east-1",
+  "confirmedMonthlyCost": 0,
+  "productionProjectBlocked": "rvbyufrvqaslcveaowvr",
+  "containsProductionData": false
+}

@@ -158,10 +158,10 @@ export function PurposeCard({
       setError((e as Error).message);
     } finally {sending.current=false;}
   }
-  if(compact&&!expanded){const todayLog=p.logs.find(l=>l.day===localDate());return <section className="card purpose-quick"><div><p className="eyebrow">{group.name}</p><h3>{p.title}</h3><p>{personalProgress(p)} de {p.target} ocasiones</p></div><button className="quick-mark" aria-label={'Registrar ocasión: '+p.title} disabled={busy||!p.joined||(todayLog?.amount??0)>=20||!current} onClick={()=>send({action:'purpose_log',day:localDate(),amount:(todayLog?.amount??0)+1,version:todayLog?.version??0})}><Plus size={22}/></button><button className="text-button purpose-detail" onClick={()=>setExpanded(true)}>Ver mis registros<ArrowRight size={16}/></button>{feedback&&<p className="quiet-feedback" role="status">{feedback}</p>}{error&&<p role="alert">{error}</p>}</section>;}
+  if(compact&&!expanded){const todayLog=p.logs.find(l=>l.day===localDate());return <section className="card purpose-quick"><div><p className="eyebrow">{group.name}</p><h3>{p.title}</h3><p>{personalProgress(p)} de {p.target} ocasiones</p></div><button className="quick-mark" aria-label={'Registrar ocasión: '+p.title} disabled={busy||!p.joined||(todayLog?.amount??0)>=20||!current} onClick={()=>send({action:'purpose_log',day:localDate(),amount:(todayLog?.amount??0)+1,version:todayLog?.version??0})}><Plus size={22}/></button><button className="action-button purpose-detail" data-action="navigation" onClick={()=>setExpanded(true)}>Ver mis registros<ArrowRight size={16}/></button>{feedback&&<p className="quiet-feedback" role="status">{feedback}</p>}{error&&<p role="alert">{error}</p>}</section>;}
   return (
     <section className="card purpose-card">
-      {compact&&<button className="text-button" onClick={()=>setExpanded(false)}>Cerrar detalle</button>}
+      {compact&&<button className="action-button" data-action="navigation" onClick={()=>setExpanded(false)}>Cerrar detalle</button>}
       <p className="eyebrow">{compact ? group.name : "NUESTRO PROPÓSITO"}</p>
       <h3>{p.title}</h3>
       <div className="purpose-meta"><span><CalendarDays size={14}/>{new Date(p.start+'T12:00:00').toLocaleDateString('es-CR',{day:'numeric',month:'short'})}{p.start!==p.end?' – '+new Date(p.end+'T12:00:00').toLocaleDateString('es-CR',{day:'numeric',month:'short'}):''}</span><span>{p.unit==='couple'?'En matrimonio':'Personal'}</span></div>
@@ -188,7 +188,7 @@ export function PurposeCard({
         <>
           <QuietProgress symbol={group.symbol} image={group.symbolImage} value={personalProgress(p)} total={p.target} label="Mi avance del propósito"/>
           <div className="purpose-register">
-            <div className="purpose-day"><span>{day===localDate()?'Hoy':new Date(day+'T12:00:00').toLocaleDateString('es-CR',{day:'numeric',month:'long'})}</span><button className="text-button" onClick={()=>setDateOpen(!dateOpen)} aria-expanded={dateOpen}>Cambiar día</button></div>
+            <div className="purpose-day"><span>{day===localDate()?'Hoy':new Date(day+'T12:00:00').toLocaleDateString('es-CR',{day:'numeric',month:'long'})}</span><button className="action-button" data-action="disclosure" onClick={()=>setDateOpen(!dateOpen)} aria-expanded={dateOpen}>Cambiar día</button></div>
             {dateOpen&&<label className="purpose-date-field">
               Elegir día
               <input
@@ -224,7 +224,7 @@ export function PurposeCard({
             </button>
             {log && log.amount > 0 && (
               <button
-                className="text-button"
+                className="action-button" data-action="reversible"
                 disabled={busy || log.amount === 0}
                 onClick={() =>
                   send({
@@ -468,7 +468,7 @@ function SharedRosaryCard({r,act,busy,userId,names={},canManage=false,habits=[],
               )}
               {!r.cancelled && !s && (
                 <button
-                  className="text-button"
+                  className="action-button" data-action="secondary"
                   disabled={busy}
                   onClick={() => send("rosary_reserve", { decade: n })}
                 >
@@ -480,7 +480,7 @@ function SharedRosaryCard({r,act,busy,userId,names={},canManage=false,habits=[],
                 !s.done &&
                 (s.userId === userId || canManage || r.ownerId === userId) && (
                   <button
-                    className="text-button"
+                    className="action-button" data-action="secondary"
                     disabled={busy}
                     onClick={() => send("rosary_release", { decade: n })}
                   >
@@ -556,7 +556,7 @@ function SharedRosaryCard({r,act,busy,userId,names={},canManage=false,habits=[],
         <details className="optional-details">
           <summary>Administrar este encuentro</summary>
           <button
-            className="text-button"
+            className="action-button" data-action="sensitive"
             disabled={busy}
             onClick={() => send("rosary_cancel")}
           >
@@ -641,7 +641,7 @@ function SharedRosaryCard({r,act,busy,userId,names={},canManage=false,habits=[],
             Terminé de rezar esta decena
           </button>
           <button
-            className="text-button"
+            className="action-button" data-action="secondary"
             disabled={busy}
             onClick={async () => {
               if (await send("rosary_complete", { decade: selected }))

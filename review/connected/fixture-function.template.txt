@@ -1,0 +1,16 @@
+// Temporary fixture helper. Deactivate after QA. No arbitrary emails or IDs accepted.
+const cfg=__FIXTURE_CONFIG__;
+const url=Deno.env.get('SUPABASE_URL');
+const key=Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
+Deno.serve(async req=>{
+ if(url!=='https://xhfqcrmekfjclgazrvrm.supabase.co'||Date.now()>cfg.expires||req.method!=='POST'||req.headers.get('x-review-key')!==cfg.secret)return new Response('Forbidden',{status:403});
+ const input=await req.json();
+ if(input.action!=='create')return new Response('Invalid',{status:400});
+ const results=[];
+ for(const email of cfg.emails){
+  const r=await fetch(url+'/auth/v1/admin/users',{method:'POST',headers:{apikey:key,Authorization:'Bearer '+key,'Content-Type':'application/json'},body:JSON.stringify({email,password:cfg.password,email_confirm:true})});
+  const v=await r.json();if(!r.ok)return Response.json({error:'fixture_failed',status:r.status},{status:500});
+  results.push({id:v.id,email});
+ }
+ return Response.json({users:results},{headers:{'Cache-Control':'no-store'}});
+});
