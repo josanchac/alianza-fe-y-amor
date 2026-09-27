@@ -64,3 +64,43 @@
 @media(prefers-reduced-motion:reduce){.symbol-progress{transition:none!important}}
 
 .workspace .serene-day .today-reflections>summary:before{content:none}
+
+/* Approved compact groups, September 27: separate enduring daily habits from courses. */
+.workspace .serene-heading .symbol-progress{width:80px;height:80px}
+.workspace .serene-heading .symbol-progress svg,.workspace .serene-heading .symbol-progress img{width:76px;height:76px}
+.workspace .serene-heading .symbol-progress.is-ring svg,.workspace .serene-heading .symbol-progress.is-ring img{width:62px;height:62px}
+.workspace .serene-heading.is-compact .symbol-progress{width:60px;height:60px}
+.workspace .serene-heading.is-compact .symbol-progress svg,.workspace .serene-heading.is-compact .symbol-progress img{width:56px;height:56px}
+.workspace .serene-heading.is-compact .symbol-progress.is-ring svg,.workspace .serene-heading.is-compact .symbol-progress.is-ring img{width:44px;height:44px}
+.workspace .today-progress-button>span{display:none}
+.workspace .serene-day .habit-group{margin:14px 0}
+.workspace .serene-day .habit-group>h3{font-size:17px;font-weight:500;color:var(--app-control-ink);margin:0 6px 8px}
+.workspace .serene-day .habit-list{background:var(--app-paper);border-radius:20px;padding:0 10px}
+.workspace .serene-day .habit-row{min-height:60px;padding:7px 0;align-items:center}
+.workspace .serene-day .habit-row:last-child{border-bottom:0}
+.workspace .serene-day .occurrence-controls{top:7px}
+.workspace .serene-day .habit-period-progress .symbol-progress{width:36px;height:36px;flex-shrink:0}
+.workspace .serene-day .habit-period-progress .symbol-progress svg,.workspace .serene-day .habit-period-progress .symbol-progress img{width:34px;height:34px}
+.workspace .serene-day .habit-period-progress .symbol-progress.is-ring svg,.workspace .serene-day .habit-period-progress .symbol-progress.is-ring img{width:24px;height:24px}
+.workspace .serene-day .habit-period-progress p{font-size:13px!important}
+.workspace .serene-day .frequency-day{display:none}
+.workspace .serene-day .today-moment h2{font-size:17px;margin:18px 6px 8px}
+.workspace .serene-day .today-moment>div{display:flex;background:var(--app-control-soft);border-radius:18px;padding:6px}
+.workspace .serene-day .today-moment button{display:flex;flex:1;min-width:0;flex-direction:column;align-items:center;justify-content:center;gap:6px;min-height:60px;padding:8px 2px;border:0;background:transparent;color:var(--app-control-ink);font-size:12px;overflow-wrap:normal;word-break:normal}
+@media(max-width:360px){.workspace .serene-day .today-moment>div{flex-wrap:wrap}.workspace .serene-day .today-moment button{flex-basis:100%;flex-direction:row;justify-content:flex-start;gap:12px;font-size:15px}}
+
+/* Scroll-linked transforms preserve the layout height and the list's position. */
+.workspace .serene-day .serene-heading,.workspace .serene-day .serene-heading.is-compact{padding:12px 0;min-height:104px;border-bottom-color:transparent}
+.workspace .serene-heading>div{transform:scale(calc(1 - var(--header-collapse,0)*.125));transform-origin:left center}
+.workspace .serene-heading h1,.workspace .serene-heading.is-compact h1{font-size:32px;transition:none}
+.workspace .serene-heading .today-progress-button{transform:scale(calc(1 - var(--header-collapse,0)*.25));transform-origin:right center}
+.workspace .serene-heading.is-compact .symbol-progress{width:80px;height:80px}
+.workspace .serene-heading.is-compact .symbol-progress svg,.workspace .serene-heading.is-compact .symbol-progress img{width:76px;height:76px}
+.workspace .serene-heading.is-compact .symbol-progress.is-ring svg,.workspace .serene-heading.is-compact .symbol-progress.is-ring img{width:62px;height:62px}
+.workspace .serene-day .purpose-strip{margin:6px 0 18px}
+.workspace .serene-day .purpose-strip p{font-size:19px;line-height:1.4;margin-top:4px}
+.workspace .serene-day .purpose-empty{display:flex;align-items:center;gap:8px;min-height:44px;background:none;border:0;padding:4px 0;color:var(--app-muted);font-size:14px;text-align:left}
+.workspace .serene-day .symbol-progress.has-additional{isolation:isolate;filter:drop-shadow(0 0 4px #d6aa4a80)}
+.workspace .serene-day .symbol-progress.has-additional::before{content:'';position:absolute;inset:-9px;border-radius:50%;background:radial-gradient(circle,#edc36385 0%,#e4b75240 42%,transparent 72%);pointer-events:none;z-index:-1;opacity:.65;animation:alianza-extra-aura 2.4s ease-in-out 3}
+@keyframes alianza-extra-aura{0%,100%{opacity:.5;transform:scale(.9)}50%{opacity:1;transform:scale(1.3)}}
+@media(prefers-reduced-motion:reduce){.workspace .serene-heading>div,.workspace .serene-heading .today-progress-button{transform:none}.workspace .serene-day .symbol-progress.has-additional::before{animation:none;opacity:.65}}

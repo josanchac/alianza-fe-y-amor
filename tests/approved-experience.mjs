@@ -50,6 +50,19 @@ try{
  await within(nightRow).findByText('+1 adicional');
  assert.equal(partialDaily.getAttribute('aria-valuenow'),'2');
  cleanup();
+ fixture.own.push(row('habit','Novena',{title:'Novena',moment:'Noche',active:true,frequency:{period:'day',target:1,unit:'days',course:{start:today,days:9}}}));
+ render(React.createElement(Journal,{dataRequest:request,onSignOut(){}}));
+ await screen.findByRole('heading',{name:'Otros compromisos'});
+ assert.equal(screen.getByRole('progressbar',{name:'Compromisos diarios'}).getAttribute('aria-valuemax'),'2');
+ const novena=screen.getByRole('progressbar',{name:'Novena'});
+ assert.equal(novena.getAttribute('aria-valuenow'),'0');
+ assert.equal(novena.getAttribute('aria-valuemax'),'9');
+ assert.equal(screen.getByRole('checkbox',{name:'Novena'}).closest('.habit-group').querySelector('h3').textContent,'Otros compromisos');
+ fireEvent.click(screen.getByRole('checkbox',{name:'Novena'}));
+ await waitFor(()=>assert.equal(novena.getAttribute('aria-valuenow'),'1'));
+ assert.equal(screen.getByRole('progressbar',{name:'Compromisos diarios'}).getAttribute('aria-valuenow'),'2');
+ assert(screen.getByRole('heading',{name:'Momento para vos'}));
+ cleanup();
  let edited;
  function Form(){const [data,set]=React.useState({title:'Ejercicio',moment:'Durante el día',active:true,anchor:'',minimum:'',frequency:{period:'week',target:3}});edited=data;return React.createElement(HabitFields,{data,first:false,step:1,field:(k,v)=>set({...data,[k]:v})});}
  render(React.createElement(Form));

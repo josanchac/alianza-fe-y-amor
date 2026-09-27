@@ -48,3 +48,26 @@ Implementada la dirección aprobada del dummy `alianza-hoy-avance-vivo`: check a
 Cabecera Hoy persistente y compacta al desplazarse; símbolo personal/foto y modo aro conservados. Avance diario independiente del semanal/mensual. Sin meta diaria, símbolo vacío y explicación al abrir Mi avance. Indicadores pequeños por semana/mes; adicionales expresados en texto y dorado luminoso, sin subir el denominador. Transición del llenado respeta reducir movimiento. No cambios de esquema ni escrituras de producción.
 
 Verificación: tipos y compilación; pruebas de acciones, recorridos, reflexiones, onboarding, sesión 3, ritmos y extras/deshacer. Navegador a 390 px: check a la izquierda con área 44 px; cabecera sticky con top 0 al desplazarse; ejercicio pasa de 1 a 4 y mantiene meta 3 con brillo y +1 adicional; no altera el valor diario. Marcar novena lleva el diario de 1 a 2. No se afirma prueba en dispositivos físicos. El recurso final de Rosario B continúa bloqueado por Figma y es independiente de estos símbolos de avance.
+
+## Hoy compacto — aprobado el 27 de septiembre, 11:04 CR
+
+El usuario aprueba el dummy `alianza-hoy-app`: agrupación Cada día / Otros compromisos, árbol diario protagonista y Momento para vos con acceso directo a tres reflexiones. Se implementa en la rama de revisión. El árbol diario mide compromisos diarios permanentes; las novenas/cursos tienen símbolo y denominador propios. Esta regla sustituye el comportamiento documentado a las 08:36 donde marcar novena incrementaba el árbol diario. El símbolo del curso usa días efectivamente registrados, limitado a la duración, y conserva pausa/retomar. No se altera el cálculo histórico general ni el contenido espiritual.
+
+Verificación automatizada: approved-experience (incluye independencia de novena y árbol diario), neca-feedback-ui, onboarding, commitment-courses, session3-ui, TypeScript y compilación. La inspección visual móvil/escritorio de esta iteración está PENDIENTE: el navegador devuelve ERR_BLOCKED_BY_CLIENT al abrir la vista de prueba local. No se atribuyen a esta iteración las comprobaciones visuales previas. No desplegado en preview remoto ni producción.
+
+## Verificación visual y selector de espacios — 27 septiembre, 11:15 CR
+
+Resuelto el acceso al navegador mediante preview supervisado. En 320 y 390 px no hay desbordamiento en Hoy; árbol inicial 80 px y compacto 60 px al desplazarse. Probado registro de novena 0→1 de 9 sin alterar el diario. Inspección de escritorio completada. No equivale a pruebas en Safari/iPhone o Android físico. La cabecera general aún ocupa espacio apreciable y queda identificada como mejora pendiente, sin bloquear esta revisión privada.
+
+A petición del usuario, se retira el engranaje junto a Personal/Pareja/Cursos. Configuración trasladada a Mi espacio → Ajustes → Mis espacios, reutilizando el diálogo, guardado y selección inicial existentes. Verificado por navegador: acceso al diálogo, opciones y regreso a Hoy. TypeScript, build, onboarding y cursos pasan. Publicación SOLO de revisión privada con datos sintéticos: https://alianza-revision-integral.josanchac.chatgpt.site, despliegue appgdep_6ab94f0d610c8191b415f86b5cbe8c3b succeeded. Sin migraciones ni publicación al piloto.
+
+## Propósito, scroll y aura — 27 septiembre, siguiente revisión
+
+- El propósito guardado no había sido eliminado; faltaba un registro en la fixture privada. Se añade un ejemplo sintético y la app ofrece Definir mi propósito del mes cuando no hay texto, sin inventar un propósito para usuarios reales. El propósito existente conserva texto y edición por mes.
+- Cabecera de altura estable (105 px comprobados antes/después), transformaciones proporcionales a 96 px de scroll mediante requestAnimationFrame; se elimina el cambio brusco de geometría del punto de corte. Respeta reducir movimiento.
+- Aura radial dorada: tres pulsaciones de 2,4 segundos cuando el símbolo supera su meta, luego halo estático; reducir movimiento deja solo el halo. Mantiene adicional textual y denominador fijo.
+- TypeScript, approved-experience y build pasan. Navegador de prueba: propósito visible, altura estable, extra en Rosario muestra aura CSS activa y +1, captura docs/qa/session3/today-aura.jpg. No se afirma validación en un dispositivo físico.
+
+## Confirmación al marcar — 27 septiembre, 11:27 CR
+
+Se elimina el toast de éxito Guardado exclusivamente al guardar checks. El estado se actualiza tras la respuesta satisfactoria del servidor; el check, llenado y aura quedan libres de superposiciones. Se conservan toast de error, conflictos y confirmaciones de edición/reflexiones. TypeScript, approved-experience y build de revisión correctos.

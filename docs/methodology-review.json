@@ -1,7 +1,7 @@
 {
   "kind": "documentary",
   "status": "documented",
-  "scope": "Guías breves y comportamiento de la aplicación compilada desde github/main.tsx. Síntesis atribuidas, no curso completo ni formato nacional costarricense. El prototipo exploratorio está excluido de publicación. No acredita aval institucional ni pastoral. Incluye notas y oraciones privadas elegidas por la persona, valoración personal por período e invitación voluntaria a explorar basada únicamente en su elección. Incluye rosarios compartidos, propósitos de grupo como controles de producto, cuaderno privado del ideal, medición técnica general voluntaria y medición agregada automática del piloto cerrado sin contenido personal. Cotejo complementario en COMMUNITY_RELEASE.md. Incluye espacios independientes, rosario individual paso a paso, PDF seleccionado por el usuario, responsabilidades delegadas y capital de gracias con resumen protegido. Incluye frecuencias configurables, cursos/novena y repeticiones como reglas de producto; Misa como guía breve con lecturas del calendario romano general por Reader oficial Evangelizo. Variantes especiales explícitamente en revisión; no Misal completo ni validación costarricense. Sesión 3: revisión mensual opcional, preparación futura, permisos por categoría e invitaciones internas son reglas de producto. Misa prioriza lecturas y ofrece cuatro oraciones tradicionales de la selección parcial aprobada, sin declarar misal completo. Diseño final del Rosario B pendiente de recuperación; ver SESSION3_IMPLEMENTATION_20260927.md.",
+  "scope": "Guías breves y comportamiento de la aplicación compilada desde github/main.tsx. Síntesis atribuidas, no curso completo ni formato nacional costarricense. El prototipo exploratorio está excluido de publicación. No acredita aval institucional ni pastoral. Incluye notas y oraciones privadas elegidas por la persona, valoración personal por período e invitación voluntaria a explorar basada únicamente en su elección. Incluye rosarios compartidos, propósitos de grupo como controles de producto, cuaderno privado del ideal, medición técnica general voluntaria y medición agregada automática del piloto cerrado sin contenido personal. Cotejo complementario en COMMUNITY_RELEASE.md. Incluye espacios independientes, rosario individual paso a paso, PDF seleccionado por el usuario, responsabilidades delegadas y capital de gracias con resumen protegido. Incluye frecuencias configurables, cursos/novena y repeticiones como reglas de producto; Misa como guía breve con lecturas del calendario romano general por Reader oficial Evangelizo. Variantes especiales explícitamente en revisión; no Misal completo ni validación costarricense. Sesión 3: revisión mensual opcional, preparación futura, permisos por categoría e invitaciones internas son reglas de producto. Misa prioriza lecturas y ofrece cuatro oraciones tradicionales de la selección parcial aprobada, sin declarar misal completo. Diseño final del Rosario B pendiente de recuperación; ver SESSION3_IMPLEMENTATION_20260927.md. Hoy compacto: separación visual de compromisos permanentes y cursos; avance de novena independiente del símbolo diario. Regla de producto aprobada, sin nueva enseñanza espiritual.",
   "verification": {
     "performedBy": "Codex — cotejo documental asistido, no representante del Movimiento",
     "date": "2026-09-27",
@@ -14,7 +14,7 @@
     "evidence": null
   },
   "reviewedContent": {
-    "app/app-panel.tsx": "ca4943ede5d71a863da90f862dbeba38a8d4efa05f35c1cb324b7239e50ad70b",
+    "app/app-panel.tsx": "20bce4b2482c6cc6d986c4efcbb067502f4dcf10cd55bc4e8715fbe980a63369",
     "app/back-button.tsx": "44dc52b178994e13e2c549ae431cb8247c8c991efab0fd364c49d65be29291aa",
     "app/choice-chips.tsx": "71ec7c79cb538a7d9b091f180fe532fe2f34404fd79eae77812b4dd2f6b0ee92",
     "app/commitment-review.tsx": "be4b4c58007bfb89b9730cf66d8e2c7d0049f95e3e8137aefdd13811205ed424",
@@ -29,7 +29,7 @@
     "app/habit-fields.tsx": "cc81768ae234574b13f5c18a073f1352e9a64c2d0aa0da2909d7c2cf40008b75",
     "app/home.tsx": "7158c2516c7f38932d426483e740fc092f771e6ecd49132be45a1be9cf4e13ad",
     "app/install-guide.tsx": "f646fef2fa459e0cbc7ee733b14fe78a5c0c9bd747b5e820b43ee8efb7a94309",
-    "app/journal.tsx": "a157b391579b56ac78e9c343a167cce05f298e76bcf614ff94e7fd6cb92921b6",
+    "app/journal.tsx": "9612650185b933eec9b509d3a070a81a47b9cfe257b6d54849e15863cccd76f9",
     "app/logo-viewer.tsx": "0c9eb87e7460b13a01efa51c6e3c2d40b942c76f3ebc5f5eaeb62e9e828689b8",
     "app/mass-prayers.tsx": "1e3168ea35000102f693e6d9b85cfbea933fdd4514b6753cf2da2cda01e08c96",
     "app/mass.tsx": "d1f7317be24cc1bf3e0246bee0d85699e7c21e7debf45dbd5bab04001cab4174",
@@ -48,11 +48,11 @@
     "app/reports.tsx": "5ae88c39467e8224d188362ec0d086d9bea080767e84e09065ba321ac982a134",
     "app/rhythm-progress.tsx": "43421ac09a390cc7f1b5ef2f2a762fca35e5ab29606c967fa0d701c62e4f5cf9",
     "app/rosary-preferences.tsx": "c70efc0fdecd41640352c76aff5464cc4713d70295e3f625d7d11c20580707da",
-    "app/spaces.tsx": "39941e8f3657eca30113093992ba75911c1382f7644a05c40561e7b4e9d3a9dd",
+    "app/spaces.tsx": "e5b8292a4b3874160b2ab8c9d803139662a1e96558f762e4f6bf514ced4952dc",
     "app/start-guide.tsx": "baffcd7196df2e96646ba2914fc0131f0c267ff17305daf8f28901463d991468",
     "app/symbol-picker.tsx": "4484e48b0eb65b7d44a66981703aeb6a3e867cbdf216e25689a4efbca99ef1cf",
     "app/symbol-progress.tsx": "6af7e38373017551eac2e8c1cfb1cc88395cd49a7a9f56cadc576e78d8f59b99",
-    "app/today-header.tsx": "d94b5f108969d5081c874af08673ef8982f87a6508f9e6539a18c15d111a6c3e",
+    "app/today-header.tsx": "9310d010f18224145bc9e069e6d76c41b38f15f61912a0bfe61acebca3aaa867",
     "app/use-prayer-screen.ts": "c845ee13e58de0c7f58804db51bd7edee155a02ced2f7af6efeda1c50ed57611",
     "app/version.ts": "e839241714078d26294f629d2d17885d070dff343413d3bb4be61a4f8aeae8b8",
     "components/ui/alert-dialog.tsx": "9a8d950f2b9b4352d5ebb762fb44d5c28c2d353aa29712071973656a8736e311",
