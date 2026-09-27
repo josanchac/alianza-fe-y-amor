@@ -40,3 +40,11 @@ CarPlay y push nativo quedan fuera de esta entrega; no se simula soporte. El inv
 - Invitaciones con espacio interior, título/remitente agrupados y acción independiente; acceso a rechazadas visualmente secundario.
 - TypeScript, session3-ui, commitment-actions-ui y compilación de revisión satisfactorios. Navegador: incremento observado de 1 a 2; etiquetas íntegras y controles de 44 px en Pareja; recorrido de invitaciones en 390 px. No equivale a prueba en iPhone real.
 - El usuario autorizó recuperación de Figma por navegador; tanto el enlace design como el enlace file suministrado devuelven “Site Unavailable”. Se requiere exportación del recurso aprobado para continuar esa integración.
+
+## Hoy sereno — dummy aprobado el 27 de septiembre, 08:36 CR
+
+Implementada la dirección aprobada del dummy `alianza-hoy-avance-vivo`: check a la izquierda (área 44 px), título como acceso al menú contextual, suma directa de sesiones, edición/deshacer/ayuda en el menú, filas sin tarjetas y reflexiones agrupadas bajo demanda. Se conservan confirmación de eliminación, historial, límites de repeticiones y permisos.
+
+Cabecera Hoy persistente y compacta al desplazarse; símbolo personal/foto y modo aro conservados. Avance diario independiente del semanal/mensual. Sin meta diaria, símbolo vacío y explicación al abrir Mi avance. Indicadores pequeños por semana/mes; adicionales expresados en texto y dorado luminoso, sin subir el denominador. Transición del llenado respeta reducir movimiento. No cambios de esquema ni escrituras de producción.
+
+Verificación: tipos y compilación; pruebas de acciones, recorridos, reflexiones, onboarding, sesión 3, ritmos y extras/deshacer. Navegador a 390 px: check a la izquierda con área 44 px; cabecera sticky con top 0 al desplazarse; ejercicio pasa de 1 a 4 y mantiene meta 3 con brillo y +1 adicional; no altera el valor diario. Marcar novena lleva el diario de 1 a 2. No se afirma prueba en dispositivos físicos. El recurso final de Rosario B continúa bloqueado por Figma y es independiente de estos símbolos de avance.

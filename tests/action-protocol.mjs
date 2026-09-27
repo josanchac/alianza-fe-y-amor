@@ -19,6 +19,6 @@ for(const file of new Set(audit.applied.map(a=>a.file))){
  }
  total+=current.length;
 }
-assert.equal(total,67);
+assert.equal(total,64);
 assert.equal(audit.applied.filter(a=>a.implementation==='external-link-preserved').length,1);
-console.log('PASS 67 retained classified actions, original tags and handlers preserved; institutional external source remains a link');
+console.log('PASS 64 retained classified actions, original tags and handlers preserved; institutional external source remains a link');

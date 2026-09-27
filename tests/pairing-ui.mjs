@@ -35,7 +35,7 @@ try{
  cleanup();calls.length=0;
  const today=localDate();let fixture={user:{id:'one',role:'member',email:'one@example.test',relationshipVersion:1,coupleId:null},own:[{owner:'one',kind:'spaces',key:'experience',version:1,data:{enabled:['personal','couple'],start:'personal'}},{owner:'one',kind:'profile',key:'me',data:{name:'Persona',ideal:'',shareSchedule:false,shareNotes:false},version:1,updated:''}],shared:[],partner:null,archives:[],invitations:[],marriageIdeal:null,today};
  const requests=[];async function request(init){if(init?.method==='POST'){const p=JSON.parse(init.body);requests.push(p);return Response.json({error:'No permitido en esta prueba'},{status:409});}return Response.json(fixture);}
- render(React.createElement(Journal,{dataRequest:request,onSignOut(){}}));await screen.findByRole('heading',{name:'Mis compromisos'});
+ render(React.createElement(Journal,{dataRequest:request,onSignOut(){}}));await screen.findByRole('heading',{name:/^(Hoy|Mi día)$/});
  assert.equal(screen.queryByRole('tab',{name:'En pareja'}),null);fireEvent.mouseDown(screen.getByRole('tab',{name:'Mi espacio'}),{button:0,ctrlKey:false});await screen.findByRole('heading',{name:'Podés empezar por vos'});assert.equal(screen.queryByRole('button',{name:'Preparar este momento'}),null);
  // Receive a linked state from the server, then hold a shared draft through an unlink.
  fixture={...fixture,user:{...fixture.user,coupleId:'pair',relationshipVersion:2},couple:{emblem:'neutral'},partner:{name:'Pareja',ideal:'',shareSchedule:false,shareNotes:false,records:[]},marriageIdeal:{text:'',version:0,confirmations:0,confirmedByMe:false}};

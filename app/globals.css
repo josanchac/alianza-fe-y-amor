@@ -9,6 +9,7 @@
 @import "./renewal.css";
 @import "./approved-experience.css";
 @import "./session3.css";
+@import "./today-serene.css";
 
 @utility scrollbar-thin {
   scrollbar-width: thin;
@@ -149,22 +150,6 @@
 .space-label-short{display:none}.workspace .s3-month-date{position:relative;display:flex;align-items:center;min-height:44px;padding:8px 12px;border-radius:13px;background:var(--app-control-soft);font-size:14px;color:var(--app-control-ink);white-space:nowrap}.workspace .s3-month-date input{position:absolute;inset:0;opacity:0;max-width:none!important;min-width:0!important;width:100%;height:100%;margin:0;cursor:pointer}.workspace .s3-month-date:focus-within{outline:3px solid var(--app-gold)}
 @media(max-width:700px){.space-label-full{display:none}.space-label-short{display:inline}.workspace .space-switcher .space-buttons{overflow:visible}.workspace .space-switcher .space-buttons button{flex:1;min-width:0;padding:8px 5px}.workspace .space-switcher .space-buttons button>svg{display:none}.workspace .s3-month-date{font-size:13px;padding:8px}.workspace .s3-month>.s3-row>button{max-width:140px}}
 /* Session 3 mobile feedback: content before controls, intact navigation labels. */
-.workspace .habit-row{position:relative;display:grid;grid-template-columns:minmax(0,1fr) 44px;gap:8px 12px;padding:18px 16px;background:var(--app-paper)}
-.workspace .habit-row .habit-copy{grid-column:1;grid-row:1;padding-right:0}
-.workspace .habit-title-line{display:block}
-.workspace .habit-title-line>label{display:block;font-size:20px;font-weight:600;line-height:1.35;color:var(--app-control-ink);overflow-wrap:break-word}
-.workspace .habit-title-line .frequency-chip{margin-top:5px;padding:0;background:transparent;font-size:12px;font-weight:400;color:var(--app-muted)}
-.workspace .habit-row .habit-check{grid-column:2;grid-row:1;align-self:start;margin:0!important;width:44px!important;height:44px!important;min-height:44px!important}
-.workspace .habit-row .habit-edit{position:absolute;right:16px;bottom:12px;width:44px;height:44px;padding:0;border:0;background:transparent;color:var(--app-muted)}
-.workspace .habit-period-progress{margin-top:10px;gap:8px}
-.workspace .habit-period-progress .symbol-progress{width:30px;height:30px;flex-shrink:0}
-.workspace .habit-period-progress svg,.workspace .habit-period-progress img{width:24px;height:24px}
-.workspace .habit-period-progress>div p{font-size:13px!important;color:var(--app-muted);line-height:1.4}
-.workspace .occurrence-controls{gap:6px;margin:8px 0 0}
-.workspace .occurrence-controls>span{font-size:13px;color:var(--app-muted);margin-right:4px}
-.workspace .occurrence-controls button{width:44px;height:44px;min-height:44px;padding:0;border:0;border-radius:50%;background:var(--app-control-soft)}
-.workspace .habit-row:has(.habit-edit) .habit-copy{padding-bottom:36px}
-.workspace .habit-row:has(.occurrence-controls) .habit-copy{padding-bottom:0}
 .workspace .couple-view-switch{display:flex;flex-wrap:wrap;background:transparent;border:0;padding:0;gap:6px}
 .workspace .couple-view-switch button{flex:0 0 auto;min-width:max-content;white-space:nowrap;word-break:normal;overflow-wrap:normal;padding:9px 12px;background:var(--app-control-soft);border-radius:18px;font-size:13px}
 .workspace .couple-view-switch button[aria-pressed=true]{background:var(--app-control-ink);color:white;box-shadow:none}
@@ -177,11 +162,4 @@
 .workspace .s3-invite-card button{flex-shrink:0}
 .workspace .s3-invites button.primary{background:var(--app-control-ink);color:white}
 .workspace .s3-invites .s3-invite-history{background:transparent;font-size:13px;margin-top:4px}
-.workspace .today-heading{display:grid;grid-template-columns:minmax(0,1fr) 52px auto;gap:10px;align-items:center;margin:8px 0 10px}
-.workspace .today-heading>div:first-child{grid-column:1}
-.workspace .today-heading h1{font-size:28px;line-height:1.2}
-.workspace .today-heading>.symbol-progress{width:52px;height:52px}
-.workspace .today-heading .symbol-progress svg,.workspace .today-heading .symbol-progress img{width:38px;height:38px}
-.workspace .today-heading .day-count{background:transparent;padding:0;font-size:14px;color:var(--app-muted)}
-.workspace .schedule-explainer{font-size:12px!important;margin:0 0 12px}
 .workspace .today-ideal{margin:12px 0;font-size:15px}

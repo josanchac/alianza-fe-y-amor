@@ -13,7 +13,7 @@ async function request(init){if(init?.method!=='POST')return Response.json(fixtu
 async function menu(name){fireEvent.pointerDown(screen.getByRole('button',{name:'Editar: '+name}),{button:0,ctrlKey:false,pointerType:'mouse'});await screen.findByRole('menu');}
 try{
  render(React.createElement(Journal,{dataRequest:request,onSignOut(){}}));
- await screen.findByRole('heading',{name:'Mis compromisos'});
+ await screen.findByRole('heading',{name:/^(Hoy|Mi día)$/});
  const progress=screen.getByRole('progressbar',{name:'Caminar'});assert.equal(progress.getAttribute('aria-valuenow'),'1');assert.equal(progress.getAttribute('aria-valuemax'),'3');assert(progress.querySelector('.symbol-progress-color').style.maskImage.includes('linear-gradient'));assert.equal(progress.querySelector('.symbol-progress-color').style.clipPath,'');
  await menu('Nuevo');fireEvent.click(screen.getByRole('menuitem',{name:'Eliminar compromiso'}));
  await screen.findByRole('alertdialog');fireEvent.click(screen.getByRole('button',{name:'Cancelar'}));assert.equal(writes.length,0);

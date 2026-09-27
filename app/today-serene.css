@@ -1,0 +1,66 @@
+/* Approved Today family: keep content and marking primary. */
+.workspace .serene-day .serene-heading{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--app-bg);margin:0;padding:18px 0 14px;border-bottom:1px solid transparent}
+.today-sentinel{height:1px}
+.workspace .serene-day .serene-heading.is-compact{padding-top:8px;padding-bottom:8px;border-bottom-color:var(--app-line)}
+.workspace .serene-heading h1{font:32px/1.2 Georgia,serif;margin:0;transition:font-size .2s}
+.workspace .serene-heading.is-compact h1{font-size:24px}
+.today-date{display:block;font-size:12px;color:var(--app-muted);margin-top:5px}
+.workspace .today-progress-button{display:flex;align-items:center;gap:8px;min-height:48px;background:none;border:0;padding:0;font:12px Arial,sans-serif;color:var(--app-muted)}
+.workspace .serene-heading .symbol-progress{width:44px;height:44px;margin:0;background:transparent;border-radius:0}
+.workspace .serene-heading .symbol-progress>span{inset:0}
+.workspace .serene-heading .symbol-progress svg,.workspace .serene-heading .symbol-progress img{width:42px;height:42px}
+.workspace .serene-heading .symbol-progress.is-ring{border-radius:50%;background:conic-gradient(var(--app-gold) var(--symbol-percent),var(--app-control-soft) 0)}
+.workspace .serene-heading .symbol-progress.is-ring>span{inset:3px}
+.workspace .serene-heading .symbol-progress.is-ring img,.workspace .serene-heading .symbol-progress.is-ring svg{width:30px;height:30px}
+.today-progress-detail{padding:12px 0;border-bottom:1px solid var(--app-line)}
+.today-progress-detail p{font-size:14px;color:var(--app-muted);margin:5px 0}
+.workspace .serene-day .today-ideal{font:15px/1.5 Georgia,serif;color:var(--app-gold);margin:10px 0 16px}
+.workspace .serene-day .purpose-strip{background:transparent;border:0;border-radius:0;margin:10px 0 24px;padding:0;gap:8px}
+.workspace .serene-day .purpose-strip>svg{display:none}
+.workspace .serene-day .purpose-strip p{font:21px/1.45 Georgia,serif;margin:5px 0 0}
+.workspace .serene-day .purpose-strip .small-title{font-size:12px}
+.workspace .serene-day .habit-group{margin:16px 0}
+.workspace .serene-day .habit-group>h3{font-size:12px;font-weight:400;margin:0 0 4px;color:var(--app-muted)}
+.workspace .serene-day .habit-group>h3 svg{display:none}
+.workspace .serene-day .habit-list{overflow:visible;border:0;border-radius:0;background:transparent}
+.workspace .serene-day .habit-row{position:relative;display:grid;grid-template-columns:44px minmax(0,1fr) 44px;align-items:start;gap:8px;min-height:82px;padding:14px 0;border:0;border-bottom:1px solid var(--app-line);background:transparent}
+.workspace .serene-day .habit-check{grid-column:1;grid-row:1;justify-self:center;width:44px!important;height:44px!important;min-height:44px!important;margin:0;position:relative;background:transparent!important;border:0!important;box-shadow:none!important;color:var(--app-paper)!important}
+.workspace .serene-day .habit-check:before{content:'';position:absolute;inset:9px;border:1.5px solid #7b8c94;border-radius:50%}
+.workspace .serene-day .habit-check[data-state=checked]:before{background:var(--app-control-ink);border-color:var(--app-control-ink)}
+.workspace .serene-day .habit-check [data-slot=checkbox-indicator]{position:relative;z-index:1}
+.workspace .serene-day .habit-copy{grid-column:2;grid-row:1;min-width:0;padding:0}
+.workspace .serene-day .habit-title-line{display:block}
+.workspace .serene-day .habit-title-button{display:block;min-height:44px;padding:0;text-align:left;width:100%;border:0;background:none;font:500 17px/1.4 Arial,sans-serif;color:var(--app-control-ink);overflow-wrap:break-word}
+.workspace .serene-day .frequency-chip{display:block;background:none;padding:0;margin:0;font-size:12px;font-weight:400;color:var(--app-muted)}
+.workspace .serene-day .habit-period-progress{display:flex;align-items:center;gap:6px;margin:0}
+.workspace .serene-day .habit-period-progress .symbol-progress{width:22px;height:22px;margin:0;background:none;border-radius:0}
+.workspace .serene-day .habit-period-progress .symbol-progress>span{inset:0}
+.workspace .serene-day .habit-period-progress .symbol-progress svg,.workspace .serene-day .habit-period-progress .symbol-progress img{width:22px;height:22px}
+.workspace .serene-day .habit-period-progress .symbol-progress.is-ring{border-radius:50%;background:conic-gradient(var(--app-gold) var(--symbol-percent),var(--app-control-soft) 0)}
+.workspace .serene-day .habit-period-progress .symbol-progress.is-ring>span{inset:2px;padding:2px}
+.workspace .serene-day .habit-period-progress .symbol-progress.is-ring svg,.workspace .serene-day .habit-period-progress .symbol-progress.is-ring img{width:14px;height:14px}
+.workspace .serene-day .habit-period-progress p{display:inline;font:12px/1.5 Arial,sans-serif!important;color:var(--app-muted);margin:0}
+.workspace .serene-day .habit-period-progress .additional-count{margin-left:5px;color:var(--app-gold)}
+.workspace .serene-day .occurrence-controls{position:absolute;right:0;top:14px;margin:0}
+.workspace .serene-day .occurrence-controls>span{display:none}
+.workspace .serene-day .occurrence-controls button{width:44px;height:44px;min-height:44px;padding:0;border:0;border-radius:50%;background:transparent;color:var(--app-muted)}
+.workspace .serene-day .habit-copy>p{font-size:12px;margin:2px 0}
+.workspace .serene-day .add-button{width:fit-content;border:0;margin:8px 0;padding:10px 0;font-weight:400;font-size:14px}
+.today-reflections{border-top:1px solid var(--app-line);margin-top:12px}
+.workspace .serene-day .today-reflections>summary{display:flex;align-items:center;justify-content:space-between;list-style:none;min-height:56px;cursor:pointer;font-size:16px}
+.today-reflections>summary::-webkit-details-marker{display:none}
+.today-reflections[open]>summary svg{transform:rotate(90deg)}
+.today-reflections>div{display:grid;padding-bottom:8px}
+.today-reflections button{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:48px;border:0;background:none;font-size:14px;text-align:left}
+.today-reflections button span{font-size:12px;color:var(--app-muted)}
+.workspace .serene-day .gentle-note{font-size:12px;margin:18px 0}
+.workspace .serene-day .symbol-progress.has-additional{box-shadow:none;filter:drop-shadow(0 0 3px #d9af5580)}
+.workspace .serene-day .symbol-progress.has-additional .symbol-progress-color{color:#c99524;filter:brightness(1.15) saturate(1.2)}
+.workspace .serene-day .symbol-progress.has-additional img{filter:brightness(1.1) saturate(1.15)}
+@media(prefers-reduced-motion:reduce){.workspace .serene-day *{transition:none!important}}
+@property --symbol-percent{syntax:'<percentage>';inherits:true;initial-value:0%}
+.symbol-progress{transition:--symbol-percent .4s ease}
+
+@media(prefers-reduced-motion:reduce){.symbol-progress{transition:none!important}}
+
+.workspace .serene-day .today-reflections>summary:before{content:none}

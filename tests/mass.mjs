@@ -45,7 +45,7 @@ try {
  const state={user:{id:'synthetic',role:'member',email:'synthetic@example.test',coupleId:null,relationshipVersion:1},own:[{owner:'synthetic',kind:'spaces',key:'experience',version:1,data:{enabled:['personal'],start:'personal'}},{owner:'synthetic',kind:'profile',key:'me',version:1,data:{name:'',ideal:'',shareSchedule:false,shareNotes:false}}],shared:[],partner:null,today:'2026-09-19'};
  const writes=[];
  render(React.createElement(Journal,{dataRequest:async init=>{if(init?.method==='POST')writes.push(init);return Response.json(state)},onSignOut(){}}));
- await screen.findByRole('heading',{name:'Mis compromisos'});
+ await screen.findByRole('heading',{name:/^(Hoy|Mi día)$/});
  fireEvent.mouseDown(screen.getByRole('tab',{name:'Oración',exact:true}),{button:0,ctrlKey:false});
  click('Misa');assert(screen.getByRole('region',{name:'Misa'}));
  date('2026-09-20');click('Oraciones');click('Volver a Oración');assert(screen.getByRole('button',{name:'Misa'}));assert.equal(writes.length,0);
