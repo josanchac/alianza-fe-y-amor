@@ -32,9 +32,9 @@ try{
  assert.equal(screen.getByRole('checkbox',{name:'Dos rosarios al mes'}).getAttribute('aria-checked'),'false');
  cleanup();
  render(React.createElement(ReflectionSummary,{rows:[row('journal',today,{gratitude:'Por la familia',offering:'Mi esfuerzo',meditation:'Una palabra que guardo'})],start:month+'-01',end:today}));
- assert(screen.getByRole('heading',{name:'Mis agradecimientos'}).parentElement.textContent.includes('Por la familia'));
- assert(screen.getByRole('heading',{name:'Mis ofrecimientos a la Mater'}).parentElement.textContent.includes('Mi esfuerzo'));
- assert(screen.getByRole('heading',{name:'Mis meditaciones'}).parentElement.textContent.includes('Una palabra que guardo'));
- assert.equal(document.querySelectorAll('time[datetime="'+today+'"]').length,3);
+ assert(screen.getByRole('button',{name:'Mis agradecimientos'}));assert(screen.getByText('Por la familia'));assert.equal(screen.queryByText('Mi esfuerzo'),null);
+ fireEvent.click(screen.getByRole('button',{name:'Mis ofrecimientos a la Mater'}));assert(screen.getByText('Mi esfuerzo'));
+ fireEvent.click(screen.getByRole('button',{name:'Mis meditaciones'}));assert(screen.getByText('Una palabra que guardo'));
+ assert.equal(document.querySelectorAll('time[datetime="'+today+'"]').length,1);
  console.log('PASS one commitment view, visible cadence chips, repeated monthly occasions and undo, dated gratitude, meditation and offering groups');
 }finally{cleanup();dom.window.close();}

@@ -1,5 +1,8 @@
 import {GroupsWorkspace} from './groups-workspace';
 import { useState, useRef } from "react";
+import {RosaryPreferences} from './rosary-preferences';
+import type {RosaryOpening} from '@/lib/rosary-guide';
+import {Settings} from 'lucide-react';
 import {PersonalRosary} from './personal-rosary';
 import {QuietProgress} from "./quiet-progress";
 import {AppPanel} from "./app-panel";
@@ -284,14 +287,19 @@ export function CreateRosary({
   groupId,
   onCreated,
   defaultScope="personal",
+  ownerId,preferences,onSavePreferences,
 }: {
   act: CommunityAction;
   busy: boolean;
   coupleId?: string | null;
   groupId?: string;
   onCreated?: () => void;
+  ownerId?:string;
+  preferences?:RosaryOpening;
+  onSavePreferences?:(value:RosaryOpening)=>Promise<boolean>;
   defaultScope?: "personal"|"couple";
 }) {
+  const [preferencesOpen,setPreferencesOpen]=useState(!preferences),[draftPreferences,setDraftPreferences]=useState<RosaryOpening>(preferences??{include:true,mary:'trinitarian',position:'end'});
   const [scope, setScope] = useState(groupId ? "group" : defaultScope);
   const today=localDate(), suggested=mysteriesFor(today);
   const [chosenMystery,setChosenMystery]=useState<Mystery|null>(null);
@@ -303,7 +311,10 @@ export function CreateRosary({
       submitLabel="Comenzar el rosario"
       busy={busy}
       submit={async (f) => {
-        await act({
+        const personal=!groupId&&scope==='personal';
+        if(personal&&onSavePreferences&&(!preferences||JSON.stringify(preferences)!==JSON.stringify(draftPreferences))&&!await onSavePreferences(draftPreferences))throw new Error('No se pudieron guardar tus preferencias.');
+        if(personal&&ownerId){try{sessionStorage.setItem('alianza-rosary-open:'+ownerId,id);}catch{}}
+        try {await act({
           action: "rosary_create",
           id,
           scope: groupId ? "group" : f.get("scope") || defaultScope,
@@ -313,6 +324,8 @@ export function CreateRosary({
           intention: f.get("intention"),
           startsWith: f.get("startsWith") || "me",
         });
+        }catch(error){if(personal&&ownerId){try{sessionStorage.removeItem('alianza-rosary-open:'+ownerId);}catch{}}throw error;}
+        setPreferencesOpen(false);
         setId(crypto.randomUUID());
         onCreated?.();
       }}
@@ -327,16 +340,8 @@ export function CreateRosary({
         </label>
       )}
       <div className="rosary-suggestion"><CalendarDays size={20} aria-hidden="true"/><div><strong>Hoy, {weekday}: {MYSTERIES[suggested].name.toLowerCase()}</strong><p>Sugeridos para hoy. Podés elegir otros.</p></div></div>
-      <label>
-        Misterios
-        <select name="mystery" value={chosenMystery??suggested} onChange={e=>setChosenMystery(e.target.value as Mystery)}>
-          {Object.entries(MYSTERIES).map(([id, m]) => (
-            <option value={id} key={id}>
-              {m.name}{id===suggested?" · sugeridos hoy":""}
-            </option>
-          ))}
-        </select>
-      </label>
+      <fieldset className="s3-mysteries"><legend>Misterios</legend><div className="s3-segments">{Object.entries(MYSTERIES).map(([key,m])=><label key={key}><input type="radio" name="mystery" value={key} checked={(chosenMystery??suggested)===key} onChange={()=>setChosenMystery(key as Mystery)}/><span>{m.name}</span></label>)}</div></fieldset>
+      {scope==='personal'&&onSavePreferences&&<><div className="s3-row"><span/><button type="button" className="action-button s3-icon" aria-label="Preferencias del rosario" aria-expanded={preferencesOpen} onClick={()=>setPreferencesOpen(!preferencesOpen)}><Settings size={22}/></button></div>{preferencesOpen&&<RosaryPreferences value={draftPreferences} onChange={setDraftPreferences} disabled={busy}/>}</>}
       <div hidden={scope==='personal'}><label>
         Forma de rezarlo
         <select name="mode">

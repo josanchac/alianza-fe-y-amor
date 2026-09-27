@@ -40,10 +40,10 @@ try{
  globalThis.fetch=async()=>new Response(xml());
  const {Mass}=await import('../app/mass.tsx');
  render(React.createElement(Mass,{now:()=>new Date('2026-09-20T12:00:00Z')}));
- fireEvent.click(screen.getByRole('button',{name:/Liturgia de la Palabra/}));
+
  fireEvent.click(await screen.findByRole('button',{name:'Primera lectura'}));
  assert.equal(screen.getByRole('button',{name:'Primera lectura'}).getAttribute('aria-expanded'),'true');
- fireEvent.click(screen.getByRole('button',{name:'Homilía',exact:true}));
+ fireEvent.click(screen.getByRole('button',{name:'Oraciones',exact:true}));fireEvent.click(screen.getByRole('button',{name:'Lecturas',exact:true}));await screen.findByRole('button',{name:'Primera lectura'});
  assert.equal(screen.getByRole('button',{name:'Primera lectura'}).getAttribute('aria-expanded'),'false');
  delete globalThis.__EVANGELIZO_REVIEW__;
  console.log('PASS XML/date/incomplete/duplicate/markup checks, range and special-date guards, retry, accordion and stale response cancellation');

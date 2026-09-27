@@ -13,7 +13,7 @@ function Harness({initial=base,checked={}}){const [r,setR]=React.useState(initia
 async function clear(){cleanup();sessionStorage.clear();localStorage.clear();calls.length=0;await act(()=>new Promise(r=>setTimeout(r,20)));}
 try{
  render(React.createElement(Harness));
- fireEvent.click(screen.getByRole('button',{name:'Hija, Madre y Esposa'}));
+ fireEvent.click(screen.getByRole('button',{name:'Preferencias de este rosario'}));fireEvent.click(screen.getByRole('button',{name:'Hija, Madre y Esposa'}));
  fireEvent.click(screen.getByRole('button',{name:'Empezar a rezar'}));
  await screen.findByRole('dialog');assert.equal(calls[0].action,'rosary_opening');assert.equal(calls[0].mary,'trinitarian');
  fireEvent.pointerDown(document.body);assert(screen.getByRole('dialog'));

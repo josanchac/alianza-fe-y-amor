@@ -65,7 +65,8 @@ export type Rosary = {
   slots: { decade: number; userId: string; done: boolean }[];
   mine: { decade: number; day: string }[];
 };
-export type CommunityState = { groups: CommunityGroup[]; rosaries: Rosary[] };
+export type CourseInvitation={id:string;groupId:string;name:string;senderName:string;status:'pending'|'declined';version:number;expiresAt:string};
+export type CommunityState = { invitations?:CourseInvitation[]; groups: CommunityGroup[]; rosaries: Rosary[] };
 export type CommunityAction = (
   payload: Record<string, unknown>,
 ) => Promise<any>;

@@ -66,7 +66,7 @@ try{
  assert.equal(screen.queryByText('Líder de amor'),null);assert(!document.body.textContent.includes('Neca'));assert.equal(document.querySelector('img[src$="emblem.png"]'),null);
  console.log('PASS A new couple sees its own identity and can start without an ideal');
  fireEvent.click(screen.getByRole('button',{name:'Mi mes',exact:true}));
- fireEvent.click(screen.getByRole('button',{name:'Anotar mi propósito'}));
+ fireEvent.click(screen.getByRole('button',{name:'Editar mi propósito'}));
  await screen.findByRole('dialog');
  const purpose=screen.getByRole('textbox',{name:'Mi propósito particular',exact:true});
  fireEvent.change(purpose,{target:{value:'Mi propósito de prueba'}});

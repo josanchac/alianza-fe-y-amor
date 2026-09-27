@@ -40,7 +40,7 @@ try{
  // Receive a linked state from the server, then hold a shared draft through an unlink.
  fixture={...fixture,user:{...fixture.user,coupleId:'pair',relationshipVersion:2},couple:{emblem:'neutral'},partner:{name:'Pareja',ideal:'',shareSchedule:false,shareNotes:false,records:[]},marriageIdeal:{text:'',version:0,confirmations:0,confirmedByMe:false}};
  fireEvent(window,new Event('focus'));fireEvent.click(screen.getByRole('button',{name:'En pareja',exact:true}));await screen.findByRole('tab',{name:'En pareja'});fireEvent.mouseDown(screen.getByRole('tab',{name:'En pareja'}),{button:0,ctrlKey:false});await screen.findByRole('heading',{name:'En pareja'});
- fireEvent.click(screen.getAllByRole('button',{name:'Preparar este momento'})[0]);await screen.findByRole('dialog');
+ fireEvent.click(screen.getByRole('button',{name:'Las 4 Rs',exact:true}));fireEvent.click(screen.getAllByRole('button',{name:'Preparar este momento'})[0]);await screen.findByRole('dialog');
  fixture={...fixture,user:{...fixture.user,coupleId:null,relationshipVersion:3},partner:null,couple:null,marriageIdeal:null};fireEvent(window,new Event('focus'));
  await screen.findByText(/La vinculación cambió. Tu borrador sigue aquí/);fireEvent.click(screen.getByRole('button',{name:'Guardar',exact:true}));await screen.findByText(/Cerrá este formulario y revisá tu espacio actualizado/);assert.equal(requests.length,0);
  console.log('PASS Individual UI hides shared editors; a draft from an old relationship cannot be saved into the next context');
