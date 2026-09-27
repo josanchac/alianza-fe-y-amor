@@ -32,3 +32,11 @@ Estado: implementación en rama `release/session3-20260927`, pendiente de public
 4. Actualizar número de versión y nota de lanzamiento al cerrar estos puntos. Esta rama no se anuncia como una publicación terminada.
 
 CarPlay y push nativo quedan fuera de esta entrega; no se simula soporte. El inventario de oraciones completo conserva su pendiente editorial explícito y no se presenta como resuelto.
+
+## Ajuste de revisión móvil — 27 septiembre, segunda iteración
+
+- Títulos de compromisos destacados, frecuencia y avance secundarios; sumar y deshacer pasan a iconos con nombre accesible y área de 44 px. Se conserva el comportamiento de registro. Cabecera diaria más compacta.
+- Navegación de Pareja mantiene palabras completas y distribuye opciones en filas sin comprimir cada palabra. Comprobado sin desbordamiento a 320 px.
+- Invitaciones con espacio interior, título/remitente agrupados y acción independiente; acceso a rechazadas visualmente secundario.
+- TypeScript, session3-ui, commitment-actions-ui y compilación de revisión satisfactorios. Navegador: incremento observado de 1 a 2; etiquetas íntegras y controles de 44 px en Pareja; recorrido de invitaciones en 390 px. No equivale a prueba en iPhone real.
+- El usuario autorizó recuperación de Figma por navegador; tanto el enlace design como el enlace file suministrado devuelven “Site Unavailable”. Se requiere exportación del recurso aprobado para continuar esa integración.
