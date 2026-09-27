@@ -1,4 +1,5 @@
-import {useEffect,useRef,useState,type CSSProperties} from 'react';
+import {rosaryArtwork} from "@/lib/rosary-artwork";
+import {useEffect,useMemo,useRef,useState,type CSSProperties} from 'react';
 import {ChevronLeft,ChevronRight,Cross,Pause,Settings} from 'lucide-react';
 import {type Rosary,type CommunityAction,MYSTERIES} from '@/lib/community';
 import {ROSARY_STEPS,DEFAULT_OPENING,prayerFor,nextPrayerStep,THREE_MARY_SOURCE,CONTRITION_SOURCE,rosaryStep,rosaryStepOrder,type RosaryOpening} from '@/lib/rosary-guide';
@@ -7,15 +8,10 @@ import {localDate} from '@/lib/domain';
 import {Dialog,DialogContent,DialogTitle,DialogDescription} from '@/components/ui/dialog';
 import {usePrayerScreen} from './use-prayer-screen';
 export function RosaryMap({step,opening=DEFAULT_OPENING}:{step:number;opening?:RosaryOpening}){
- const current=rosaryStep(step,opening),order=rosaryStepOrder(opening),doneBefore=(id:number)=>order.includes(id)&&order.indexOf(step)>order.indexOf(id);
- return <svg className="rosary-map" viewBox="0 0 300 255" role="img" aria-label={step===69?'Rosario concluido':current.decade===0?'Oraciones iniciales':current.decade===6?'Oraciones finales':`Misterio ${current.decade} de 5`}>
- <ellipse cx="150" cy="100" rx="106" ry="76" fill="none" className="rosary-thread"/>
- {Array.from({length:50},(_,i)=>{const d=Math.floor(i/10)+1,b=i%10+1,angle=(90+(i+.5)*360/50)*Math.PI/180;const index=7+(d-1)*12+b;const done=doneBefore(index),active=current.decade===d&&current.bead===b;return <circle key={i} cx={150+106*Math.cos(angle)} cy={100+76*Math.sin(angle)} r={active?5.8:3.8} className={active?'bead-current':done?'bead-complete':'bead-pending'}/>;})}
- {Array.from({length:5},(_,i)=>{const a=(90+i*72)*Math.PI/180,idx=7+i*12;return <circle key={i} cx={150+106*Math.cos(a)} cy={100+76*Math.sin(a)} r="5" className={step===idx?'bead-current':doneBefore(idx)?'bead-complete':'bead-pending'}/>;})}
- <path className="rosary-thread" d="M150 177v55m-9-7h18" fill="none"/>
- {[186,195,204].map((y,i)=><circle key={y} cx="150" cy={y} r="3" className={step===3+i?'bead-current':doneBefore(3+i)?'bead-complete':'bead-pending'}/>)}
- <text x="150" y="96" textAnchor="middle">{step===69?'5 / 5':current.decade>0&&current.decade<6?`${current.decade} / 5`:current.decade===0?'Inicio':'Cierre'}</text>
- <text className="rosary-map-caption" x="150" y="120" textAnchor="middle">{current.decade>0&&current.decade<6?'misterio':'Mi rosario'}</text>
+ const current=rosaryStep(step,opening);
+ const artwork=useMemo(()=>`data:image/svg+xml,${encodeURIComponent(rosaryArtwork(step,opening))}`,[step,opening]);
+ return <svg className="rosary-map" viewBox="0 0 342 306" role="img" aria-label={step===69?'Rosario concluido':current.decade===0?'Oraciones iniciales':current.decade===6?'Oraciones finales':`Misterio ${current.decade} de 5${current.bead?`, Avemaría ${current.bead} de 10`:''}`}>
+ <image href={artwork} width="342" height="306"/>
  </svg>;
 }
 

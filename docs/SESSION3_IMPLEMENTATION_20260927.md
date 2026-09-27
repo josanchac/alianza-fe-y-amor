@@ -71,3 +71,10 @@ A petición del usuario, se retira el engranaje junto a Personal/Pareja/Cursos. 
 ## Confirmación al marcar — 27 septiembre, 11:27 CR
 
 Se elimina el toast de éxito Guardado exclusivamente al guardar checks. El estado se actualiza tras la respuesta satisfactoria del servidor; el check, llenado y aura quedan libres de superposiciones. Se conservan toast de error, conflictos y confirmaciones de edición/reflexiones. TypeScript, approved-experience y build de revisión correctos.
+
+### Approved Rosario B artwork — supplied SVG integration
+- Received the complete resting and progress SVG exports; retained unchanged under `design/rosary/`.
+- Replaced the schematic RosaryMap with the exact approved resting artwork, including Schoenstatt medal and softened Christ. Dynamic blue gradients and an outlined current bead follow prayer order; no progress is baked into the resting asset.
+- Preserved opening preferences, back navigation, pause/resume and completion behavior. Three initial Avemarías correctly remain pending when configured after the mysteries.
+- Validated TypeScript, rosary comfort and prayer-order tests, every bead state in both orders, unchanged embedded medal image, exact resting source, and runtime build. Inspected the rendered fifth-Avemaría state.
+- This resolves the missing Rosario B illustration asset. Full Mass prayer content remains a separate release limitation; this entry does not authorize claiming that content complete.
