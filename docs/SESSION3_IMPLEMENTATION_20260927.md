@@ -84,3 +84,11 @@ Se elimina el toast de éxito Guardado exclusivamente al guardar checks. El esta
 - Mystery selection and remembered preferences use accessible dialogs; first-use preferences appear once on entry. Preferences save independently with visible failure recovery. Personal preparation mounts only when opened, avoiding first-use dialogs appearing behind other journeys.
 - Kept shared couple/group creation unchanged. Personal creation retains direct-resume marker, stable request ID and failure cleanup.
 - Verified typecheck, session3 UI and rosary comfort tests, runtime build, and 390px browser review: intention and start are visible together; mystery selection and preferences work.
+
+### Approved compact Pareja, Curso and Misa journeys
+- Pareja: bounded three-entry feed, full-row reading target, direct sharing, compact shortcuts and isolated detail views. Shared partner symbol is used only when present in the authorized response. Existing selective sharing and privacy rules remain intact.
+- Curso: real group names, invitation summary and reversible rejection retained; overview prioritizes the next encounter and current purpose. Participants, materials, rosary, capital and history remain reachable; administrative actions retain capability checks.
+- Misa: compact date disclosure, one reading at a time with a two-column selector, secondary prayer screen, collapsed font controls and sources. Special calendar choices, actual provider text and attribution remain. No synthetic readings introduced. Prayer coverage remains explicitly partial.
+- Tests updated only for approved navigation/label changes; data and permission assertions retained. Typecheck, community, session3, renewal and Mass suites passed before visual review.
+- Browser QA at 390px confirmed bounded partner feed, course invitation acceptance and course overview, and compact Mass controls. Live Evangelizo fetch returned an error; recovery controls remained available and no fabricated reading was substituted. Live reading availability is not claimed verified.
+- Full-suite run uncovered a pre-existing stale Rosario preparation test after its approved redesign; updated it to open the mystery picker and confirm the selection, preserving no-write/manual-choice assertions for all scopes.

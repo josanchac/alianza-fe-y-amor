@@ -11,6 +11,7 @@
 @import "./session3.css";
 @import "./today-serene.css";
 @import "./rosary-preparation.css";
+@import "./compact-journeys.css";
 
 @utility scrollbar-thin {
   scrollbar-width: thin;

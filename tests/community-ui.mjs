@@ -182,7 +182,8 @@ try {
   );
   fireEvent.click(screen.getByRole("button", { name: /Curso sintético/ }));
   assert.equal(screen.queryByText("PRIVATE DRAFT"), null);
-  assert(screen.getByText("Integrantes"));
+  fireEvent.click(screen.getByRole("button",{name:"Participantes",exact:true}));
+  assert(screen.getByRole("heading",{name:"Participantes"}));
   cleanup();
   console.log(
     "PASS community UI: absent data, explicit logs, private consent, partial prayer linking, beads without writes, and failed-save draft preservation",
