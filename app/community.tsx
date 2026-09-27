@@ -1,3 +1,4 @@
+import {RosaryPreparation} from './rosary-preparation';
 import {GroupsWorkspace} from './groups-workspace';
 import { useState, useRef } from "react";
 import {RosaryPreferences} from './rosary-preferences';
@@ -287,13 +288,14 @@ export function CreateRosary({
   groupId,
   onCreated,
   defaultScope="personal",
-  ownerId,preferences,onSavePreferences,
+  ownerId,preferences,onSavePreferences,onBack,
 }: {
   act: CommunityAction;
   busy: boolean;
   coupleId?: string | null;
   groupId?: string;
   onCreated?: () => void;
+  onBack?:()=>void;
   ownerId?:string;
   preferences?:RosaryOpening;
   onSavePreferences?:(value:RosaryOpening)=>Promise<boolean>;
@@ -305,6 +307,7 @@ export function CreateRosary({
   const [chosenMystery,setChosenMystery]=useState<Mystery|null>(null);
   const weekday=new Date(today+"T12:00:00").toLocaleDateString("es-CR",{weekday:"long"});
   const [id, setId] = useState(() => crypto.randomUUID());
+  if(!groupId&&!coupleId&&defaultScope==='personal')return <RosaryPreparation {...{act,busy,ownerId,preferences,onSavePreferences,onCreated,onBack}}/>;
   return (
     <Form
       title="Preparar mi rosario"

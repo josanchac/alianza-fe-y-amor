@@ -78,3 +78,9 @@ Se elimina el toast de éxito Guardado exclusivamente al guardar checks. El esta
 - Preserved opening preferences, back navigation, pause/resume and completion behavior. Three initial Avemarías correctly remain pending when configured after the mysteries.
 - Validated TypeScript, rosary comfort and prayer-order tests, every bead state in both orders, unchanged embedded medal image, exact resting source, and runtime build. Inspected the rendered fifth-Avemaría state.
 - This resolves the missing Rosario B illustration asset. Full Mass prayer content remains a separate release limitation; this entry does not authorize claiming that content complete.
+
+### Compact personal Rosario preparation — approved dummy implemented
+- Single preparation surface with standard back, quiet settings, mystery title/pencil, approved illustration, optional intention and sticky primary action. Removed redundant personal explanatory copy and outer card.
+- Mystery selection and remembered preferences use accessible dialogs; first-use preferences appear once on entry. Preferences save independently with visible failure recovery. Personal preparation mounts only when opened, avoiding first-use dialogs appearing behind other journeys.
+- Kept shared couple/group creation unchanged. Personal creation retains direct-resume marker, stable request ID and failure cleanup.
+- Verified typecheck, session3 UI and rosary comfort tests, runtime build, and 390px browser review: intention and start are visible together; mystery selection and preferences work.
