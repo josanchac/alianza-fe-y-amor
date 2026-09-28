@@ -5,11 +5,24 @@ import React from 'react';
 import {render,screen,fireEvent,cleanup,waitFor,within} from '@testing-library/react';
 import {MonthReview} from '../app/month-review.tsx';
 import {PartnerSharing} from '../app/partner-sharing.tsx';
+import {PairSectionBoundary} from '../app/pair-section-boundary.tsx';
 import {CourseInvitations} from '../app/course-invitations.tsx';
 import {CreateRosary} from '../app/community.tsx';
 const row=(kind,key,data)=>({owner:'synthetic',kind,key,data,version:1,updated:new Date().toISOString()});
 const h={title:'Caminar',moment:'Mañana',anchor:'',minimum:'',active:true,frequency:{period:'day',target:1}};
 try{
+ // Legacy commitments can arrive through the sharing DTO with frequency:null.
+ const legacy=row('habit','legacy',{...h,frequency:null});
+ render(React.createElement(PartnerSharing,{own:[],partner:{name:'Alex',records:[legacy]},profile:{shareSchedule:false,shareNotes:false},relationshipVersion:1,userId:'legacy-test',busy:false,onSave:async()=>true}));
+ assert(screen.getByRole('heading',{name:'Lo que te comparte'}));
+ assert(screen.getByText('Cada día'));
+ cleanup();
+ let failPair=true,returned=false;
+ function PairFailure(){if(failPair)throw Error('Synthetic rendering failure');return React.createElement('p',null,'Pareja recuperada');}
+ render(React.createElement(PairSectionBoundary,{onBack:()=>{returned=true;}},React.createElement(PairFailure)),{onCaughtError(){}});
+ assert(screen.getByRole('alert'));fireEvent.click(screen.getByRole('button',{name:'Volver a Personal'}));assert(returned);
+ failPair=false;fireEvent.click(screen.getByRole('button',{name:'Reintentar'}));assert(screen.getByText('Pareja recuperada'));
+ cleanup();
  let saved,prepared;const own=[row('habit','walk',h),row('habit','read',{...h,title:'Leer'})];
  render(React.createElement(MonthReview,{own,month:'2026-09',today:'2026-09-27',onMonth(){},edit(){},explore(){},onSave:async d=>{saved=d;return true;},onPrepare:async d=>{prepared=d;}}));
  fireEvent.change(screen.getByRole('textbox',{name:'¿Qué me ayudó?'}),{target:{value:'Pude escuchar con calma'}});
