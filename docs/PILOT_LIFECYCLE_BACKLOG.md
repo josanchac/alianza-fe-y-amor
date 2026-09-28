@@ -111,3 +111,6 @@ Implementado: relay Supabase para lecturas y cliente opt-in de GitHub Pages; acl
 Verificado: pruebas unitarias del relay/cliente, suite Misa, tipado, compilación; endpoint de pruebas rechaza solicitudes no autorizadas.
 Pendiente: carga de extremo a extremo con sesión válida y Safari, cotejo de variantes, control documental global, servicio/migraciones en producción y autorización final.
 Publicado: únicamente función mass-readings v1 en Supabase aislado; frontend privado sigue v14, piloto intacto.
+
+## Publicado: 20 septiembre, antes de las 10:00 Costa Rica
+0.3.0-alpha.1 ya está en el piloto, con mantenimiento retirado y datos previos preservados. Este estado sustituye los apartados anteriores que indicaban no publicado/no migrado. Evidencia y backlog vigente: [PUBLISHED_20260920.md](PUBLISHED_20260920.md). Variantes y textos especiales, calendario CR, pruebas humanas ampliadas y administración extendida siguen pendientes explícitos.

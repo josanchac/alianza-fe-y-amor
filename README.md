@@ -73,7 +73,7 @@ La configuración pública permite publicar sin secretos. Opcionalmente se puede
 - `app/journal.tsx`: registro personal, matrimonio, ajustes y controles de compartir.
 - `app/reports.tsx` y `lib/reports.ts`: historia, rangos y comparaciones.
 - `github/main.tsx`: entrada, recuperación de cuenta y transporte de datos.
-- `supabase/schema.sql`: esquema canónico y API con autorización y control de versiones.
+- `supabase/schema.sql`: referencia histórica del esquema inicial. Las instalaciones y actualizaciones vigentes se construyen con `supabase/migrations/` en orden; no ejecutar esta referencia sobre una base existente.
 - `tests/password-db.mjs` y `tests/multi-couple.mjs`: PostgreSQL real en PGlite, con identidades simuladas en el límite de Auth; regresiones, migración y aislamiento.
 - `app/install-guide.tsx`: guía pública y diálogo integrado para guardar el acceso en el teléfono.
 - `docs/MULTI_COUPLE.md`: flujo de invitaciones y actualización compatible.

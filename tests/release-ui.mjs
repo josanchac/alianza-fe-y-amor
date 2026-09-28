@@ -10,10 +10,10 @@ for(const [date,expected] of [['2026-09-13','glorious'],['2026-09-14','joyful'],
 for(const mode of ['personal','couple','group']){
  const calls=[];const act=async p=>{calls.push(p);return {groups:[],rosaries:[]};};
  render(React.createElement(CreateRosary,{act,busy:false,coupleId:mode==='couple'?'pair':undefined,groupId:mode==='group'?'group':undefined}));
- const chosen=screen.getByRole('combobox',{name:'Misterios'});const suggested=mysteriesFor(localDate());assert.equal(chosen.value,suggested);assert(screen.getByText(/Sugeridos para hoy/));assert.equal(calls.length,0);
+ const suggested=mysteriesFor(localDate());if(mode==='personal')fireEvent.click(screen.getByRole('button',{name:'Cambiar misterios'}));assert.equal(screen.getByRole('radio',{name:MYSTERIES[suggested].name+(mode==='personal'?' · Hoy':'')}).checked,true);if(mode!=='personal')assert(screen.getByText(/Sugeridos para hoy/));assert.equal(calls.length,0);
  if(mode==='couple')fireEvent.change(screen.getByRole('combobox',{name:'¿Con quién?'}),{target:{value:'couple'}});
- const alternate=Object.keys(MYSTERIES).find(k=>k!==suggested);fireEvent.change(chosen,{target:{value:alternate}});
- fireEvent.click(screen.getByRole('button',{name:'Comenzar el rosario'}));await waitFor(()=>assert.equal(calls.length,1));assert.equal(calls[0].mystery,alternate);assert.equal(calls[0].scope,mode);cleanup();
+ const alternate=Object.keys(MYSTERIES).find(k=>k!==suggested);fireEvent.click(screen.getByRole('radio',{name:MYSTERIES[alternate].name}));
+ if(mode==='personal')fireEvent.click(screen.getByRole('button',{name:'Listo'}));fireEvent.click(screen.getByRole('button',{name:'Comenzar el rosario'}));await waitFor(()=>assert.equal(calls.length,1));assert.equal(calls[0].mystery,alternate);assert.equal(calls[0].scope,mode);cleanup();
 }
 console.log('PASS day suggestions: all seven days, no automatic writes, manual choice respected for personal, couple and group prayer');
 dom.window.close();

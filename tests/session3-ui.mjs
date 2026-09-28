@@ -1,0 +1,28 @@
+import {readMonthlyReview} from '../lib/monthly-review.ts';
+import assert from 'node:assert/strict';
+import {dom} from './dom.mjs';
+import React from 'react';
+import {render,screen,fireEvent,cleanup,waitFor,within} from '@testing-library/react';
+import {MonthReview} from '../app/month-review.tsx';
+import {PartnerSharing} from '../app/partner-sharing.tsx';
+import {CourseInvitations} from '../app/course-invitations.tsx';
+import {CreateRosary} from '../app/community.tsx';
+const row=(kind,key,data)=>({owner:'synthetic',kind,key,data,version:1,updated:new Date().toISOString()});
+const h={title:'Caminar',moment:'Mañana',anchor:'',minimum:'',active:true,frequency:{period:'day',target:1}};
+try{
+ let saved,prepared;const own=[row('habit','walk',h),row('habit','read',{...h,title:'Leer'})];
+ render(React.createElement(MonthReview,{own,month:'2026-09',today:'2026-09-27',onMonth(){},edit(){},explore(){},onSave:async d=>{saved=d;return true;},onPrepare:async d=>{prepared=d;}}));
+ fireEvent.change(screen.getByRole('textbox',{name:'¿Qué me ayudó?'}),{target:{value:'Pude escuchar con calma'}});
+ fireEvent.click(screen.getByRole('button',{name:'Consultar lo que viví este mes',hidden:true}));
+ fireEvent.click(screen.getByRole('button',{name:'Volver a mi revisión',hidden:true}));assert.equal(screen.getByRole('textbox',{name:'¿Qué me ayudó?'}).value,'Pude escuchar con calma');
+ fireEvent.click(screen.getByRole('button',{name:'Guardar revisión'}));await waitFor(()=>assert(saved));assert.equal(readMonthlyReview(saved.review).answers[0],'Pude escuchar con calma');
+ fireEvent.click(screen.getByRole('button',{name:'Preparar el siguiente mes'}));const all=screen.getByRole('checkbox',{name:'Todos'});assert(all.checked);fireEvent.click(screen.getByRole('checkbox',{name:'Leer',exact:true}));assert(all.indeterminate);
+ fireEvent.click(screen.getByRole('button',{name:'Editar Caminar'}));fireEvent.change(screen.getByRole('combobox',{name:'Frecuencia'}),{target:{value:'course'}});assert.equal(screen.getByLabelText('Empiezo el').value,'2026-10-01');fireEvent.click(screen.getByRole('radio',{name:'Solo ciertos días de la semana'}));fireEvent.click(screen.getByRole('button',{name:'Aplicar cambios'}));fireEvent.click(screen.getByRole('button',{name:'Guardar octubre de 2026'}));await waitFor(()=>assert(prepared));assert.equal(prepared.items[1].keep,false);assert.deepEqual(prepared.items[0].data.frequency.course.weekdays,[1,3,5]);assert.equal(own[0].data.frequency.course,undefined);
+ cleanup();let sharing;const many=Array.from({length:30},(_,i)=>row('journal','2026-09-'+String(i+1).padStart(2,'0'),{gratitude:'Reflexión '+i}));
+ render(React.createElement(PartnerSharing,{own:[...own,...many],partner:{name:'Alex',records:many},profile:{shareSchedule:false,shareNotes:false},relationshipVersion:1,userId:'test',busy:false,onSave:async d=>{sharing=d;return true;}}));assert.equal(document.querySelectorAll('.s3-latest article').length,3);fireEvent.click(screen.getAllByRole('button',{name:'Leer',exact:true})[0]);assert(screen.getByRole('button',{name:'Volver a lo que me comparte'}));fireEvent.click(screen.getByRole('button',{name:'Volver a lo que me comparte'}));
+ fireEvent.click(screen.getByRole('button',{name:'Comparto',exact:true}));const category=screen.getByRole('group',{name:'Compartir Agradecimientos'});fireEvent.click(within(category).getByRole('button',{name:'Todo',exact:true}));assert.equal(screen.getByRole('checkbox',{name:'También lo que agregue después'}).checked,false);fireEvent.click(screen.getByRole('button',{name:'Guardar cambios'}));await waitFor(()=>assert(sharing));assert.equal(sharing.categories.gratitude.keys.length,30);assert.equal(sharing.categories.gratitude.future,false);assert.equal(sharing.symbol,false);
+ cleanup();const calls=[];function Invites(){const [invitations,set]=React.useState([{id:'invite',groupId:'group',name:'Curso',senderName:'Alex',status:'pending',version:1,expiresAt:'2026-10-02'}]);return React.createElement(CourseInvitations,{invitations,busy:false,act:async p=>{calls.push(p);set(xs=>xs.map(i=>({...i,status:p.action==='course_decline'?'declined':'pending',version:i.version+1})));}});}
+ render(React.createElement(Invites));fireEvent.click(screen.getByRole('button',{name:'Ver invitación'}));fireEvent.click(screen.getByRole('button',{name:'Ahora no'}));assert.equal(calls.length,0);fireEvent.click(screen.getByRole('button',{name:'Ver invitación'}));fireEvent.click(screen.getByRole('button',{name:'Rechazar invitación'}));assert.equal(calls.length,0);fireEvent.click(screen.getByRole('button',{name:'Sí, rechazar'}));fireEvent.click(await screen.findByRole('button',{name:'Deshacer'}));await waitFor(()=>assert.equal(calls.length,2));assert.equal(calls[1].action,'course_restore');assert.equal(calls[1].version,2);
+ cleanup();globalThis.FormData=dom.window.FormData;const actions=[],prefs={include:true,mary:'trinitarian',position:'end'};render(React.createElement(CreateRosary,{ownerId:'synthetic',preferences:prefs,onSavePreferences:async()=>{throw Error('Must not rewrite unchanged preferences')},busy:false,act:async p=>{actions.push(p);assert.equal(sessionStorage.getItem('alianza-rosary-open:synthetic'),p.id);return {};}}));assert.equal(screen.queryByText('Tu manera de rezar'),null);fireEvent.click(screen.getByRole('button',{name:'Comenzar el rosario'}));await waitFor(()=>assert.equal(actions.length,1));assert.equal(actions[0].action,'rosary_create');
+ console.log('PASS session3 UI: monthly answers preserved in consultation, save wired, selective carry, recurrence next-month start, bounded partner feed, future privacy off, invitation confirm/undo, remembered rosary preferences and direct-start marker');
+}finally{cleanup();dom.window.close();}

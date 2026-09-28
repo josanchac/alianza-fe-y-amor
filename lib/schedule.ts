@@ -1,9 +1,9 @@
 import {type RecordItem} from './domain.ts';
 import {rangeFor,shift} from './reports.ts';
-export type Frequency={period:'day'|'week'|'month';target:number;unit?:'days'|'times';weekdays?:number[];course?:{start:string;days:number;resumedOn?:string}};
+export type Frequency={period:'day'|'week'|'month';target:number;unit?:'days'|'times';weekdays?:number[];course?:{start:string;days:number;weekdays?:number[];resumedOn?:string}};
 export type Plan=Frequency&{from:string;active:boolean};
 export const daily:Frequency={period:'day',target:1};
-export function frequencyLabel(f:Frequency=daily){return f.course?`${f.course.days} días · desde ${f.course.start}`:f.weekdays?f.weekdays.map(d=>['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'][d]).join(' · '):f.period==='day'?(f.unit==='times'?`${f.target} ${f.target===1?'vez':'veces'} al día`:'Cada día'):`${f.target} ${f.unit==='times'?(f.target===1?'vez':'veces'):(f.target===1?'día':'días')} por ${f.period==='week'?'semana':'mes'}`;}
+export function frequencyLabel(f:Frequency=daily){return f.course?`${f.course.days} días${f.course.weekdays ? f.course.weekdays.length===7 ? " consecutivos" : " · "+f.course.weekdays.map(d=>["Dom","Lun","Mar","Mié","Jue","Vie","Sáb"][d]).join(", ") : ""} · desde ${f.course.start}`:f.weekdays?f.weekdays.map(d=>['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'][d]).join(' · '):f.period==='day'?(f.unit==='times'?`${f.target} ${f.target===1?'vez':'veces'} al día`:'Cada día'):`${f.target} ${f.unit==='times'?(f.target===1?'vez':'veces'):(f.target===1?'día':'días')} por ${f.period==='week'?'semana':'mes'}`;}
 export function registeredCount(value:unknown){return value==='done'?1:typeof value==='number'&&Number.isInteger(value)&&value>0?value:0;}
 export function plansFor(rows:RecordItem[],key:string):Plan[]{return rows.find(r=>r.kind==='habit_plan'&&r.key===key)?.data.versions??[];}
 export function planAt(plans:Plan[],date:string){return [...plans].reverse().find(p=>p.from<=date);}
@@ -13,6 +13,7 @@ export function courseProgress(rows:RecordItem[],key:string,date:string,frequenc
  const before=checks.filter(r=>r.key<date&&registeredCount(r.data[key])>0).length;
  const doneToday=checks.some(r=>r.key===date&&registeredCount(r.data[key])>0);
  const previous=shift(date,-1);
+ if(course.weekdays){let scheduled=0;for(let day=course.start;day<date;day=shift(day,1)){if(course.weekdays.includes(new Date(day+'T12:00:00Z').getUTCDay()))scheduled++;if(scheduled>=course.days)break;}return {day:Math.min(scheduled+1,course.days),done:before+Number(doneToday),total:course.days,doneToday,finishedBefore:scheduled>=course.days,complete:before+Number(doneToday)>=course.days,paused:false};}
  return {day:Math.min(before+1,course.days),done:before+Number(doneToday),total:course.days,doneToday,finishedBefore:before>=course.days,complete:before+Number(doneToday)>=course.days,
  paused:date>course.start&&!doneToday&&before<course.days&&!checks.some(r=>r.key===previous&&registeredCount(r.data[key])>0)&&course.resumedOn!==date};
 }
@@ -21,6 +22,7 @@ export function isActiveOn(rows:RecordItem[],habit:RecordItem,date:string){
  const plans=plansFor(rows,habit.key),at=plans.length?planAt(plans,date):{...habit.data.frequency,active:habit.data.active};
  if(!at?.active)return false;
  if(at.weekdays&&!at.weekdays.includes(new Date(date+'T12:00:00Z').getUTCDay()))return false;
+ if(at.course?.weekdays&&!at.course.weekdays.includes(new Date(date+'T12:00:00Z').getUTCDay()))return false;
  if(at.course&&(date<at.course.start||courseProgress(rows,habit.key,date,at)?.finishedBefore))return false;
  return true;
 }

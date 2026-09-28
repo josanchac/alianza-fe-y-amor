@@ -1,0 +1,25 @@
+.workspace .rosary-preparation{max-width:430px;margin:0 auto;color:var(--app-ink,#203e4b)}
+.workspace .rosary-preparation-header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 20px}
+.workspace .rosary-preparation-header h2{font:500 18px/1.3 system-ui;margin:0}
+.rosary-quiet-icon{display:grid;place-items:center;min-width:44px;min-height:44px;background:transparent;border:0;border-radius:50%;color:inherit;padding:10px}
+.workspace .rosary-mystery-heading{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.workspace .rosary-mystery-heading p{font:14px/1.4 system-ui;color:var(--app-muted,#63747a);margin:0 0 4px}
+.workspace .rosary-mystery-heading h3{font:400 28px/1.2 Georgia,serif;margin:0}
+.workspace .rosary-preparation .rosary-map{width:100%;height:clamp(210px,34dvh,290px);margin:12px auto}
+.workspace .rosary-intention{display:block;font:14px/1.4 system-ui;color:var(--app-muted,#63747a)}
+.workspace .rosary-intention input{display:block;width:100%;margin:8px 0 0;border-radius:16px;padding:13px 16px;font:16px/1.4 system-ui}
+.workspace .rosary-preparation footer{position:sticky;bottom:calc(84px + env(safe-area-inset-bottom));padding:14px 0 8px;background:var(--app-paper,#faf9f4);z-index:2}
+.workspace .rosary-preparation footer .primary{width:100%;min-height:52px;border-radius:18px;justify-content:center}
+.rosary-preparation-sheet header{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.rosary-preparation-sheet fieldset{border:0;margin:6px 0;padding:0;min-width:0}
+.rosary-preparation-sheet legend{font-weight:500;margin-bottom:8px}
+.rosary-preparation-sheet fieldset label{display:flex;align-items:center;gap:12px;min-height:50px;padding:10px 0;border-bottom:1px solid #d9dcd6}
+.rosary-preparation-sheet input[type=radio]{width:20px;height:20px;margin:0;flex-shrink:0;accent-color:#203e4b}
+.rosary-preparation-sheet .primary{min-height:50px;border-radius:16px}
+@media(max-width:600px){html body .rosary-preparation-sheet{top:auto;bottom:0;left:0;right:0;transform:none;width:100%;max-width:none;max-height:90dvh;overflow-y:auto;border-radius:26px 26px 0 0;padding:20px 24px calc(24px + env(safe-area-inset-bottom))}}
+
+.workspace.preparing-rosary>.topbar,.workspace.preparing-rosary>.space-switcher{display:none}
+html body [data-slot="dialog-content"].rosary-preparation-sheet{padding:20px 24px!important;gap:12px;background:#faf9f4;color:#203e4b}
+html body .rosary-preparation-sheet fieldset label{margin:0;gap:12px;min-height:48px;padding:10px 0}
+html body .rosary-preparation-sheet header{margin:0;padding:0}
+@media(max-width:600px){html body [data-slot="dialog-content"].rosary-preparation-sheet{top:auto!important;bottom:0!important;left:0!important;right:0!important;width:100%!important;max-width:none!important;max-height:90dvh!important;margin:0!important;border-radius:26px 26px 0 0!important;padding-bottom:calc(24px + env(safe-area-inset-bottom))!important}}

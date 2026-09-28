@@ -13,10 +13,10 @@ const writes=[];
 async function request(init){if(init?.method!=='POST')return Response.json(fixture);const p=JSON.parse(init.body);writes.push(p);const record={...row(p.kind,p.key,p.data),version:p.version+1};fixture.own=[...fixture.own.filter(r=>r.kind!==p.kind||r.key!==p.key),record];return Response.json({record});}
 try{
  render(React.createElement(Journal,{dataRequest:request,onSignOut(){}}));
- await screen.findByRole('heading',{name:'Mis compromisos'});
- assert(screen.getByLabelText('1 de 1 compromisos diarios'));
+ await screen.findByRole('heading',{name:/^(Hoy|Mi día)$/});
+ assert.equal(screen.getByRole('progressbar',{name:'Compromisos diarios'}).getAttribute('aria-valuenow'),'1');
  await screen.findByText('Dos rosarios al mes');
- assert(screen.getByText('Mensual'));
+ assert(screen.getByText(/este mes/));
  assert.equal(screen.queryByRole('button',{name:'Agregar otro'})===null,true);
  assert.equal(screen.getAllByRole('checkbox').length,2);
  fireEvent.click(screen.getByRole('checkbox',{name:'Dos rosarios al mes'}));
@@ -24,17 +24,18 @@ try{
  fireEvent.click(await screen.findByRole('button',{name:'Agregar otro'}));
  await waitFor(()=>assert.equal(fixture.own.find(r=>r.kind==='checks').data.rosary,2));
  await waitFor(()=>assert(screen.getByText(/2 de 2 veces/)));
- fireEvent.click(screen.getByRole('button',{name:'Deshacer último'}));
+ fireEvent.pointerDown(screen.getByRole('button',{name:'Editar: Dos rosarios al mes'}),{button:0,ctrlKey:false,pointerType:'mouse'});
+ fireEvent.click(await screen.findByRole('menuitem',{name:'Deshacer último'}));
  await waitFor(()=>assert.equal(fixture.own.find(r=>r.kind==='checks').data.rosary,1));
- assert(screen.getByLabelText('1 de 1 compromisos diarios'));
+ assert.equal(screen.getByRole('progressbar',{name:'Compromisos diarios'}).getAttribute('aria-valuenow'),'1');
  fireEvent.click(screen.getByRole('checkbox',{name:'Dos rosarios al mes'}));
  await waitFor(()=>assert.equal(screen.queryByRole('button',{name:'Agregar otro'})===null,true));
  assert.equal(screen.getByRole('checkbox',{name:'Dos rosarios al mes'}).getAttribute('aria-checked'),'false');
  cleanup();
  render(React.createElement(ReflectionSummary,{rows:[row('journal',today,{gratitude:'Por la familia',offering:'Mi esfuerzo',meditation:'Una palabra que guardo'})],start:month+'-01',end:today}));
- assert(screen.getByRole('heading',{name:'Mis agradecimientos'}).parentElement.textContent.includes('Por la familia'));
- assert(screen.getByRole('heading',{name:'Mis ofrecimientos a la Mater'}).parentElement.textContent.includes('Mi esfuerzo'));
- assert(screen.getByRole('heading',{name:'Mis meditaciones'}).parentElement.textContent.includes('Una palabra que guardo'));
- assert.equal(document.querySelectorAll('time[datetime="'+today+'"]').length,3);
+ assert(screen.getByRole('button',{name:'Mis agradecimientos'}));assert(screen.getByText('Por la familia'));assert.equal(screen.queryByText('Mi esfuerzo'),null);
+ fireEvent.click(screen.getByRole('button',{name:'Mis ofrecimientos a la Mater'}));assert(screen.getByText('Mi esfuerzo'));
+ fireEvent.click(screen.getByRole('button',{name:'Mis meditaciones'}));assert(screen.getByText('Una palabra que guardo'));
+ assert.equal(document.querySelectorAll('time[datetime="'+today+'"]').length,1);
  console.log('PASS one commitment view, visible cadence chips, repeated monthly occasions and undo, dated gratitude, meditation and offering groups');
 }finally{cleanup();dom.window.close();}

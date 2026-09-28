@@ -36,7 +36,7 @@ try{
  render(React.createElement(Form));assert(screen.getByRole('checkbox',{name:'Permitir más de una vez al día'}).checked);
  fireEvent.change(screen.getByRole('combobox',{name:'Frecuencia'}),{target:{value:'course'}});
  assert.equal(screen.queryByRole('checkbox',{name:'Permitir más de una vez al día'}),null);
- assert.equal(screen.getByRole('spinbutton',{name:'Durante cuántos días'}).value,'9');
+ assert.equal(screen.getByRole('spinbutton',{name:'Durante cuántos días'}).value,'10');
  assert.equal(value.frequency.unit,'days');assert.equal(value.frequency.target,1);
  fireEvent.change(screen.getByRole('combobox',{name:'Frecuencia'}),{target:{value:'month'}});
  assert(screen.getByRole('checkbox',{name:'Permitir más de una vez al día'}));assert.equal(screen.queryByRole('spinbutton',{name:'Durante cuántos días'}),null);

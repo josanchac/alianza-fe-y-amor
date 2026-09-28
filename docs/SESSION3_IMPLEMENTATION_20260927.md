@@ -1,0 +1,111 @@
+# Sesión 3 — integración en revisión, 27 septiembre 2026
+
+## Cierre de validación — 27 septiembre, noche CR
+
+### Lecturas en vivo — 19:29 CR
+
+- Nueva prueba optativa: `ALIANZA_LIVE_READINGS=1 node --import tsx tests/mass-live.mjs`. No forma parte de la suite determinista ni usa sesiones/BD.
+- PASS mediante el cargador y parser reales: 2026-09-26 (3 lecturas), 2026-09-27 (4), 2026-09-28 (3); referencias y textos presentes, fecha correspondiente.
+- Servicio de producción `mass-readings` activo; OPTIONS desde el origen del piloto devuelve 204 y CORS correcto. GET sin sesión devuelve 401. No se modificó la función ni se leyó contenido de usuarios.
+- Pendiente: recorrido completo con sesión real desde la interfaz. Estas comprobaciones NO acreditan ese recorrido.
+- El usuario difiere cualquier contacto con CONALI hasta ampliar el piloto; no se envían consultas. Oraciones completas siguen pendientes y no se sustituyen por enlaces.
+
+- Pareja usa Compartimos / Medios ascéticos. La prueba de vinculación recorre esta nueva navegación y conserva el rechazo de escrituras de un borrador perteneciente a una vinculación anterior.
+- TypeScript, compilación de producción, integridad documental y diff sin errores pasan. La compilación mantiene una advertencia de tamaño de bundle; no equivale a publicación.
+- Consulta directa al Reader oficial para 2026-09-27: HTTP 200 y cuatro lecturas procesadas por el parser de la app, celebración 26o domingo del Tiempo Ordinario. Esta comprobación no acredita todavía el transporte autenticado ni el recorrido completo en la app.
+- La cobertura parcial de cuatro oraciones requiere decisión expresa de alcance antes de anunciar una guía completa. No hay cambios en datos del piloto ni migraciones de producción.
+- Suite completa `npm test` repetida tras actualizar la prueba de navegación: PASS, salida 0. Incluye sesión 3 UI/DB y privacidad. No sustituye la validación externa con JWT/API real en CI ni las pruebas en dispositivos físicos.
+
+Estado actualizado: implementación en rama `release/session3-20260927`, pendiente de publicación al piloto. Se conserva `main` y no se aplicaron migraciones en producción. Rosario B ya está integrado desde los SVG aprobados; las menciones posteriores a su exportación pendiente son el registro histórico de iteraciones anteriores. Permanecen pendientes la disponibilidad de lecturas en vivo, el alcance editorial parcial de Misa y la validación de integración/despliegue.
+
+## Cambios implementados
+
+- Misa abre Lecturas, conserva fecha y calendario especial; Oraciones abre una lista con lectura dedicada y regreso circular. Sin explicaciones repetidas ni placeholders en cada momento.
+- **Contenido de Misa parcial:** cuatro oraciones tradicionales del prototipo aprobado (Kyrie, Credo de los Apóstoles, Padre nuestro y Cordero de Dios). Padre nuestro reutiliza el texto existente omitiendo el Amén final para este contexto. No se afirma guía completa, cotejo de edición costarricense ni autorización editorial de los textos pendientes. Fuentes consultadas en los documentos de aprobación, referencias visibles por oración. No se añadieron Gloria, Santo, Credo niceno ni textos modernos sin resolver procedencia y reproducción.
+- Revisión mensual con tres preguntas opcionales. Consulta por categoría con tres reflexiones por página. Móvil revela consulta aparte; escritorio consulta a la izquierda y escritura a la derecha. Propósito anterior editable; notas previas se conservan como texto legible.
+- Preparación del próximo mes independiente del cierre, Todos con estado parcial, selección por compromiso y edición de recurrencia. Guarda un plan separado; al entrar el mes se aplica sin reescribir registros anteriores. Ediciones posteriores a la planificación prevalecen. Planes separados por época de datos para no reaparecer tras un reinicio de cuenta.
+- Compromisos por tiempo: días consecutivos o días de semana seleccionados; cantidad programada sin extenderse automáticamente por una omisión. Novenas anteriores conservan semántica e historial.
+- Pareja: Me comparte/Comparto; últimas tres novedades de la semana, consulta paginada por categoría y mes, marca Nuevo local acotada, sin contador acumulativo. Permisos Nada/Todo/Elegir por categoría, futuros desactivados inicialmente, avance y símbolo independientes. Filtrado de campos en servidor, sin notas privadas de compromisos. Se conservan elecciones de compartición anteriores hasta que el propietario guarde las nuevas.
+- Curso: invitación asociada a la cuenta destinataria, no exige compartir un enlace. Ahora no, confirmación de rechazo, Deshacer, recuperación mientras esté vigente, control de versión y revocación. No envíos de correo ni push nativo nuevos.
+- Rosario: preferencias de cuenta reutilizables, engranaje, opciones de misterios como selección directa y entrada al rezo al crearlo. La base ya admite varios rosarios personales; no se cancela uno al iniciar otro. **La ilustración B aprobada sigue pendiente de exportación e integración; no se ha sustituido por una aproximación.**
+- Símbolo: encuadre de foto con zoom y posición, esquinas redondeadas en la propia imagen; color gradual o aro, vista 0/50/100. Miniatura JPEG reencodificada sin metadatos originales, límites existentes conservados.
+- Regreso circular compartido y controles compactos. El diagnóstico anterior de acciones conserva 67 controles sin alterar su comportamiento; ocho controles reemplazados se documentan como superseded en la auditoría. Revocación de invitaciones permanece accesible.
+
+## Evidencia
+
+- `npm test`: suite completa pasa, incluidos privacidad, datos sintéticos, invitaciones, reinicio, convivencia con historial, lecturas, accesibilidad semántica y contratos de acciones. No equivale a pruebas de percepción o dispositivos reales.
+- `tests/session3-db.mjs`: categorías privadas, selección en servidor, revocación, terceros sin acceso, versionado, destinatario exclusivo, rechazo/recuperación, aplicación mensual una sola vez, preferencias de rosario reutilizadas y aislamiento de planes tras reinicio.
+- `tests/session3-ui.mjs`: consulta conserva respuestas, guardado mensual, Todos parcial, recurrencia con inicio en siguiente mes, lista acotada, futuros privados, rechazo confirmado y Deshacer, preferencias guardadas y marcador de inicio directo.
+- Tipado TypeScript y compilación de revisión pasan. Después de los últimos ajustes se repitieron las pruebas afectadas de sesión 3, onboarding, acciones y recorrido mensual.
+- Navegador de revisión con datos sintéticos: escritorio y iframe de 390 px; guardado de revisión, preparación del mes, edición de frecuencia y fecha 1 de octubre. No se probaron Safari/iOS/Android reales ni CarPlay.
+- Vista privada reutiliza el sitio autorizado. Datos de ejemplo se reinician al recargar. Su transporte simulado no acredita sincronización real; esta se prueba en PGlite y queda pendiente de verificación del despliegue.
+
+## Pendientes antes del despliegue
+
+1. Resolver disponibilidad de lecturas en vivo y acordar expresamente si esta entrega mantiene las cuatro oraciones actuales, sin presentar Misa como completa.
+2. Completar la matriz de comprobación visual pendiente; no equiparar la revisión en navegador con dispositivos físicos. Rosario B ya integrado y revisado en navegador.
+3. Validación de invitaciones con JWT/API real en CI, migraciones de producción bajo mantenimiento y verificación de filas, versión y bundle publicado.
+4. Actualizar número de versión y nota de lanzamiento al cerrar estos puntos. Esta rama no se anuncia como una publicación terminada.
+
+CarPlay y push nativo quedan fuera de esta entrega; no se simula soporte. El inventario de oraciones completo conserva su pendiente editorial explícito y no se presenta como resuelto.
+
+## Ajuste de revisión móvil — 27 septiembre, segunda iteración
+
+- Títulos de compromisos destacados, frecuencia y avance secundarios; sumar y deshacer pasan a iconos con nombre accesible y área de 44 px. Se conserva el comportamiento de registro. Cabecera diaria más compacta.
+- Navegación de Pareja mantiene palabras completas y distribuye opciones en filas sin comprimir cada palabra. Comprobado sin desbordamiento a 320 px.
+- Invitaciones con espacio interior, título/remitente agrupados y acción independiente; acceso a rechazadas visualmente secundario.
+- TypeScript, session3-ui, commitment-actions-ui y compilación de revisión satisfactorios. Navegador: incremento observado de 1 a 2; etiquetas íntegras y controles de 44 px en Pareja; recorrido de invitaciones en 390 px. No equivale a prueba en iPhone real.
+- El usuario autorizó recuperación de Figma por navegador; tanto el enlace design como el enlace file suministrado devuelven “Site Unavailable”. Se requiere exportación del recurso aprobado para continuar esa integración.
+
+## Hoy sereno — dummy aprobado el 27 de septiembre, 08:36 CR
+
+Implementada la dirección aprobada del dummy `alianza-hoy-avance-vivo`: check a la izquierda (área 44 px), título como acceso al menú contextual, suma directa de sesiones, edición/deshacer/ayuda en el menú, filas sin tarjetas y reflexiones agrupadas bajo demanda. Se conservan confirmación de eliminación, historial, límites de repeticiones y permisos.
+
+Cabecera Hoy persistente y compacta al desplazarse; símbolo personal/foto y modo aro conservados. Avance diario independiente del semanal/mensual. Sin meta diaria, símbolo vacío y explicación al abrir Mi avance. Indicadores pequeños por semana/mes; adicionales expresados en texto y dorado luminoso, sin subir el denominador. Transición del llenado respeta reducir movimiento. No cambios de esquema ni escrituras de producción.
+
+Verificación: tipos y compilación; pruebas de acciones, recorridos, reflexiones, onboarding, sesión 3, ritmos y extras/deshacer. Navegador a 390 px: check a la izquierda con área 44 px; cabecera sticky con top 0 al desplazarse; ejercicio pasa de 1 a 4 y mantiene meta 3 con brillo y +1 adicional; no altera el valor diario. Marcar novena lleva el diario de 1 a 2. No se afirma prueba en dispositivos físicos. El recurso final de Rosario B continúa bloqueado por Figma y es independiente de estos símbolos de avance.
+
+## Hoy compacto — aprobado el 27 de septiembre, 11:04 CR
+
+El usuario aprueba el dummy `alianza-hoy-app`: agrupación Cada día / Otros compromisos, árbol diario protagonista y Momento para vos con acceso directo a tres reflexiones. Se implementa en la rama de revisión. El árbol diario mide compromisos diarios permanentes; las novenas/cursos tienen símbolo y denominador propios. Esta regla sustituye el comportamiento documentado a las 08:36 donde marcar novena incrementaba el árbol diario. El símbolo del curso usa días efectivamente registrados, limitado a la duración, y conserva pausa/retomar. No se altera el cálculo histórico general ni el contenido espiritual.
+
+Verificación automatizada: approved-experience (incluye independencia de novena y árbol diario), neca-feedback-ui, onboarding, commitment-courses, session3-ui, TypeScript y compilación. La inspección visual móvil/escritorio de esta iteración está PENDIENTE: el navegador devuelve ERR_BLOCKED_BY_CLIENT al abrir la vista de prueba local. No se atribuyen a esta iteración las comprobaciones visuales previas. No desplegado en preview remoto ni producción.
+
+## Verificación visual y selector de espacios — 27 septiembre, 11:15 CR
+
+Resuelto el acceso al navegador mediante preview supervisado. En 320 y 390 px no hay desbordamiento en Hoy; árbol inicial 80 px y compacto 60 px al desplazarse. Probado registro de novena 0→1 de 9 sin alterar el diario. Inspección de escritorio completada. No equivale a pruebas en Safari/iPhone o Android físico. La cabecera general aún ocupa espacio apreciable y queda identificada como mejora pendiente, sin bloquear esta revisión privada.
+
+A petición del usuario, se retira el engranaje junto a Personal/Pareja/Cursos. Configuración trasladada a Mi espacio → Ajustes → Mis espacios, reutilizando el diálogo, guardado y selección inicial existentes. Verificado por navegador: acceso al diálogo, opciones y regreso a Hoy. TypeScript, build, onboarding y cursos pasan. Publicación SOLO de revisión privada con datos sintéticos: https://alianza-revision-integral.josanchac.chatgpt.site, despliegue appgdep_6ab94f0d610c8191b415f86b5cbe8c3b succeeded. Sin migraciones ni publicación al piloto.
+
+## Propósito, scroll y aura — 27 septiembre, siguiente revisión
+
+- El propósito guardado no había sido eliminado; faltaba un registro en la fixture privada. Se añade un ejemplo sintético y la app ofrece Definir mi propósito del mes cuando no hay texto, sin inventar un propósito para usuarios reales. El propósito existente conserva texto y edición por mes.
+- Cabecera de altura estable (105 px comprobados antes/después), transformaciones proporcionales a 96 px de scroll mediante requestAnimationFrame; se elimina el cambio brusco de geometría del punto de corte. Respeta reducir movimiento.
+- Aura radial dorada: tres pulsaciones de 2,4 segundos cuando el símbolo supera su meta, luego halo estático; reducir movimiento deja solo el halo. Mantiene adicional textual y denominador fijo.
+- TypeScript, approved-experience y build pasan. Navegador de prueba: propósito visible, altura estable, extra en Rosario muestra aura CSS activa y +1, captura docs/qa/session3/today-aura.jpg. No se afirma validación en un dispositivo físico.
+
+## Confirmación al marcar — 27 septiembre, 11:27 CR
+
+Se elimina el toast de éxito Guardado exclusivamente al guardar checks. El estado se actualiza tras la respuesta satisfactoria del servidor; el check, llenado y aura quedan libres de superposiciones. Se conservan toast de error, conflictos y confirmaciones de edición/reflexiones. TypeScript, approved-experience y build de revisión correctos.
+
+### Approved Rosario B artwork — supplied SVG integration
+- Received the complete resting and progress SVG exports; retained unchanged under `design/rosary/`.
+- Replaced the schematic RosaryMap with the exact approved resting artwork, including Schoenstatt medal and softened Christ. Dynamic blue gradients and an outlined current bead follow prayer order; no progress is baked into the resting asset.
+- Preserved opening preferences, back navigation, pause/resume and completion behavior. Three initial Avemarías correctly remain pending when configured after the mysteries.
+- Validated TypeScript, rosary comfort and prayer-order tests, every bead state in both orders, unchanged embedded medal image, exact resting source, and runtime build. Inspected the rendered fifth-Avemaría state.
+- This resolves the missing Rosario B illustration asset. Full Mass prayer content remains a separate release limitation; this entry does not authorize claiming that content complete.
+
+### Compact personal Rosario preparation — approved dummy implemented
+- Single preparation surface with standard back, quiet settings, mystery title/pencil, approved illustration, optional intention and sticky primary action. Removed redundant personal explanatory copy and outer card.
+- Mystery selection and remembered preferences use accessible dialogs; first-use preferences appear once on entry. Preferences save independently with visible failure recovery. Personal preparation mounts only when opened, avoiding first-use dialogs appearing behind other journeys.
+- Kept shared couple/group creation unchanged. Personal creation retains direct-resume marker, stable request ID and failure cleanup.
+- Verified typecheck, session3 UI and rosary comfort tests, runtime build, and 390px browser review: intention and start are visible together; mystery selection and preferences work.
+
+### Approved compact Pareja, Curso and Misa journeys
+- Pareja: bounded three-entry feed, full-row reading target, direct sharing, compact shortcuts and isolated detail views. Shared partner symbol is used only when present in the authorized response. Existing selective sharing and privacy rules remain intact.
+- Curso: real group names, invitation summary and reversible rejection retained; overview prioritizes the next encounter and current purpose. Participants, materials, rosary, capital and history remain reachable; administrative actions retain capability checks.
+- Misa: compact date disclosure, one reading at a time with a two-column selector, secondary prayer screen, collapsed font controls and sources. Special calendar choices, actual provider text and attribution remain. No synthetic readings introduced. Prayer coverage remains explicitly partial.
+- Tests updated only for approved navigation/label changes; data and permission assertions retained. Typecheck, community, session3, renewal and Mass suites passed before visual review.
+- Browser QA at 390px confirmed bounded partner feed, course invitation acceptance and course overview, and compact Mass controls. Live Evangelizo fetch returned an error; recovery controls remained available and no fabricated reading was substituted. Live reading availability is not claimed verified.
+- Full-suite run uncovered a pre-existing stale Rosario preparation test after its approved redesign; updated it to open the mystery picker and confirm the selection, preserving no-write/manual-choice assertions for all scopes.
+- General suite passed through approved-experience; the action-protocol gate detected a missing sensitive-action marker on the relocated coordination-transfer button. Restored its original classification and handler; all 64 classified actions pass. Remaining end-of-suite checks run separately after this narrow correction.

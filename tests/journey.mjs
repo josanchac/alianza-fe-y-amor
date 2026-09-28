@@ -1,3 +1,4 @@
+import {readMonthlyReview} from '../lib/monthly-review.ts';
 import assert from 'node:assert/strict';
 import {dom} from './dom.mjs';
 const React=await import('react');
@@ -22,19 +23,18 @@ try{
  assert.equal(screen.getByLabelText('Cantidad de veces').value,'3');
  fireEvent.click(screen.getByRole('button',{name:'Guardar',exact:true}));await screen.findByRole('checkbox',{name:'Ejercicio elegido'});
  assert.deepEqual(writes[1].data.frequency,{period:'week',target:3,unit:'days'});
- cleanup();mount();await screen.findByRole('heading',{name:'Mis compromisos'});await screen.findByRole('checkbox',{name:'Ejercicio elegido'});assert.equal(writes.length,2);
+ cleanup();mount();await screen.findByRole('heading',{name:/^(Hoy|Mi día)$/});await screen.findByRole('checkbox',{name:'Ejercicio elegido'});assert.equal(writes.length,2);
  console.log('PASS Chosen start and weekly commitment persist; failed choice does not advance');
  cleanup();fixture.own.push(row('purpose',previous,{text:'Propósito anterior',review:''}),row('purpose',month,{text:'Propósito actual',review:'Nota actual'}));
- mount();await screen.findByRole('heading',{name:'Mis compromisos'});fireEvent.mouseDown(screen.getByRole('tab',{name:'Hoy',exact:true}),{button:0,ctrlKey:false});fireEvent.click(screen.getByRole('button',{name:'Mi mes',exact:true}));
+ mount();await screen.findByRole('heading',{name:/^(Hoy|Mi día)$/});fireEvent.mouseDown(screen.getByRole('tab',{name:'Hoy',exact:true}),{button:0,ctrlKey:false});fireEvent.click(screen.getByRole('button',{name:'Mi mes',exact:true}));
  assert(screen.getByText('Propósito actual'));fireEvent.change(screen.getByLabelText('Mi mes'),{target:{value:previous}});assert(screen.getByText('Propósito anterior'));
- fireEvent.click(screen.getByRole('button',{name:'Editar mi propósito'}));await screen.findByRole('dialog');
- fireEvent.change(screen.getByRole('textbox',{name:'Mi revisión: qué ayudó, qué costó y un próximo paso'}),{target:{value:'Lo que aprendí'}});
- fireEvent.click(screen.getByRole('button',{name:'Guardar',exact:true}));await screen.findByText('Lo que aprendí');
+ fireEvent.change(screen.getByRole('textbox',{name:'¿Qué me ayudó?'}),{target:{value:'Lo que aprendí'}});
+ fireEvent.click(screen.getByRole('button',{name:'Guardar revisión',exact:true}));await screen.findByText('Revisión guardada');assert.equal(readMonthlyReview(writes.at(-1).data.review).answers[0],'Lo que aprendí');
  assert.equal(writes.at(-1).key,previous);assert.equal(fixture.own.find(r=>r.kind==='purpose'&&r.key===month).data.text,'Propósito actual');
  console.log('PASS Reviewing the previous month preserves the current purpose and its review');
  // Continuing is an editable draft, not an automatic copy or a replacement of an existing text.
  cleanup();fixture.own=fixture.own.map(r=>r.kind==='purpose'&&r.key===month?{...r,data:{text:'',review:'Conservar mi revisión'}}:r);
- mount();await screen.findByRole('heading',{name:'Mis compromisos'});fireEvent.mouseDown(screen.getByRole('tab',{name:'Hoy',exact:true}),{button:0,ctrlKey:false});fireEvent.click(screen.getByRole('button',{name:'Mi mes',exact:true}));
+ mount();await screen.findByRole('heading',{name:/^(Hoy|Mi día)$/});fireEvent.mouseDown(screen.getByRole('tab',{name:'Hoy',exact:true}),{button:0,ctrlKey:false});fireEvent.click(screen.getByRole('button',{name:'Mi mes',exact:true}));
  const count=writes.length;fireEvent.click(screen.getByRole('button',{name:'Retomar el propósito anterior'}));await screen.findByRole('dialog');assert.equal(writes.length,count);
  assert.equal(screen.getByRole('textbox',{name:'Mi propósito particular',exact:true}).value,'Propósito anterior');
  assert.equal(screen.getByRole('textbox',{name:'Mi revisión: qué ayudó, qué costó y un próximo paso'}).value,'Conservar mi revisión');
