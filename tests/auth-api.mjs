@@ -85,6 +85,25 @@ try{
  await rpc(d.client,'product_metrics',{action:'consent',enabled:true});await rpc(d.client,'product_metrics',{action:'event',event:'open'});
  await rpc(d.client,'product_metrics',{action:'consent',enabled:false});assert.equal((await rpc(d.client,'product_metrics',{})).enabled,false);
  pass('Real JWT group isolation, invitation acceptance, leave revocation, anonymous denial and voluntary metrics');
+ // Session 3: account-bound inbox with real Auth JWTs and PostgREST.
+ const f=await person('course-outsider');
+ const coursePayload=p=>({dataEpoch:1,relationshipVersion:1,...p});
+ const invitePayload=coursePayload({action:'course_invite',groupId:group.id,email:e.email});
+ await rpc(d.client,'community',invitePayload);
+ await rpc(d.client,'community',invitePayload);
+ const inbox=(await rpc(e.client,'community',{})).invitations;
+ assert.equal(inbox.length,1,'Repeated invitation must not duplicate');
+ const ci=inbox[0];assert.equal(ci.status,'pending');
+ assert.equal((await rpc(f.client,'community',{})).invitations.length,0);
+ await assert.rejects(()=>rpc(f.client,'community',coursePayload({action:'course_accept',id:ci.id,version:ci.version})),x=>x.code==='42501');
+ const declined=await rpc(e.client,'community',coursePayload({action:'course_decline',id:ci.id,version:ci.version}));
+ assert.equal(declined.groups.length,0);assert.equal(declined.invitations[0].status,'declined');
+ await assert.rejects(()=>rpc(e.client,'community',coursePayload({action:'course_restore',id:ci.id,version:ci.version})),x=>x.code==='PT409');
+ const restored=await rpc(e.client,'community',coursePayload({action:'course_restore',id:ci.id,version:declined.invitations[0].version}));
+ const accepted=await rpc(e.client,'community',coursePayload({action:'course_accept',id:ci.id,version:restored.invitations[0].version}));
+ assert(accepted.groups.some(g=>g.id===group.id));assert.equal(accepted.invitations.length,0);
+ await rpc(e.client,'community',{action:'group_leave',groupId:group.id,dataEpoch:1});
+ pass('Session3 real JWT inbox: exclusive recipient, deduplication, decline, stale restore rejection, recovery and acceptance without links');
  const personalId=crypto.randomUUID();
  await rpc(d.client,'community',{action:'rosary_create',id:personalId,scope:'personal',mystery:'joyful',mode:'free',dataEpoch:1});
  await rpc(d.client,'community',{action:'rosary_opening',id:personalId,version:0,include:false,mary:'trinitarian',dataEpoch:1});

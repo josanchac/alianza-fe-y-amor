@@ -1,6 +1,22 @@
 # Sesión 3 — integración en revisión, 27 septiembre 2026
 
-Estado: implementación en rama `release/session3-20260927`, pendiente de publicación al piloto. Se conserva `main` y no se aplicaron migraciones en producción. La autorización de publicar ya existe; la limitación actual es recuperar el recurso visual exacto del Rosario B desde Figma, cuyo conector rechazó tanto el contexto de diseño como la captura por cuota Starter agotada.
+## Cierre de validación — 27 septiembre, noche CR
+
+### Lecturas en vivo — 19:29 CR
+
+- Nueva prueba optativa: `ALIANZA_LIVE_READINGS=1 node --import tsx tests/mass-live.mjs`. No forma parte de la suite determinista ni usa sesiones/BD.
+- PASS mediante el cargador y parser reales: 2026-09-26 (3 lecturas), 2026-09-27 (4), 2026-09-28 (3); referencias y textos presentes, fecha correspondiente.
+- Servicio de producción `mass-readings` activo; OPTIONS desde el origen del piloto devuelve 204 y CORS correcto. GET sin sesión devuelve 401. No se modificó la función ni se leyó contenido de usuarios.
+- Pendiente: recorrido completo con sesión real desde la interfaz. Estas comprobaciones NO acreditan ese recorrido.
+- El usuario difiere cualquier contacto con CONALI hasta ampliar el piloto; no se envían consultas. Oraciones completas siguen pendientes y no se sustituyen por enlaces.
+
+- Pareja usa Compartimos / Medios ascéticos. La prueba de vinculación recorre esta nueva navegación y conserva el rechazo de escrituras de un borrador perteneciente a una vinculación anterior.
+- TypeScript, compilación de producción, integridad documental y diff sin errores pasan. La compilación mantiene una advertencia de tamaño de bundle; no equivale a publicación.
+- Consulta directa al Reader oficial para 2026-09-27: HTTP 200 y cuatro lecturas procesadas por el parser de la app, celebración 26o domingo del Tiempo Ordinario. Esta comprobación no acredita todavía el transporte autenticado ni el recorrido completo en la app.
+- La cobertura parcial de cuatro oraciones requiere decisión expresa de alcance antes de anunciar una guía completa. No hay cambios en datos del piloto ni migraciones de producción.
+- Suite completa `npm test` repetida tras actualizar la prueba de navegación: PASS, salida 0. Incluye sesión 3 UI/DB y privacidad. No sustituye la validación externa con JWT/API real en CI ni las pruebas en dispositivos físicos.
+
+Estado actualizado: implementación en rama `release/session3-20260927`, pendiente de publicación al piloto. Se conserva `main` y no se aplicaron migraciones en producción. Rosario B ya está integrado desde los SVG aprobados; las menciones posteriores a su exportación pendiente son el registro histórico de iteraciones anteriores. Permanecen pendientes la disponibilidad de lecturas en vivo, el alcance editorial parcial de Misa y la validación de integración/despliegue.
 
 ## Cambios implementados
 
@@ -26,8 +42,8 @@ Estado: implementación en rama `release/session3-20260927`, pendiente de public
 
 ## Pendientes antes del despliegue
 
-1. Recuperar recursos de Figma B e integrar/contrastar rosario completo. La guía `control-browser` pide autorización antes de pasar al navegador cuando falla un conector suficiente; no se efectuó ese fallback sin autorización.
-2. Completar comprobación visual de imagen propia y rosario con sus recursos definitivos; comprobar recorridos a 320/390/768 px y escritorio.
+1. Resolver disponibilidad de lecturas en vivo y acordar expresamente si esta entrega mantiene las cuatro oraciones actuales, sin presentar Misa como completa.
+2. Completar la matriz de comprobación visual pendiente; no equiparar la revisión en navegador con dispositivos físicos. Rosario B ya integrado y revisado en navegador.
 3. Validación de invitaciones con JWT/API real en CI, migraciones de producción bajo mantenimiento y verificación de filas, versión y bundle publicado.
 4. Actualizar número de versión y nota de lanzamiento al cerrar estos puntos. Esta rama no se anuncia como una publicación terminada.
 
