@@ -38,7 +38,7 @@ try{
  render(React.createElement(Journal,{dataRequest:request,onSignOut(){}}));await screen.findByRole('heading',{name:/^(Hoy|Mi día)$/});
  assert.equal(screen.queryByRole('tab',{name:'En pareja'}),null);fireEvent.mouseDown(screen.getByRole('tab',{name:'Mi espacio'}),{button:0,ctrlKey:false});await screen.findByRole('heading',{name:'Podés empezar por vos'});assert.equal(screen.queryByRole('button',{name:'Preparar este momento'}),null);
  // Receive a linked state from the server, then hold a shared draft through an unlink.
- fixture={...fixture,user:{...fixture.user,coupleId:'pair',relationshipVersion:2},couple:{emblem:'neutral'},partner:{name:'Pareja',ideal:'',shareSchedule:false,shareNotes:false,records:[]},marriageIdeal:{text:'',version:0,confirmations:0,confirmedByMe:false}};
+ fixture={...fixture,user:{...fixture.user,coupleId:'pair',relationshipVersion:2},couple:{emblem:'neutral'},partner:{name:'Pareja',ideal:'',shareSchedule:true,shareNotes:false,records:[{kind:'habit',key:'legacy',data:{title:'Compromiso antiguo',frequency:null},updated:new Date().toISOString()}]},marriageIdeal:{text:'',version:0,confirmations:0,confirmedByMe:false}};
  fireEvent(window,new Event('focus'));fireEvent.click(screen.getByRole('button',{name:'En pareja',exact:true}));await screen.findByRole('tab',{name:'En pareja'});fireEvent.mouseDown(screen.getByRole('tab',{name:'En pareja'}),{button:0,ctrlKey:false});await screen.findByRole('heading',{name:'En pareja'});
  assert.equal(screen.getByRole('button',{name:'Compartimos',exact:true}).getAttribute('aria-pressed'),'true');
  assert.equal(screen.queryByRole('button',{name:'Las 4 Rs',exact:true}),null);
