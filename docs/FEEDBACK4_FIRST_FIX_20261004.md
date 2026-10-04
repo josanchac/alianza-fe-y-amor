@@ -32,8 +32,17 @@ incidente original ni equivale a inspeccionar datos privados.
 Sin migración, cambios de permisos, almacenamiento persistente de diarios,
 reintentos de escritura automáticos, cambio de navegación o nuevas preguntas.
 No se cambian textos espirituales, frecuencias, recuentos ni consentimiento.
-La recuperación guiada de un conflicto real y la protección al salir de un
-borrador mensual siguen siendo trabajo de #27; no se declara cerrado.
+La revisión mensual ahora conserva en memoria sus respuestas, texto de origen y
+versión al cambiar entre vistas o meses dentro del mismo Journal. Cada cuenta y
+reinicio de espacio obtiene un almacén nuevo. Un guardado confirmado descarta
+solo el borrador guardado; escribir durante una petición mantiene el texto nuevo.
+El aviso nativo de salida también considera borradores de meses no visibles.
+No usa localStorage/sessionStorage, guardado automático ni un diálogo nuevo.
+
+La recuperación guiada de un conflicto real y la continuidad tras expirar sesión
+siguen pendientes en #27. El almacén se pierde al desmontar Journal, cerrar sesión
+o recargar; beforeunload no garantiza aviso ante cierre forzado o suspensión móvil.
+No se declara cerrado el issue ni se extiende esta protección a todos los formularios.
 
 ## Pruebas y límites
 
@@ -41,11 +50,20 @@ borrador mensual siguen siendo trabajo de #27; no se declara cerrado.
 revisión recibida en formulario limpio; conflicto real sin pérdida/sobrescritura;
 propósito creado mientras se escribe; reintento fallido y dos guardados sucesivos,
 incluyendo actualización del padre antes de resolver el guardado.
+Se agregan navegación entre meses, recuperación del borrador con conflicto remoto
+y escritura durante un guardado pendiente. `tests/journey.mjs` comprueba la
+integración real en Journal: Mi día → Mi mes, aislamiento por mes, aviso de salida,
+limpieza tras guardar, invalidación por dataEpoch y nueva sesión sin borrador viejo.
 Se agrega al comando `npm test`. Datos ficticios, sin conexión a producción.
 
 El registro de ejecución definitivo y la propuesta de cambio quedan enlazados
 en #27. JSDOM no acredita Safari/PWA, teclado móvil ni recuperación operativa.
 Las pruebas no validan todo el alcance de feedback 4.
+
+CI de la primera corrección (`3ab81b7`): ejecuciones 37220836373 y 37220836455
+aprobadas, incluyendo PostgreSQL concurrente, restauración sintética y Auth/API.
+La ampliación de borradores requiere su propia ejecución sobre el nuevo commit.
+Inventario operativo y límites de respaldo: `FEEDBACK4_RELIABILITY_AUDIT_20261004.md`.
 
 ## Cotejo documental acotado
 

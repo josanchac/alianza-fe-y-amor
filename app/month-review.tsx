@@ -1,4 +1,4 @@
-import {useMonthlyReviewDraft} from './month-review-draft';
+import {useMonthlyReviewDraft,type MonthlyReviewDrafts} from './month-review-draft';
 import {readMonthlyReview,writeMonthlyReview} from '@/lib/monthly-review';
 import {useRef,useState} from 'react';
 import {Pencil,Plus,Check} from 'lucide-react';
@@ -12,11 +12,11 @@ import {CommitmentReviewSummary} from './commitment-review';
 import {reviewDraft,weeklyReviews} from '@/lib/commitment-review';
 type Edit=(kind:string,key:string,title:string,fallback:any)=>void;
 type PlanItem={key:string;version:number;data:Habit;keep:boolean};
-export function MonthReview({own,month,today,onMonth,edit,explore,onSave,onPrepare,busy=false}:{own:RecordItem[];month:string;today:string;onMonth:(month:string)=>void;edit:Edit;explore:()=>void;onSave?:(data:any,version:number)=>Promise<boolean>;onPrepare?:(payload:Record<string,unknown>)=>Promise<any>;busy?:boolean}){
+export function MonthReview({own,month,today,onMonth,edit,explore,onSave,onPrepare,busy=false,drafts}:{drafts?:MonthlyReviewDrafts;own:RecordItem[];month:string;today:string;onMonth:(month:string)=>void;edit:Edit;explore:()=>void;onSave?:(data:any,version:number)=>Promise<boolean>;onPrepare?:(payload:Record<string,unknown>)=>Promise<any>;busy?:boolean}){
  const previousPurpose=own.find(r=>r.kind==='purpose'&&r.key===monthBefore(month));
  const record=own.find(r=>r.kind==='purpose'&&r.key===month),current=record?.data;
  const priorReview=readMonthlyReview(current?.review);
- const {answers,setAnswers,reviewVersion,markSaved}=useMonthlyReviewDraft(record);
+ const {answers,setAnswers,reviewVersion,markSaved}=useMonthlyReviewDraft(record,drafts,month);
  const [view,setView]=useState<'review'|'prepare'|'edit'>('review'),[consult,setConsult]=useState(false),[status,setStatus]=useState(''),[sending,setSending]=useState(false);const lock=useRef(false);
  const nextDate=new Date(month+'-01T12:00:00Z');nextDate.setUTCMonth(nextDate.getUTCMonth()+1);const next=nextDate.toISOString().slice(0,7);
  const savedPlan=own.find(r=>r.kind==='month_plan'&&r.key===next);
