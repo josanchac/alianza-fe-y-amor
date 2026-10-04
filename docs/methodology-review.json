@@ -1,6 +1,13 @@
 {
   "kind": "documentary",
   "status": "documented",
+  "incrementalReview": {
+    "date": "2026-10-04",
+    "performedBy": "Codex — revisión acotada del diff, sin aval institucional",
+    "scope": "M09: protección del borrador mensual y reconciliación de versión cuando solo cambia el propósito. Mensaje 409 sin atribución a otro dispositivo. Sin cambios de preguntas, doctrina, permisos, recuentos o textos litúrgicos.",
+    "evidence": "docs/FEEDBACK4_FIRST_FIX_20261004.md; tests/month-review-concurrency.mjs",
+    "limits": "No acredita revisión del leccionario de Costa Rica ni pruebas humanas/móviles; no autoriza publicación."
+  },
   "scope": "Guías breves y comportamiento de la aplicación compilada desde github/main.tsx. Síntesis atribuidas, no curso completo ni formato nacional costarricense. El prototipo exploratorio está excluido de publicación. No acredita aval institucional ni pastoral. Incluye notas y oraciones privadas elegidas por la persona, valoración personal por período e invitación voluntaria a explorar basada únicamente en su elección. Incluye rosarios compartidos, propósitos de grupo como controles de producto, cuaderno privado del ideal, medición técnica general voluntaria y medición agregada automática del piloto cerrado sin contenido personal. Cotejo complementario en COMMUNITY_RELEASE.md. Incluye espacios independientes, rosario individual paso a paso, PDF seleccionado por el usuario, responsabilidades delegadas y capital de gracias con resumen protegido. Incluye frecuencias configurables, cursos/novena y repeticiones como reglas de producto; Misa como guía breve con lecturas del calendario romano general por Reader oficial Evangelizo. Variantes especiales explícitamente en revisión; no Misal completo ni validación costarricense. Sesión 3: revisión mensual opcional, preparación futura, permisos por categoría e invitaciones internas son reglas de producto. Misa prioriza lecturas y ofrece nueve entradas de oraciones y aclamaciones; cinco añadidas desde Catholic.net según sus condiciones de reproducción, documentadas en MASS_PRAYER_SOURCES_20260927.md, con cotejo local pendiente, sin declarar misal completo. Diseño final del Rosario B integrado desde los SVG aprobados; ver SESSION3_IMPLEMENTATION_20260927.md. Hoy compacto: separación visual de compromisos permanentes y cursos; avance de novena independiente del símbolo diario. Regla de producto aprobada, sin nueva enseñanza espiritual. Navegación de Pareja: Compartimos / Medios ascéticos agrupa funciones existentes; no redefine el método ni atribuye carácter ascético al historial.",
   "verification": {
     "performedBy": "Codex — cotejo documental asistido, no representante del Movimiento",
@@ -33,7 +40,8 @@
     "app/logo-viewer.tsx": "0c9eb87e7460b13a01efa51c6e3c2d40b942c76f3ebc5f5eaeb62e9e828689b8",
     "app/mass-prayers.tsx": "ad342b0863db17289c5f685d6f1902a17e0b6e496323a6e12971d8211df1ca48",
     "app/mass.tsx": "bb8f9f1e136fb55d955cd4cb0218290a5e4c8beb13fc12d12ad61b68c796eb49",
-    "app/month-review.tsx": "a4dc3bb412043c64eee5bfd40607df164e810f9b453c4aabd443bb0f16958f32",
+    "app/month-review-draft.ts": "d09544f88be4d050e9175a284a8b956ae14d64df2cca5680505bce14d94fda35",
+    "app/month-review.tsx": "afb0548ba9afef846e17454df16bef2af09f568424068b33fa82d14d41e18425",
     "app/movement-costa-rica.tsx": "98fd5fa91bf6a4b3ae4a9c3ee3d8cea8674abffdf5c326a8dc3cc8c5d9984dfb",
     "app/my-path.tsx": "a76c7f6e9c6337e435b960a0bbef06afd72bc36d2e73b8e98c78eb67d1634f63",
     "app/pair-section-boundary.tsx": "f4de065450efa0b81502805e3ec1da5cdc0765046329bba2d6d880811f3bb101",
@@ -71,7 +79,7 @@
     "github/config.public.json": "cb9844ba6b2463e1bc4c8e6e2f45786f3cd111f99981d6eff1e95ef9e6a93ea5",
     "github/index.html": "fd340334f04792bf4791ef681c18b315489b93cc2f613536ad807d4a92905862",
     "github/invitations.tsx": "f8c604159f01a8aa58b1e25cbb3bca69e5dc50134a0bcc7f79934e8a9a6a4bd8",
-    "github/main.tsx": "615282c93b8820143a837cf5c81a8694bc9c5a2e17ae4e4014d9aaa92da12670",
+    "github/main.tsx": "a2a28256c32e7bd9fe7a45199b1eede121088fc9d324d43595b4fa20fa65dc24",
     "github/maintenance.tsx": "835d6357879f2f831e06a77e0199b9dfd81365c3ee65dcf72c082e54ca652af7",
     "github/pilot-pulse.tsx": "1e86f81a5090d6caff64f2a5acc1d1fe4c052208e1b682b70ea9a3f6e9e5165a",
     "github/pilot.tsx": "0a6c438fe42e4bdfd070918ecc56cc81cd555bf425768a1878fa8bb46fdef8e2",
