@@ -1,0 +1,38 @@
+import assert from 'node:assert/strict';
+import {dom} from '../../tests/dom.mjs';
+import React from 'react';
+import {render,screen,fireEvent,cleanup,waitFor} from '@testing-library/react';
+import {Frame} from './prototype.tsx';
+try{
+ render(React.createElement(Frame,{variant:'proposed',task:'review',initialState:'empty'}));
+ const note=()=>screen.getByRole('textbox');
+ fireEvent.change(note(),{target:{value:' \n '}});
+ fireEvent.click(screen.getByRole('button',{name:'Cerrar formulario'}));
+ await waitFor(()=>assert.equal(screen.queryByRole('dialog'),null));
+ assert.equal(document.activeElement.textContent,'Abrir revisión');
+ fireEvent.click(screen.getByRole('button',{name:'Abrir revisión'}));
+ fireEvent.change(note(),{target:{value:'Nota ficticia pendiente'}});
+ fireEvent.click(screen.getByRole('button',{name:'Cerrar formulario'}));
+ await screen.findByRole('heading',{name:'¿Cerrar sin guardar?'});
+ fireEvent.click(screen.getByRole('button',{name:'Seguir escribiendo'}));
+ assert.equal(note().value,'Nota ficticia pendiente');
+ fireEvent.click(screen.getByRole('button',{name:'Guardar',exact:true}));
+ await screen.findByText('Guardado de prueba. No se envió ningún dato.');
+ cleanup();
+ render(React.createElement(Frame,{variant:'proposed',task:'review',initialState:'error'}));
+ const before=note().value;
+ fireEvent.click(screen.getByRole('button',{name:'Guardar',exact:true}));
+ await screen.findByText(/podés volver a intentarlo/);
+ assert.equal(note().value,before);
+ fireEvent.click(screen.getByRole('button',{name:'Guardar',exact:true}));
+ await screen.findByText('Guardado de prueba. No se envió ningún dato.');
+ cleanup();
+ render(React.createElement(Frame,{variant:'proposed',task:'habit'}));
+ const quantity=screen.getByRole('textbox',{name:'Cantidad'});
+ fireEvent.change(quantity,{target:{value:'01'}});fireEvent.blur(quantity);
+ assert.equal(quantity.value,'1');
+ fireEvent.change(quantity,{target:{value:''}});
+ fireEvent.click(screen.getByRole('button',{name:'Guardar',exact:true}));
+ await screen.findByText('Elegí una cantidad entre 1 y 99.');
+ console.log('PASS prototype: blank close, focus return, preserve draft, simulated save/error/retry, quantity normalization and validation');
+}finally{cleanup();dom.window.close();}
