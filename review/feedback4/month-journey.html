@@ -1,0 +1,148 @@
+<div id="alianza-month-demo" class="viz-dotted-background">
+<style>
+#alianza-month-demo{--paper:light-dark(#faf9f3,#17272d);--panel:light-dark(#fff,#20343c);--ink:light-dark(#193b4c,#eef4f2);--soft:light-dark(#edf1ef,#31464d);--line:light-dark(#ccd6d5,#52666e);--dim:light-dark(#526970,#c2cecf);--button:light-dark(#193b4c,#d5e9ed);--onbutton:light-dark(#fff,#173440);color:var(--ink);font:16px/1.5 system-ui,sans-serif;padding:12px;box-sizing:border-box}
+#alianza-month-demo *{box-sizing:border-box}
+#alianza-month-demo [hidden]{display:none!important}
+#alianza-month-demo button,#alianza-month-demo input,#alianza-month-demo select,#alianza-month-demo textarea{font:inherit;color:inherit;max-width:100%}
+#alianza-month-demo button{min-height:44px;padding:10px 16px;border:1px solid var(--line);border-radius:13px;background:var(--panel);white-space:normal;word-break:normal}
+#alianza-month-demo button.primary{background:var(--button);color:var(--onbutton);border-color:var(--button)}
+#alianza-month-demo input:not([type=checkbox]):not([type=radio]),#alianza-month-demo select,#alianza-month-demo textarea{width:100%;padding:12px;border:1px solid var(--line);border-radius:10px;background:var(--panel)}
+#alianza-month-demo textarea{min-height:110px;resize:vertical}
+#alianza-month-demo input[type=checkbox],#alianza-month-demo input[type=radio]{width:22px;height:22px;flex-shrink:0;accent-color:var(--button)}
+#alianza-month-demo h2{font:normal 28px/1.2 Georgia,serif;margin:8px 0 16px}
+#alianza-month-demo h3{font-size:18px;margin:0 0 12px}
+#alianza-month-demo p{margin:8px 0 14px}
+#alianza-month-demo small{font-size:13px;color:var(--dim)}
+#alianza-month-demo label{display:block;margin:12px 0}
+#alianza-month-demo .check{display:flex;align-items:center;gap:12px;min-height:44px}
+#alianza-month-demo .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+#alianza-month-demo .row>*{min-width:0}
+#alianza-month-demo .spread{justify-content:space-between}
+#alianza-month-demo .compare{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:20px;max-width:1080px;margin:auto}
+#alianza-month-demo .old,#alianza-month-demo .phone{background:var(--paper);border:1px solid var(--line);border-radius:22px;overflow:hidden;min-width:0}
+#alianza-month-demo .old{align-self:start;padding:20px}
+#alianza-month-demo .old summary{min-height:44px;font-weight:600}
+#alianza-month-demo .old section{margin-top:18px}
+#alianza-month-demo .old .dense{padding:12px 0;border-bottom:1px solid var(--line)}
+#alianza-month-demo .old .fake{padding:12px;border:1px solid var(--line);border-radius:10px;min-height:60px;margin:10px 0;background:var(--panel)}
+#alianza-month-demo .phone{position:relative;display:flex;flex-direction:column;height:790px;max-height:90svh;min-height:490px}
+#alianza-month-demo .bar{padding:14px 18px;border-bottom:1px solid var(--line);background:var(--paper);flex:none}
+#alianza-month-demo .brand{font:24px Georgia,serif}
+#alianza-month-demo .body{overflow:auto;padding:20px;flex:1;min-height:0;scroll-padding:20px}
+#alianza-month-demo .block{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px;margin:16px 0}
+#alianza-month-demo .hint{background:var(--soft);padding:14px;border-radius:12px;margin:12px 0}
+#alianza-month-demo .actions{background:var(--paper);padding:12px 18px max(12px,env(safe-area-inset-bottom));border-top:1px solid var(--line);flex:none}
+#alianza-month-demo .actions button{flex:1}
+#alianza-month-demo .tag{display:inline-block;padding:3px 9px;background:var(--soft);border-radius:9px;font-size:13px}
+#alianza-month-demo .summary{display:block;padding:10px 0;min-height:44px}
+#alianza-month-demo fieldset{border:0;padding:0;margin:0}
+#alianza-month-demo legend{font-weight:600}
+#alianza-month-demo .error{color:light-dark(#8b2525,#ffc5bb);background:light-dark(#fff0ed,#502b2b);padding:12px;border-radius:10px}
+#alianza-month-demo .overlay{position:absolute;inset:0;background:var(--paper);display:flex;flex-direction:column;z-index:5}
+#alianza-month-demo .decision{position:absolute;inset:0;z-index:10;background:var(--paper);padding:30px 22px;overflow:auto}
+#alianza-month-demo .lab{max-width:1080px;margin:0 auto 14px;padding:12px 16px;background:var(--soft);border-radius:12px}
+#alianza-month-demo .lab summary{min-height:44px}
+@media(max-width:680px){#alianza-month-demo{padding:0}#alianza-month-demo .compare{grid-template-columns:minmax(0,1fr)}#alianza-month-demo .phone{height:760px;max-height:85svh}#alianza-month-demo .old{padding:14px}#alianza-month-demo h2{font-size:26px}}
+</style>
+<div class="lab"><strong>Prueba de experiencia · datos ficticios</strong><details><summary>Controles de prueba</summary><div class="row"><button data-act="reset">Reiniciar recorrido</button><label class="check"><input id="demo-fail" type="checkbox">Simular un error al guardar</label></div><small>Fecha del ejemplo: 4 de octubre de 2026. Los cambios duran hasta recargar. No se envía información.</small></details></div>
+<div class="compare">
+<details class="old" open><summary>Actual · reconstrucción de tus capturas</summary>
+<small>Referencia simplificada, no captura ni versión funcional.</small>
+<section><div class="row"><span class="tag">Mi día</span><span class="tag">Mi mes</span><span class="tag">Mi recorrido</span></div><p>Octubre de 2026</p><h2>Mi revisión del mes</h2><p>Podés responder solo lo que te ayude.</p><div class="fake">Consultar lo que viví este mes</div><p>Mi propósito</p><div class="fake">Retomar el propósito anterior</div><p>¿Qué me ayudó?</p><div class="fake"></div><p>¿Qué me costó?</p><div class="fake"></div><p>¿Qué quiero ajustar?</p><div class="fake"></div></section>
+<section><h3>En otra sección</h3><p>Revisiones de mis compromisos</p><div class="dense"><strong>Rezar el rosario</strong><p>Mes · 2026-09-01 — 2026-09-30</p><p>Según mi revisión, lo cumplí</p><div class="fake">Ajustar este compromiso</div><div class="fake">Editar mi nota y valoración</div></div><div class="dense"><strong>Oración Matutina</strong><p>Mes · 2026-09-01 — 2026-09-30</p><div class="fake">Anotar o valorar este período</div></div></section>
+</details>
+<section class="phone" aria-label="Propuesta interactiva">
+<header class="bar"><div class="row spread"><span class="brand">Alianza</span><span class="tag">Propuesta</span></div><label for="demo-period">Mi mes</label><select id="demo-period"><option value="sep">Septiembre · pasado</option><option value="oct" selected>Octubre · actual</option><option value="nov">Noviembre · futuro</option></select></header>
+<div class="body" id="demo-screen"><h2>Preparar octubre</h2><p>Elegí qué querés cuidar este mes.</p><p>Activá JavaScript en el navegador para probar el recorrido.</p></div>
+<footer class="actions row" id="demo-footer"></footer>
+<div id="demo-editor" class="overlay" role="dialog" aria-modal="true" aria-label="Editar compromiso" hidden></div>
+<div id="demo-confirm" class="decision" role="alertdialog" aria-modal="true" aria-label="Cambios pendientes" hidden></div>
+</section>
+</div>
+<div id="demo-live" role="status" aria-live="polite"></div>
+<script>
+(()=>{
+const root=document.getElementById('alianza-month-demo');
+const $=s=>root.querySelector(s), screen=$('#demo-screen'),foot=$('#demo-footer'),editor=$('#demo-editor');
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const button=(a,t,primary=false,extra='')=>`<button data-act="${a}" class="${primary?'primary':''}" ${extra}>${t}</button>`;
+let period='oct',view='home',closed=false,prepared={oct:false,nov:false},monthNote={help:'',hard:'',next:''},purpose={oct:'',nov:''},reviews={},selected={oct:[0,1],nov:[0,1]},plans={},editing=null,editorOriginal='',origin=null;
+let habits=[{name:'Rezar el rosario',scope:'Personal',qty:4,freq:'mes'},{name:'Oración en pareja',scope:'Pareja',qty:1,freq:'día'},{name:'Caminar',scope:'Personal',qty:3,freq:'semana'}];
+const names={sep:'septiembre',oct:'octubre',nov:'noviembre'};
+const getHabit=(p,i)=>plans[p]?.[i]||habits[i];
+const announce=t=>{$('#demo-live').textContent=t};
+const field=(key,label,val='')=>`<label>${label}<textarea data-note="${key}">${esc(val)}</textarea></label>`;
+function showError(target){if(!$('#demo-fail').checked)return false;$('#demo-fail').checked=false;target.innerHTML='<p class="error" role="alert">No se pudo guardar. Tu texto sigue aquí. Intentá de nuevo.</p>';return true;}
+function render(){
+ $('#demo-period').value=period;
+ let html='',actions='';
+ if(period==='sep'){
+  html=`<span class="tag">${closed?'Cierre guardado':'Mes terminado'}</span><h2>${closed?'Tu cierre de septiembre':'Cerrar septiembre'}</h2>`;
+  if(closed){html+=`<div class="block"><h3>Lo que te llevás</h3><p>${esc(monthNote.help||'Sin nota sobre lo que ayudó.')}</p><p>${esc(monthNote.hard||'Sin nota sobre lo que costó.')}</p><p>${esc(monthNote.next||'Sin ajuste escrito.')}</p></div>${button('edit-close','Editar mi cierre')}`;actions=button('oct','Preparar octubre',true);}
+  else{
+   html+=`<details class="block"><summary class="summary">Mis compromisos · ${Object.keys(reviews).length}/3 revisados</summary>`;
+   habits.slice(0,3).forEach((h,i)=>{html+=`<div class="block"><span class="tag">${h.scope}</span><h3>${esc(h.name)}</h3><small>${reviews[i]?'Revisión guardada':'Sin revisar · opcional'}</small><p>${button('review',reviews[i]?'Editar revisión':'Revisar',false,`data-id="${i}"`)}</p></div>`});
+   html+=`</details><div class="block"><h3>Mi reflexión del mes</h3>${field('help','¿Qué me ayudó?',monthNote.help)}${field('hard','¿Qué me costó?',monthNote.hard)}${field('next','¿Qué quiero ajustar?',monthNote.next)}<small>Podés dejar preguntas sin responder.</small></div><div id="demo-error"></div>`;
+   actions=button('oct','Ahora no')+button('close-month','Guardar cierre',true);
+  }
+ }else{
+  const label=names[period];
+  html=`<span class="tag">${period==='oct'?'Mes actual':'Próximo mes'}</span><h2>${prepared[period]?'Mi plan de '+label:'Preparar '+label}</h2>`;
+  if(!closed&&period==='oct')html+=`<div class="hint"><strong>Septiembre quedó sin cerrar</strong><p>Podés retomarlo cuando quieras.</p>${button('sep','Revisar septiembre')}</div>`;
+  if(prepared[period]&&view!=='plan'){
+   html+=`<div class="block"><h3>Mi propósito</h3><p>${esc(purpose[period]||'Sin propósito escrito.')}</p></div><h3>Mis compromisos</h3>`;
+   selected[period].forEach(i=>{const h=getHabit(period,i);html+=`<div class="block"><span class="tag">${h.scope}</span><h3>${esc(h.name)}</h3><p>${h.qty} ${h.qty===1?'vez':'veces'} por ${h.freq}</p></div>`});
+   if(!selected[period].length)html+='<p>No elegiste compromisos para este mes.</p>';
+   actions=button('plan','Ajustar mi plan',true);
+  }else{
+   html+=`<div class="block"><label>Mi propósito para ${label}<input data-purpose value="${esc(purpose[period])}" placeholder="¿Qué quiero cuidar este mes?"></label></div><h3>Elegir mis compromisos</h3><p><small>Desmarcar uno lo deja fuera de este plan; conserva su historia.</small></p>`;
+   habits.forEach((h,i)=>{h=getHabit(period,i);html+=`<div class="block"><label class="check"><input type="checkbox" data-select="${i}" ${selected[period].includes(i)?'checked':''}><strong>${esc(h.name)}</strong></label><div class="row spread"><small>${h.scope} · ${h.qty} ${h.qty===1?'vez':'veces'} por ${h.freq}</small>${button('edit','Ajustar',false,`data-id="${i}"`)}</div></div>`});
+   html+=button('new','Agregar compromiso')+'<div id="demo-error"></div>';
+   actions=button('save-plan','Guardar mi plan',true);
+  }
+ }
+ screen.innerHTML=html;foot.innerHTML=actions;
+}
+function openEditor(type,id){
+ origin=document.activeElement;editing={type,id};
+ const h=id===undefined?{name:'',scope:'Personal',qty:1,freq:'día'}:getHabit(period,id), r=reviews[id]||{note:'',value:'Sin valorar'};
+ let body='';
+ if(type==='review')body=`<h2>${esc(h.name)}</h2><small>Septiembre · Solo vos</small><div class="block"><label>¿Qué me ayudó, qué me costó o qué quiero recordar?<textarea name="note">${esc(r.note)}</textarea></label><details><summary class="summary">Privacidad de esta revisión</summary><p>No se comparte con tu pareja.</p></details></div><fieldset class="block"><legend>Mi valoración</legend>${['Sin valorar','Según mi revisión, lo cumplí','Según mi revisión, no lo cumplí'].map(v=>`<label class="check"><input name="value" type="radio" value="${v}" ${r.value===v?'checked':''}>${v}</label>`).join('')}<small>Tu valoración no cambia los registros.</small></fieldset>`;
+ else body=`<h2>${id===undefined?'Nuevo compromiso':'Ajustar compromiso'}</h2><small>Para ${names[period]} · ejemplo personal</small><div class="block"><label>Nombre<input name="name" value="${esc(h.name)}" placeholder="Ej. Caminar"></label><label>Frecuencia<select name="freq">${['día','semana','mes'].map(f=>`<option ${h.freq===f?'selected':''}>${f}</option>`).join('')}</select></label><label>Cantidad de veces<input name="qty" type="number" min="1" max="999" step="1" value="${h.qty}" inputmode="numeric"></label></div><details class="block"><summary class="summary">Organizar mi compromiso</summary><label>Recordatorio escrito<input name="anchor" value="${esc(h.anchor)}" placeholder="Ej. Después de llegar a casa"></label><small>Una frase para vos. No programa una notificación.</small><label>Nota personal<textarea name="note">${esc(h.note)}</textarea></label></details>`;
+ editor.innerHTML=`<header class="bar row spread"><strong>${type==='review'?'Revisar compromiso':'Mi compromiso'}</strong>${button('exit-editor','Cerrar')}</header><div class="body">${body}<div id="editor-error"></div></div><footer class="actions row">${button('save-editor','Guardar',true)}</footer>`;
+ editor.hidden=false;screen.inert=true;foot.inert=true;$('#demo-period').disabled=true;editorOriginal=serialize();editor.querySelector('button').focus();
+}
+function serialize(){return JSON.stringify([...editor.querySelectorAll('input,textarea,select')].map(e=>[e.name,e.type==='radio'?e.checked:e.value.trim()]));}
+function endEditor(){editor.hidden=true;screen.inert=false;foot.inert=false;$('#demo-period').disabled=false;editing=null;render();if(origin?.isConnected)origin.focus();else $('#demo-period').focus();}
+function exitEditor(){if(serialize()===editorOriginal){endEditor();return}const confirm=$('#demo-confirm');confirm.innerHTML=`<h2>Tenés cambios sin guardar</h2><p>¿Querés seguir editando o descartarlos?</p><div class="row">${button('keep','Seguir editando',true)}${button('discard','Descartar')}</div>`;confirm.hidden=false;editor.inert=true;confirm.querySelector('button').focus();}
+root.addEventListener('input',e=>{const t=e.target;if(t.dataset.note)monthNote[t.dataset.note]=t.value;if(t.hasAttribute('data-purpose'))purpose[period]=t.value;});
+root.addEventListener('change',e=>{const t=e.target;if(t.id==='demo-period'){period=t.value;view='home';render();screen.scrollTop=0}if(t.hasAttribute('data-select')){const i=Number(t.dataset.select);selected[period]=t.checked?[...new Set([...selected[period],i])]:selected[period].filter(x=>x!==i)}});
+root.addEventListener('click',e=>{
+ const b=e.target.closest('button[data-act]');if(!b)return;const a=b.dataset.act;
+ if(a==='sep'||a==='oct'){period=a;view='home';render();screen.scrollTop=0}
+ if(a==='plan'){view='plan';render()}
+ if(a==='edit-close'){closed=false;render()}
+ if(a==='close-month'){if(showError($('#demo-error')))return;closed=true;render();screen.scrollTop=0;announce('Cierre de septiembre guardado en esta prueba.')}
+ if(a==='save-plan'){if(showError($('#demo-error')))return;prepared[period]=true;view='home';render();screen.scrollTop=0;announce('Plan guardado en esta prueba.')}
+ if(a==='review'||a==='edit')openEditor(a,Number(b.dataset.id));
+ if(a==='new')openEditor('edit');
+ if(a==='exit-editor')exitEditor();
+ if(a==='keep'){$('#demo-confirm').hidden=true;editor.inert=false;editor.querySelector('button').focus()}
+ if(a==='discard'){$('#demo-confirm').hidden=true;editor.inert=false;endEditor()}
+ if(a==='save-editor'){
+  const value=n=>editor.querySelector(`[name="${n}"]`)?.value.trim()||'';
+  let h;if(editing.type!=='review'){const qty=Number(value('qty'));if(!value('name')||!Number.isInteger(qty)||qty<1||qty>999){$('#editor-error').innerHTML='<p class="error" role="alert">Escribí un nombre y una cantidad entera entre 1 y 999.</p>';return}h={name:value('name'),qty,freq:value('freq'),anchor:value('anchor'),note:value('note'),scope:editing.id===undefined?'Personal':habits[editing.id].scope};}
+  if(showError($('#editor-error')))return;
+  if(editing.type==='review')reviews[editing.id]={note:value('note'),value:editor.querySelector('[name=value]:checked').value};
+  else if(editing.id===undefined){habits.push(h);selected[period].push(habits.length-1)}
+  else{plans[period]??={};plans[period][editing.id]=h}
+  endEditor();announce('Cambios guardados en esta prueba.');
+ }
+ if(a==='reset'){period='oct';view='home';closed=false;prepared={oct:false,nov:false};monthNote={help:'',hard:'',next:''};purpose={oct:'',nov:''};reviews={};selected={oct:[0,1],nov:[0,1]};plans={};habits=habits.slice(0,3);$('#demo-fail').checked=false;render();announce('Prueba reiniciada.')}
+});
+root.addEventListener('keydown',e=>{if(e.key==='Escape'&&!editor.hidden&&$('#demo-confirm').hidden){e.preventDefault();exitEditor()}});
+if(typeof matchMedia==='function'&&matchMedia('(max-width:680px)').matches)root.querySelector('.old').open=false;
+render();
+})();
+</script>
+</div>

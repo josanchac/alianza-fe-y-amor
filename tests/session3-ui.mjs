@@ -25,6 +25,7 @@ try{
  cleanup();
  let saved,prepared;const own=[row('habit','walk',h),row('habit','read',{...h,title:'Leer'})];
  render(React.createElement(MonthReview,{own,month:'2026-09',today:'2026-09-27',onMonth(){},edit(){},explore(){},onSave:async d=>{saved=d;return true;},onPrepare:async d=>{prepared=d;}}));
+ fireEvent.click(screen.getByRole('button',{name:'Reflexionar sobre este mes'}));
  fireEvent.change(screen.getByRole('textbox',{name:'¿Qué me ayudó?'}),{target:{value:'Pude escuchar con calma'}});
  fireEvent.click(screen.getByRole('button',{name:'Consultar lo que viví este mes',hidden:true}));
  fireEvent.click(screen.getByRole('button',{name:'Volver a mi revisión',hidden:true}));assert.equal(screen.getByRole('textbox',{name:'¿Qué me ayudó?'}).value,'Pude escuchar con calma');

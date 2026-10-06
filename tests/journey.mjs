@@ -42,6 +42,7 @@ try{
  fireEvent.click(screen.getByRole('button',{name:'Mi mes',exact:true}));
  assert.equal(screen.getByRole('textbox',{name:'¿Qué me ayudó?'}).value,'Borrador conservado');
  fireEvent.change(screen.getByLabelText('Mi mes'),{target:{value:month}});
+ fireEvent.click(screen.getByRole('button',{name:'Reflexionar sobre este mes'}));
  assert.notEqual(screen.getByRole('textbox',{name:'¿Qué me ayudó?'}).value,'Borrador conservado');
  fireEvent.change(screen.getByLabelText('Mi mes'),{target:{value:previous}});
  assert.equal(screen.getByRole('textbox',{name:'¿Qué me ayudó?'}).value,'Borrador conservado');
