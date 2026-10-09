@@ -19,16 +19,23 @@ try{
  $('[data-nav="month"]').click();assert.equal(d.querySelectorAll('[data-select]').length,5);click('show-all');assert.equal(d.querySelectorAll('[data-select]').length,50);
  $('[data-all]').click();assert.equal($('[data-count]').textContent,'50 elegidos');$('[data-all]').click();assert.equal($('[data-count]').textContent,'0 elegidos');
  input('[data-scenario]','partial','change');$('[data-nav="month"]').click();input('[data-purpose]','Propósito de prueba');
- click('adjust');input('[data-habit-qty]','0');click('apply-habit');assert(text().includes('cantidad entera'));input('[data-habit-qty]','6');click('apply-habit');
+ assert.equal($('[data-action="review-plan"]'),null);
+ click('adjust');
+ const qty=$('[data-habit-qty]');qty.focus();assert.equal(qty.selectionStart,0);assert.equal(qty.selectionEnd,1);
+ qty.setRangeText('6',qty.selectionStart,qty.selectionEnd,'end');qty.dispatchEvent(new dom.window.Event('input',{bubbles:true}));assert.equal(qty.value,'6');
+ click('more');assert.equal(qty.value,'7');click('less');assert.equal(qty.value,'6');
+ input('[data-habit-qty]','0');click('apply-habit');assert(text().includes('cantidad entera'));input('[data-habit-qty]','6');click('apply-habit');assert(text().includes('4 → 6 veces por mes'));
+ $('[data-select="walk"]').click();assert($('[data-diff="walk"]').textContent.includes('Quedará en pausa'));$('[data-select="walk"]').click();assert(!$('[data-diff="walk"]').textContent.includes('Quedará en pausa'));
+ $('[data-select="reading"]').click();assert($('[data-diff="reading"]').textContent.includes('Se retomará'));$('[data-select="reading"]').click();
  click('new-habit');input('[data-habit-name]','Compromiso nuevo');click('apply-habit');assert(text().includes('Compromiso nuevo'));
- click('review-plan');assert(text().includes('hoy, 8 de octubre'));assert(text().includes('3 compromisos'));assert(text().includes('1 quedan en pausa'));
- $('[data-fail]').checked=true;click('save-plan');assert(text().includes('Conservamos tu selección'));click('save-plan');assert(text().includes('Propósito de prueba'));assert(text().includes('6 veces por mes'));
+ assert(text().includes('hoy, 8 de octubre'));assert.equal($('[data-count]').textContent,'3 elegidos');assert(text().includes('Nuevo compromiso'));
+ $('[data-fail]').checked=true;click('save-plan');assert(text().includes('Conservamos tu selección'));assert(text().includes('4 → 6 veces por mes'));click('save-plan');assert.equal($('[data-purpose]').value,'Propósito de prueba');assert(text().includes('6 veces por mes'));assert(!text().includes('4 → 6'));assert($('[data-action="save-plan"]').disabled);assert($('[data-announcement]').textContent.includes('Tu plan de octubre quedó guardado'));
  // Future month inherits the saved current plan without overwriting it.
  input('[data-month]','2026-11','change');assert(text().includes('el 1 de noviembre'));assert(text().includes('6 veces por mes'));assert.equal($('[data-purpose]').value,'Propósito de prueba');
- input('[data-purpose]','Plan futuro');click('review-plan');click('save-plan');input('[data-month]','2026-10','change');assert(text().includes('Propósito de prueba'));assert(!text().includes('Plan futuro'));
+ input('[data-purpose]','Plan futuro');click('save-plan');input('[data-month]','2026-10','change');assert.equal($('[data-purpose]').value,'Propósito de prueba');assert($('[data-action="save-plan"]').disabled);
  // A draft survives switching months without being falsely shown as a saved plan.
- click('edit-plan');input('[data-purpose]','Borrador sin guardar');input('[data-month]','2026-11','change');input('[data-month]','2026-10','change');assert.equal($('[data-purpose]').value,'Borrador sin guardar');assert(!text().includes('Guardado en esta prueba'));
- input('[data-scenario]','empty','change');assert(text().includes('Todavía no escribiste'));$('[data-nav="month"]').click();assert(text().includes('Todavía no tenés compromisos'));click('review-plan');click('save-plan');assert(text().includes('0 compromisos elegidos'));
+ input('[data-purpose]','Borrador sin guardar');assert(!$('[data-action="save-plan"]').disabled);input('[data-month]','2026-11','change');input('[data-month]','2026-10','change');assert.equal($('[data-purpose]').value,'Borrador sin guardar');assert(text().includes('Cambios sin guardar'));assert(!$('[data-action="save-plan"]').disabled);
+ input('[data-scenario]','empty','change');assert(text().includes('Todavía no escribiste'));$('[data-nav="month"]').click();assert(text().includes('Todavía no tenés compromisos'));click('save-plan');assert.equal($('[data-count]').textContent,'0 elegidos');assert($('[data-action="save-plan"]').disabled);
  assert.equal(errors.length,0);assert(!/fetch\(|XMLHttpRequest|localStorage|https?:\/\//.test(source));
- console.log('PASS preview: visible saved notes, date/category isolation, empty/long text, discard/retry, 50 commitments, select all, quantity validation, current/future dates, plan carryover, draft preservation, no network');
+ console.log('PASS preview: direct save without review screen, inline frequency/pause/new changes, quantity replacement and +/- controls, no-op save guard, plus notes, 50 commitments, retry, month isolation and drafts');
 }finally{dom.window.close();}

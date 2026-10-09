@@ -5,7 +5,7 @@ Entrega para revisión visual, 08/10/2026 Costa Rica (09/10 UTC). Seguimiento ú
 ## Qué evaluar
 
 1. En Mi día, ¿se puede releer el ofrecimiento sin entrar al editor? La propuesta muestra una categoría a la vez y permite cambiar a agradecimiento o meditación. Un texto extenso tiene «Leer completo»; editar es una acción separada.
-2. En Mi mes, ¿resulta claro seleccionar, ajustar o agregar compromisos y confirmar la selección? El resumen informa la fecha de vigencia y cuántos compromisos quedan activos/en pausa.
+2. En Mi mes, ¿resulta claro seleccionar, ajustar o agregar compromisos y guardar desde la misma vista? Cada compromiso muestra el cambio concreto; la vigencia se indica una sola vez.
 
 `review/feedback4/daily-month-clarity.html` es el prototipo autocontenido. Usa datos ficticios, en memoria, sin llamadas, almacenamiento persistente ni textos del piloto. Incluye referencia simplificada del componente diario anterior; no es captura ni conexión a producción. Los controles del carrusel los aporta la presentación en conversación. Fuera de esa presentación, la propuesta inicial funciona sola.
 
@@ -23,10 +23,13 @@ Entrega para revisión visual, 08/10/2026 Costa Rica (09/10 UTC). Seguimiento ú
 
 ### Mi mes
 
-- La entrada contextual está implementada parcialmente en PR #37. Este prototipo concreta el tramo todavía pendiente de selección y confirmación conjunta del mes actual.
-- Mes actual: se propone aplicar cambios desde hoy. Mes siguiente: desde su primer día. La pantalla indica la vigencia antes de confirmar.
+- La entrada contextual está implementada parcialmente en PR #37. Este prototipo concreta el tramo todavía pendiente de selección y guardado conjunto del mes actual.
+- Tras revisar la captura, el propietario señaló que «Revisar cambios» no era claro ni aportaba valor. Se eliminó esa pantalla: guardar directamente, diferencias de frecuencia/pausa junto a cada compromiso, confirmación breve sin navegación. También se quitaron los dos botones de volver y los recuentos de cero pausas.
+- Mes actual: se propone aplicar cambios desde hoy. Mes siguiente: desde su primer día. La pantalla indica la vigencia una sola vez antes de guardar.
 - Elegir otro mes no convierte borradores en guardados. Se conservan las selecciones de cada mes; el siguiente parte del plan actual guardado al abrirse por primera vez.
-- Con 50 compromisos, mostrar inicialmente cinco y permitir ver todos. Seleccionar todos indica el estado parcial; agregar/ajustar no guarda el plan hasta confirmar.
+- Con 50 compromisos, mostrar inicialmente cinco y permitir ver todos. Seleccionar todos indica el estado parcial; agregar/ajustar no guarda el plan hasta tocar Guardar.
+- Después de guardar, se conserva la vista y Guardado queda deshabilitado hasta modificar algo. Las diferencias desaparecen solo tras éxito; un fallo conserva cambios y selección.
+- Cantidad: campo numérico editable con selección del valor al enfocar y botones de aumentar/reducir. La captura mostraba 46 pero no confirma si fue involuntario; se mejora la edición sin atribuir un error demostrado al usuario. Pendiente comportamiento táctil real en iOS.
 - Desmarcar propone pausa desde la vigencia indicada, conservando el pasado. Guardar todo desmarcado debe seguir siendo posible y explícito.
 - El editor de muestra cubre frecuencias básicas para evaluar el recorrido. No implementa ni reemplaza días elegidos, varias ocasiones diarias, novenas, compartición o cursos. Esos casos deben preservarse y verificarse en la integración real; no pueden convertirse automáticamente al formato simple del ejemplo.
 - Cierre del período anterior, semana/año y espacios integrados conservan sus tareas existentes. La muestra no da por completado ese alcance.
@@ -47,8 +50,8 @@ La petición de aplicar un cambio a una fecha anterior se mantiene en #33: exige
 
 ## Verificación y autorización
 
-`node review/feedback4/daily-month-clarity-test.mjs`: aprobado. Cubre nota visible, fechas/categorías, vacío/espacios, texto de más de 4500 caracteres, descarte/reintento, 50 compromisos, selección masiva, cantidades, vigencia actual/futura, herencia del plan guardado y borradores al cambiar de mes. Sin errores de script ni red.
+`node review/feedback4/daily-month-clarity-test.mjs`: aprobado. Cubre nota visible, fechas/categorías, vacío/espacios, texto de más de 4500 caracteres, descarte/reintento, 50 compromisos, selección masiva, cantidades, vigencia actual/futura, herencia del plan guardado y borradores al cambiar de mes. Añadida regresión de guardado directo, diferencias junto a compromisos, pausa/reactivación, sustitución de 4 por 6, controles +/− y guardado sin cambios. Sin errores de script ni red.
 
 No se ejecutó la suite de producto porque solo cambian archivos de revisión. JSDOM no acredita geometría, desplazamiento ni teclado real. Validación visual, 320–430 px/200% y dispositivo siguen pendientes. No hay capturas reales nuevas; las restricciones de navegador ya documentadas no se eludieron.
 
-Antes de integrar el diseño nuevo de Hoy y la confirmación mensual se solicita revisión del propietario conforme a `EXPERIENCE_REVIEW_GATE.md`. La aprobación no autoriza publicación. Reversión de esta entrega: retirar estos archivos de revisión, sin efecto sobre datos ni producto.
+El propietario probó la propuesta, aportó la observación de la pantalla de confirmación y cerró sus comentarios con «Eso era sigamos». Se aplica esa corrección y se continúa con la implementación por bloques. La publicación y la validación de dispositivo siguen siendo pasos separados. Reversión de esta entrega: retirar estos archivos de revisión, sin efecto sobre datos ni producto.
