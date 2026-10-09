@@ -2,6 +2,7 @@
 
 ## Pendiente de publicación
 
+- El menú del compromiso espera un toque completo: apoyar el dedo para deslizar la lista ya no lo abre. Se conservan los accesos por teclado y las acciones existentes; pendiente de validación en Android real.
 - Las etiquetas Diario, Semanal y Mensual conservan la palabra completa y pasan a otra línea si no caben junto al título; se mantiene el tamaño de letra.
 
 ## 0.2.0-alpha.9 — 2026-09-17 (preparada para publicación)

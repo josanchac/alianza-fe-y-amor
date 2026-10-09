@@ -22,7 +22,7 @@ try{
  assert.equal(daily.getAttribute('aria-valuenow'),'1');
  assert.equal(screen.getByRole('progressbar',{name:'Rosarios'}).getAttribute('aria-valuemax'),'2');
  await waitFor(()=>assert.equal(screen.getByRole('button',{name:'Editar: Rosarios'}).disabled,false));
- fireEvent.pointerDown(screen.getByRole('button',{name:'Editar: Rosarios'}),{button:0,ctrlKey:false,pointerType:'mouse'});
+ fireEvent.click(screen.getByRole('button',{name:'Editar: Rosarios'}),{button:0,ctrlKey:false,pointerType:'mouse'});
  fireEvent.click(await screen.findByRole('menuitem',{name:'Deshacer último'}));
  await waitFor(()=>assert.equal(screen.queryByText('+1 adicional')===null,true));
  assert.equal(writes.at(-1).data.Rosarios,2);
