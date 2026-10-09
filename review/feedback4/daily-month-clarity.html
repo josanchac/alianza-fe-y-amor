@@ -1,0 +1,133 @@
+<div id="alianza-clarity">
+<style>
+#alianza-clarity{--ac-paper:light-dark(#faf8f1,#17252a);--ac-panel:light-dark(#ffffff,#213238);--ac-ink:light-dark(#203e4b,#e7efef);--ac-soft:light-dark(#edf0ed,#2d4147);--ac-line:light-dark(#d7dfdc,#50666b);--ac-gold:light-dark(#816a32,#dcc386);--ac-muted:light-dark(#586c72,#b8c9cb);--ac-active:light-dark(#203e4b,#c4d9de);--ac-onactive:light-dark(#ffffff,#17252a);--ac-error:light-dark(#a02931,#ffc6c9);color:var(--ac-ink);font-family:Arial,sans-serif;font-size:16px;line-height:1.5}
+#alianza-clarity *{box-sizing:border-box}
+#alianza-clarity [hidden]{display:none!important}
+#alianza-clarity .ac-stage{padding:12px 0;min-height:760px}
+#alianza-clarity .ac-phone{max-width:430px;margin:auto;background:var(--ac-paper);border:1px solid var(--ac-line);border-radius:24px;padding:20px;overflow-wrap:anywhere}
+#alianza-clarity .ac-brand{font-family:Georgia,serif;font-size:28px;line-height:1.2;margin:0}
+#alianza-clarity .ac-kicker{color:var(--ac-gold);font-size:13px;letter-spacing:.08em;margin:3px 0 18px}
+#alianza-clarity h2{font:400 28px/1.2 Georgia,serif;margin:18px 0 14px}
+#alianza-clarity h3{font-size:17px;line-height:1.4;margin:0 0 8px;font-weight:600}
+#alianza-clarity p{margin:8px 0 14px}
+#alianza-clarity small{color:var(--ac-muted)}
+#alianza-clarity .ac-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+#alianza-clarity .ac-between{justify-content:space-between}
+#alianza-clarity .ac-nav{display:flex;gap:5px;background:var(--ac-soft);padding:5px;border-radius:14px;margin:12px 0}
+#alianza-clarity button{font:inherit;min-height:44px;max-width:100%;border:1px solid var(--ac-line);border-radius:12px;padding:9px 13px;background:var(--ac-panel);color:var(--ac-ink);white-space:normal;word-break:normal}
+#alianza-clarity button:disabled{opacity:.55}
+#alianza-clarity .ac-nav button{flex:1;border:0;background:transparent}
+#alianza-clarity button[aria-pressed="true"],#alianza-clarity .ac-primary{background:var(--ac-active);color:var(--ac-onactive);border-color:var(--ac-active)}
+#alianza-clarity .ac-panel{background:var(--ac-panel);border:1px solid var(--ac-line);padding:16px;border-radius:16px;margin:14px 0}
+#alianza-clarity .ac-note{font:400 20px/1.55 Georgia,serif;white-space:pre-wrap;margin:12px 0 18px;overflow-wrap:anywhere}
+#alianza-clarity .ac-categories{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+#alianza-clarity .ac-categories button{padding:8px 10px;font-size:16px;flex:1 1 auto}
+#alianza-clarity input,#alianza-clarity textarea,#alianza-clarity select{font:inherit;color:var(--ac-ink);background:var(--ac-panel);border:1px solid var(--ac-line);border-radius:10px;padding:10px;max-width:100%}
+#alianza-clarity input:not([type=checkbox]),#alianza-clarity textarea{width:100%}
+#alianza-clarity textarea{resize:vertical;min-height:150px}
+#alianza-clarity label{display:block;margin:12px 0}
+#alianza-clarity label>input:not([type=checkbox]),#alianza-clarity label>textarea,#alianza-clarity label>select{display:block;margin-top:6px}
+#alianza-clarity input[type=checkbox]{width:22px;height:22px;flex-shrink:0;accent-color:var(--ac-active)}
+#alianza-clarity .ac-check{display:flex;align-items:center;gap:10px;min-height:44px;margin:0}
+#alianza-clarity .ac-habit{padding:14px 0;border-bottom:1px solid var(--ac-line)}
+#alianza-clarity .ac-habit:last-child{border:0}
+#alianza-clarity .ac-habit small{display:block;margin:4px 0 8px 32px}
+#alianza-clarity .ac-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+#alianza-clarity .ac-actions button{flex:1 1 auto}
+#alianza-clarity .ac-status{color:var(--ac-muted);margin-top:12px}
+#alianza-clarity [role=alert]{color:var(--ac-error)}
+#alianza-clarity summary{min-height:44px;padding:10px 0}
+#alianza-clarity .ac-lab{max-width:430px;margin:0 auto 10px;font-size:14px}
+#alianza-clarity .ac-lab select{width:100%}
+@media(max-width:360px){#alianza-clarity .ac-phone{padding:14px;border-radius:16px}#alianza-clarity .ac-categories button{flex-basis:100%}#alianza-clarity .ac-stage{min-height:860px}}
+</style>
+<div class="viz-carousel viz-dotted-background" aria-label="Alianza: propuesta y referencia" data-previous-label="Anterior" data-next-label="Siguiente">
+<section data-variant="Propuesta" aria-label="Propuesta interactiva">
+ <div class="ac-stage">
+  <div class="ac-lab"><span>Datos ficticios · no cambia tu app</span><details><summary>Escenarios de prueba</summary><label>Contenido<select data-scenario><option value="partial">Algunas notas guardadas</option><option value="empty">Sin notas ni compromisos</option><option value="complete">Todo guardado</option><option value="long">Textos largos y 50 compromisos</option></select></label><label class="ac-check"><input type="checkbox" data-fail>Fallará el próximo guardado</label></details></div>
+  <section class="ac-phone" aria-label="Alianza, propuesta">
+   <header><p class="ac-brand">Alianza</p><p class="ac-kicker">FE Y AMOR · PERSONAL</p><div class="ac-nav" aria-label="Vista"><button type="button" data-nav="day" aria-pressed="true">Mi día</button><button type="button" data-nav="month" aria-pressed="false">Mi mes</button></div></header>
+   <div data-screen><h2>Momento para vos</h2><p>Ofrezco este día por las personas que necesitan compañía.</p></div>
+   <div data-announcement class="ac-status" role="status" aria-live="polite"></div>
+  </section>
+ </div>
+</section>
+<section data-variant="Referencia anterior" aria-label="Referencia simplificada de la experiencia anterior" hidden>
+ <div class="ac-stage"><div class="ac-lab">Mismos ejemplos · referencia simplificada</div><section class="ac-phone" aria-label="Alianza, referencia anterior"><p class="ac-brand">Alianza</p><p class="ac-kicker">FE Y AMOR · PERSONAL</p><h2>Mi día</h2><p>Jueves 8 de octubre</p><h3>Momento para vos</h3><div class="ac-categories"><button data-old="offering">Ofrecimiento</button><button data-old="gratitude">Agradecimiento</button><button data-old="meditation">Meditación</button></div><div data-old-editor hidden></div></section></div>
+</section>
+</div>
+<script>
+(()=>{
+const root=document.getElementById('alianza-clarity'),q=s=>root.querySelector(s),screen=q('[data-screen]');
+const title={offering:'Ofrecimiento',gratitude:'Agradecimiento',meditation:'Meditación'};
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const clone=x=>JSON.parse(JSON.stringify(x));
+const button=(act,text,primary=false,attrs='')=>`<button type="button" class="cursor-interaction ${primary?'ac-primary':''}" data-action="${act}" ${attrs}>${text}</button>`;
+let view='day',day='2026-10-08',category='offering',expanded=false,editing=null,discarding=false,month='2026-10',monthStep='edit',changes={},notes={},habits=[],savedPlans={},draftPlans={},status='';
+const today='2026-10-08';
+const monthName=()=>month==='2026-10'?'octubre':'noviembre';
+const effective=()=>month==='2026-10'?today:'2026-11-01';
+const effectiveLabel=()=>month==='2026-10'?'hoy, 8 de octubre':'el 1 de noviembre';
+const baseHabits=()=>[{id:'rosary',name:'Rezar el rosario',qty:4,unit:'mes',keep:true},{id:'walk',name:'Caminar',qty:3,unit:'semana',keep:true},{id:'reading',name:'Lectura espiritual',qty:1,unit:'día',keep:false}];
+function preset(value){
+ notes={'2026-10-08':{offering:'Ofrezco este día por las personas que necesitan compañía.',gratitude:'Agradezco la conversación de esta mañana.',meditation:''},'2026-10-07':{offering:'Ofrezco mi trabajo de hoy por quienes buscan una oportunidad.',gratitude:'',meditation:''}};
+ habits=baseHabits();savedPlans={};draftPlans={};changes={};
+ if(value==='empty'){notes={'2026-10-08':{offering:'',gratitude:'',meditation:''},'2026-10-07':{offering:'',gratitude:'',meditation:''}};habits=[];}
+ if(value==='complete'){notes[today].meditation='Quiero aprender a escuchar con más calma.';savedPlans['2026-10']={purpose:'Cuidar la constancia',items:clone(habits),effective:today};}
+ if(value==='long'){notes[today].offering=('Hoy ofrezco mis esfuerzos por quienes necesitan compañía y paciencia. ').repeat(70).trim();habits=Array.from({length:50},(_,i)=>({id:'h'+i,name:i===0?'Un compromiso con un nombre extenso para comprobar la lectura en el teléfono':'Compromiso de prueba '+(i+1),qty:3,unit:'semana',keep:i%3!==0}));}
+ day=today;view='day';category='offering';editing=null;discarding=false;expanded=false;status='';month='2026-10';monthStep='edit';q('[data-fail]').checked=false;render();renderOld();
+}
+function plan(){if(!draftPlans[month]){const source=savedPlans[month]||(month==='2026-11'?savedPlans['2026-10']:null);draftPlans[month]=clone({purpose:source?.purpose||'',items:source?.items||habits,effective:effective()});}return draftPlans[month];}
+function announce(text){status=text;q('[data-announcement]').textContent=text;}
+function fail(){if(!q('[data-fail]').checked)return false;q('[data-fail]').checked=false;return true;}
+function openNote(){editing={kind:'note',day,category,value:notes[day][category],original:notes[day][category]};render();q('[data-exit]').focus();}
+function editorHtml(){
+ if(discarding)return `<section class="ac-panel"><h2>¿Descartar los cambios?</h2><div class="ac-actions">${button('keep-editing','Seguir escribiendo',true)}${button('discard','Descartar')}</div></section>`;
+ if(editing.kind==='note')return `${button('exit','← Volver',false,'data-exit')}<h2>${title[editing.category]}</h2><p>${editing.day===today?'Jueves 8':'Miércoles 7'} de octubre · Solo vos</p><label>Tu ${title[editing.category].toLowerCase()}<textarea data-note maxlength="12000">${esc(editing.value)}</textarea></label><div data-error role="alert"></div><div class="ac-actions">${button('save-note','Guardar',true)}${button('exit','Cancelar')}</div>`;
+ return `${button('exit','← Volver al plan',false,'data-exit')}<h2>${editing.new?'Agregar':'Ajustar'} compromiso</h2><label>Nombre<input data-habit-name maxlength="160" value="${esc(editing.value.name)}"></label><div class="ac-row"><label>Veces<input type="number" data-habit-qty min="1" max="99" value="${editing.value.qty}" inputmode="numeric"></label><label>Por<select data-habit-unit>${['día','semana','mes'].map(x=>`<option ${x===editing.value.unit?'selected':''}>${x}</option>`).join('')}</select></label></div><p>Para ${monthName()} · desde ${effectiveLabel()}</p><div data-error role="alert"></div><div class="ac-actions">${button('apply-habit','Aplicar al plan',true)}${button('exit','Cancelar')}</div>`;
+}
+function dayHtml(){const text=notes[day][category],long=text.length>180;
+ return `<div class="ac-row ac-between"><h2>Mi día</h2>${button('date',day===today?'Ver ayer':'Volver a hoy')}</div><p>${day===today?'Jueves 8':'Miércoles 7'} de octubre</p><h3>Momento para vos</h3><div class="ac-categories" aria-label="Reflexión del día">${Object.keys(title).map(k=>button('category',title[k],false,`data-key="${k}" aria-pressed="${category===k}"`)).join('')}</div><section class="ac-panel"><div class="ac-row ac-between"><h3>${title[category]}</h3><small>Solo vos</small></div>${text.trim()?`<p class="ac-note" data-saved-note>${esc(long&&!expanded?text.slice(0,180)+'…':text)}</p><div class="ac-row">${long?button('expand',expanded?'Ver menos':'Leer completo',false,`aria-expanded="${expanded}"`):''}${button('edit-note','Editar')}</div>`:`<p>Todavía no escribiste aquí.</p>${button('edit-note','Escribir '+title[category].toLowerCase(),true)}`}</section>`;
+}
+function monthHtml(){
+ const p=plan(),selected=p.items.filter(x=>x.keep),limit=changes.showAll?Infinity:5;
+ const picker=`<label>Mi mes<select data-month><option value="2026-10" ${month==='2026-10'?'selected':''}>Octubre · actual</option><option value="2026-11" ${month==='2026-11'?'selected':''}>Noviembre · siguiente</option></select></label>`;
+ if(monthStep==='saved')return `${picker}<h2>Tu plan de ${monthName()}</h2><p>Guardado en esta prueba.</p><section class="ac-panel"><h3>Mi propósito</h3><p>${esc(p.purpose||'Sin propósito escrito.')}</p><h3>${selected.length} compromisos elegidos</h3>${selected.slice(0,5).map(h=>`<p>${esc(h.name)}<br><small>${h.qty} ${h.qty===1?'vez':'veces'} por ${h.unit}</small></p>`).join('')}${selected.length>5?`<p>Y ${selected.length-5} más.</p>`:''}</section>${button('edit-plan','Ajustar mi plan',true)}`;
+ if(monthStep==='review')return `${button('edit-plan','← Volver al plan')}<h2>Confirmar ${monthName()}</h2><section class="ac-panel"><h3>Desde ${effectiveLabel()}</h3><p>${selected.length} compromisos en tu horario.</p><p>${p.items.length-selected.length} quedan en pausa.</p><p>Se conservan las marcas y notas anteriores.</p><details><summary>Ver compromisos elegidos</summary>${selected.map(h=>`<p>${esc(h.name)} · ${h.qty} por ${h.unit}</p>`).join('')||'<p>Ninguno seleccionado.</p>'}</details></section><div data-error role="alert"></div><div class="ac-actions">${button('save-plan','Guardar mi plan',true)}${button('edit-plan','Volver')}</div>`;
+ return `${picker}<h2>Preparar ${monthName()}</h2><section class="ac-panel"><label>Mi propósito (opcional)<input data-purpose maxlength="500" value="${esc(p.purpose)}" placeholder="¿Qué quiero cuidar?"></label></section><div class="ac-row ac-between"><h3>Mis compromisos</h3><span data-count>${selected.length} elegidos</span></div><p><small>Los cambios regirán desde ${effectiveLabel()}.</small></p>${p.items.length?`<label class="ac-check"><input type="checkbox" data-all ${selected.length===p.items.length?'checked':''}>Seleccionar todos</label>`:''}<div>${p.items.slice(0,limit).map(h=>`<article class="ac-habit"><label class="ac-check"><input type="checkbox" data-select="${h.id}" ${h.keep?'checked':''}><span>${esc(h.name)}</span></label><small>${h.qty} ${h.qty===1?'vez':'veces'} por ${h.unit}</small>${button('adjust','Ajustar',false,`data-id="${h.id}" aria-label="Ajustar ${esc(h.name)}"`)}</article>`).join('')||'<p>Todavía no tenés compromisos.</p>'}</div>${p.items.length>5?button('show-all',changes.showAll?'Mostrar menos':`Ver los ${p.items.length} compromisos`):''}<div class="ac-actions">${button('new-habit','Agregar compromiso')}${button('review-plan','Revisar cambios',true)}</div>`;
+}
+function render(){
+ q('[data-announcement]').textContent=status;
+ root.querySelectorAll('[data-nav]').forEach(b=>{b.setAttribute('aria-pressed',String(view===b.dataset.nav));b.disabled=!!editing;});
+ q('[data-scenario]').disabled=!!editing;
+ screen.innerHTML=editing?editorHtml():view==='day'?dayHtml():monthHtml();
+ const all=q('[data-all]');if(all){const items=plan().items;all.indeterminate=items.some(x=>x.keep)&&!items.every(x=>x.keep);}
+}
+function renderOld(key){const el=q('[data-old-editor]');el.hidden=!key;if(key)el.innerHTML=`<section class="ac-panel"><h3>${title[key]}</h3><label>Texto guardado<textarea readonly>${esc(notes[day][key])}</textarea></label>${button('close-old','Cerrar')}</section>`;}
+function exitEditor(){const dirty=editing.kind==='note'?editing.value!==editing.original:JSON.stringify(editing.value)!==editing.original;if(dirty){discarding=true;render();return;}editing=null;render();}
+root.addEventListener('input',e=>{const t=e.target;if(t.matches('[data-note]'))editing.value=t.value;if(t.matches('[data-purpose]'))plan().purpose=t.value;if(t.matches('[data-habit-name]'))editing.value.name=t.value;if(t.matches('[data-habit-qty]'))editing.value.qty=t.value;});
+root.addEventListener('change',e=>{const t=e.target;if(t.matches('[data-scenario]'))preset(t.value);if(t.matches('[data-habit-unit]'))editing.value.unit=t.value;if(t.matches('[data-month]')){month=t.value;monthStep=savedPlans[month]&&(!draftPlans[month]||JSON.stringify(draftPlans[month])===JSON.stringify(savedPlans[month]))?'saved':'edit';changes.showAll=false;status='';render();}if(t.matches('[data-select]')){plan().items.find(x=>x.id===t.dataset.select).keep=t.checked;const count=plan().items.filter(x=>x.keep).length;q('[data-count]').textContent=count+' elegidos';const all=q('[data-all]');all.checked=count===plan().items.length;all.indeterminate=count>0&&!all.checked;}if(t.matches('[data-all]')){plan().items.forEach(x=>x.keep=t.checked);render();}});
+root.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.hasAttribute('data-old')){renderOld(b.dataset.old);return;}if(b.hasAttribute('data-nav')){view=b.dataset.nav;status='';render();return;}const a=b.dataset.action;
+ if(a==='category'){category=b.dataset.key;expanded=false;render();}
+ if(a==='date'){day=day===today?'2026-10-07':today;expanded=false;status='';render();renderOld();}
+ if(a==='expand'){expanded=!expanded;render();}
+ if(a==='edit-note')openNote();
+ if(a==='exit')exitEditor();
+ if(a==='keep-editing'){discarding=false;render();}
+ if(a==='discard'){editing=null;discarding=false;render();}
+ if(a==='save-note'){
+  if(fail()){q('[data-error]').textContent='No se pudo guardar. Tu texto sigue aquí; intentá de nuevo.';return;}
+  notes[editing.day][editing.category]=editing.value;editing=null;expanded=false;render();announce('Guardado en esta prueba.');renderOld();
+ }
+ if(a==='show-all'){changes.showAll=!changes.showAll;render();}
+ if(a==='adjust'||a==='new-habit'){const h=a==='adjust'?clone(plan().items.find(x=>x.id===b.dataset.id)):{id:'new-'+Date.now(),name:'',qty:1,unit:'día',keep:true};editing={kind:'habit',new:a==='new-habit',value:h,original:JSON.stringify(h)};render();q('[data-exit]').focus();}
+ if(a==='apply-habit'){const h=editing.value;const qty=Number(h.qty);if(!h.name.trim()||!Number.isInteger(qty)||qty<1||qty>99){q('[data-error]').textContent='Escribí un nombre y una cantidad entera de 1 a 99.';return;}h.qty=qty;h.name=h.name.trim();if(editing.new)plan().items.push(clone(h));else plan().items=plan().items.map(x=>x.id===h.id?clone(h):x);editing=null;render();}
+ if(a==='review-plan'){monthStep='review';render();}
+ if(a==='edit-plan'){monthStep='edit';status='';render();}
+ if(a==='save-plan'){if(fail()){q('[data-error]').textContent='No se pudo guardar. Conservamos tu selección para reintentar.';return;}savedPlans[month]=clone(plan());monthStep='saved';render();announce('Plan guardado en esta prueba.');}
+ if(a==='close-old')renderOld();
+});
+preset('partial');
+})();
+</script>
+</div>
