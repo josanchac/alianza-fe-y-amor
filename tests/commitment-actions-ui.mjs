@@ -10,7 +10,7 @@ const habit=key=>[row('habit',key,{title:key,active:true,moment:'Mañana',anchor
 const fixture={user:{id:'synthetic',role:'member',email:'x@example.test',relationshipVersion:1,dataEpoch:1,coupleId:null},own:[row('profile','me',{name:'Test',ideal:'',shareSchedule:false,shareNotes:false}),...habit('Nuevo'),...habit('Caminar'),row('checks',today,{Caminar:'done'})],shared:[],partner:null,today};
 const writes=[];
 async function request(init){if(init?.method!=='POST')return Response.json(fixture);const p=JSON.parse(init.body);writes.push(p);if(p.action==='delete_habit'){fixture.own=fixture.own.filter(r=>r.key!==p.key);return Response.json({state:fixture});}const record={...row(p.kind,p.key,p.data),version:p.version+1};fixture.own=[...fixture.own.filter(r=>r.kind!==p.kind||r.key!==p.key),record];return Response.json({record});}
-async function menu(name){fireEvent.pointerDown(screen.getByRole('button',{name:'Editar: '+name}),{button:0,ctrlKey:false,pointerType:'mouse'});await screen.findByRole('menu');}
+async function menu(name){fireEvent.click(screen.getByRole('button',{name:'Editar: '+name}),{button:0,ctrlKey:false,pointerType:'mouse'});await screen.findByRole('menu');}
 try{
  render(React.createElement(Journal,{dataRequest:request,onSignOut(){}}));
  await screen.findByRole('heading',{name:/^(Hoy|Mi día)$/});
