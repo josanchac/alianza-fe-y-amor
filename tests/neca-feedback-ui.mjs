@@ -27,7 +27,8 @@ try{
  assert(screen.getByRole('button',{name:/Meditación/}));
  assert(screen.getByRole('button',{name:/Agradecimiento/}));
 
- fireEvent.click(screen.getByRole('button',{name:/Meditación/}));
+ fireEvent.click(screen.getByRole('button',{name:'Meditación',exact:true}));
+ fireEvent.click(screen.getByRole('button',{name:'Escribir meditación',exact:true}));
  await screen.findByRole('dialog',{name:'Mi meditación'});
  assert(screen.getByRole('textbox',{name:'Mi meditación…'}));
  assert.equal(screen.queryByRole('textbox',{name:'Ofrezco a la Mater…'}),null);
