@@ -36,6 +36,17 @@ try{
  const mark=screen.getByRole('button',{name:'Marcar mi compromiso'});await waitFor(()=>assert(!mark.disabled));fireEvent.click(mark);await screen.findByRole('button',{name:'Ya está marcado'});
  assert.equal(calls.filter(p=>p.action==='rosary_today').length,1);
  fireEvent.click(screen.getByRole('button',{name:'Rezar las letanías'}));assert(screen.getByRole('heading',{name:'Señor, ten piedad.'}));fireEvent.click(screen.getByRole('button',{name:'Avanzar'}));assert(screen.getByRole('heading',{name:'Cristo, ten piedad.'}));assert.equal(calls.filter(p=>p.action==='rosary_step').length,1);await clear();
+ // Letanies are offered after Salve, before the final sign of the cross.
+ render(React.createElement(Harness,{initial:{...base,personalStep:67,progressVersion:67}}));
+ fireEvent.click(screen.getByRole('button',{name:'Continuar rezando'}));
+ assert.equal(screen.queryByRole('button',{name:'Rezar las letanías (opcional)'}),null);
+ fireEvent.click(screen.getByRole('button',{name:'Avanzar'}));
+ fireEvent.click(await screen.findByRole('button',{name:'Rezar las letanías (opcional)'}));
+ assert(screen.getByRole('heading',{name:'Señor, ten piedad.'}));
+ assert.equal(calls.at(-1).step,68);assert.equal(calls.filter(p=>p.action==='rosary_today').length,0);await clear();
+ render(React.createElement(Harness,{initial:{...base,personalStep:69,mine:[{decade:1,day:localDate()}]}}));
+ assert.equal(screen.queryByRole('img',{name:'Rosario concluido'}),null);
+ assert(screen.getByRole('button',{name:'Ver registro'}));assert.equal(screen.queryByRole('button',{name:'Continuar rezando'}),null);await clear();
  // Auto marking requires a remembered opt-in AND a completion transition in this session.
  localStorage.setItem('alianza-rosary-auto:owner','h');
  const finished={...base,personalStep:69,mine:Array.from({length:5},(_,i)=>({decade:i+1,day:localDate()}))};

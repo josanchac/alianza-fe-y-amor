@@ -18,8 +18,23 @@ La actualización del manifiesto registra este cotejo, no elimina ni debilita el
 
 Sobre `1d4b3a7c7f513d2adf35fab0ac2a21025dcf6db5`, ejecución 38182689690 aprobada. Ejecución 38182689696: suite y tipos aprobados; trabajo Auth/API y asesor de seguridad en Supabase desechable aprobados. El trabajo PostgreSQL se detuvo por la diferencia del manifiesto documental; concurrencia y restauración quedaron sin ejecutar, no fallaron por un resultado de datos.
 
-Se añade al arnés Auth/API el guardado mensual por RPC público, relectura, rechazo de versión repetida y aislamiento, con cuenta sintética independiente. Pendiente del nuevo resultado CI.
+Se añade al arnés Auth/API el guardado mensual por RPC público, relectura, rechazo de versión repetida y aislamiento, con cuenta sintética independiente. En `c54e0e9069f0bc3422968d59dae1c1fb083eab1f`, las ejecuciones 38183201046 y 38183201049 finalizaron correctamente, incluyendo PostgreSQL con conexiones independientes, restauración sintética y Auth/API real.
 
 ## Entorno y límites
 
-Se solicitó reactivar el proyecto existente `alianza-pruebas`, sin crear recursos ni cambiar suscripción. Producción permanece sin cambios. La validación de la migración conectada, interfaz móvil y recuperación operativa sigue pendiente. El circuito OneDrive de #15 aún necesita acceso seguro y prueba de recuperación; las copias internas no sustituyen un respaldo externo.
+Se reactivó el proyecto existente `alianza-pruebas`, sin crear recursos ni cambiar suscripción. Se aplicaron allí las tres migraciones pendientes (session3, invitaciones internas y guardado mensual). `tests/current-month-plan-connected.sql` aprobó guardado/relectura, preservación de diario, conflicto e aislamiento por RPC con datos sintéticos y ROLLBACK. Producción permanece sin cambios. La inspección móvil y recuperación operativa siguen pendientes. El circuito OneDrive de #15 aún necesita acceso seguro y prueba de recuperación; las copias internas no sustituyen un respaldo externo.
+
+
+## Refinamientos propuestos para revisión del propietario
+
+Instrucción del 11/10: avanzar sin consulta para trabajo técnico; solicitar revisión para cambios visuales, de experiencia y contenido final. Estos cambios están preparados en rama y vista privada, **pendientes de esa revisión**, sin publicación en el piloto.
+
+- Formularios: foco inicial en título, cierre explícito conservando protección del borrador, botones sin palabras partidas y selección de cantidad al editar. Etiquetas propuestas: «Cuándo quiero recordarlo» y «Nota para mí».
+- Rosario: acceso desde Oración al rosario compartido existente; historial concluido aparte; presentación compacta al concluir; letanías opcionales después del Salve. No se añaden aceptación/rechazo de invitaciones ni estados de lectura.
+- Misa: aviso de respuesta del salmo ausente y límite de correspondencia con Costa Rica. No se aporta aún el estribillo ni se reemplaza el proveedor.
+
+Cotejo incremental M10/M12: nombres de campos conservan los datos personales existentes; navegación e historial no crean marcas, permisos ni valoraciones espirituales. Las letanías usan el texto ya cotejado, sin modificar ninguna oración o referencia. La nota de Misa es una explicación de la limitación actual, pendiente de aprobación editorial del propietario; no acredita la edición local.
+
+Evidencia: la suite completa llegó hasta la última prueba de acceso al rosario; esa prueba tenía un evento sintético incorrecto para las pestañas y se corrigió a mouseDown, como los demás recorridos. Reejecutada, pasó sin cambios adicionales del producto. Pruebas previas, incluidas notas/foco, guardado mensual, Rosario y Misa, pasaron. El manifiesto documental no sustituye aprobación visual/editorial.
+
+Vista privada: https://alianza-revision-integral.josanchac.chatgpt.site. Datos ficticios, reinicio al recargar; variante `?scenario=rosary` y `?volume=50`. El adaptador de vista previa no sustituye los ensayos conectados. Navegador real no disponible en este entorno; pendiente inspección humana en móvil. Continúa la advertencia de tamaño de bloque JS; no se afirma rendimiento móvil medido.

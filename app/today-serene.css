@@ -133,3 +133,14 @@
 .month-plan-editor .plan-change{font-size:16px;color:var(--app-control-ink);margin:6px 0}
 .month-plan-editor textarea{width:100%;font-size:16px;min-height:90px}
 .month-plan-editor .s3-check{font-size:16px}
+.editor-dialog .form-actions{flex-wrap:wrap;gap:8px}
+.editor-dialog .form-actions>button{flex:1 0 max-content;white-space:nowrap;word-break:normal;overflow-wrap:normal;min-width:100px}
+.editor-dialog .dialog-title{padding-right:30px}
+.editor-dialog [data-slot=dialog-close]{min-width:44px;min-height:44px;display:grid;place-items:center}
+.commitment-review{padding:16px 0;border-bottom:1px solid var(--border);display:grid;gap:12px}
+.commitment-review>button{justify-self:start}
+.s3-month-support details>section{padding:16px 0}
+.rosary-finished-label{color:var(--muted-foreground);font-weight:600}
+.mass-source-note{font-size:16px;line-height:1.5;color:var(--muted-foreground);padding:10px 0}
+
+.editor-top-close{position:absolute;right:12px;top:12px;font-size:28px;line-height:1}

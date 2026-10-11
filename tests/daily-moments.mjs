@@ -24,7 +24,7 @@ assert.equal(document.querySelector('.moment-saved-text').textContent,long);
  fireEvent.click(screen.getByRole('button',{name:'Agradecimiento',exact:true}));assert(region('Agradecimiento').textContent.includes('Solo vos'));assert(screen.getByText('Nota de agradecimiento ficticia'));
  assert.equal(writes.length,0);
  fireEvent.click(screen.getByRole('button',{name:'Meditación',exact:true}));assert(region('Meditación').textContent.includes('Todavía no escribiste'));assert(region('Meditación').textContent.includes('visible para Pareja de prueba'));
- fireEvent.click(screen.getByRole('button',{name:'Escribir meditación'}));await screen.findByRole('dialog',{name:'Mi meditación'});
+ fireEvent.click(screen.getByRole('button',{name:'Escribir meditación'}));await screen.findByRole('dialog',{name:'Mi meditación'});assert.equal(document.activeElement,screen.getByRole('heading',{name:'Mi meditación'}));assert(screen.getByRole('button',{name:'Cerrar formulario'}));
  fireEvent.change(screen.getByRole('textbox',{name:'Mi meditación…'}),{target:{value:'Meditación editada'}});
  fireEvent.click(screen.getByRole('button',{name:'Guardar',exact:true}));await waitFor(()=>assert.equal(writes.length,1));await waitFor(()=>assert.equal(screen.getByRole('button',{name:'Guardar',exact:true}).disabled,false));
  assert.equal(screen.getByRole('textbox',{name:'Mi meditación…'}).value,'Meditación editada');assert(!document.querySelector('.moment-reading').textContent.includes('Meditación editada'));

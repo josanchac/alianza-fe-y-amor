@@ -11,7 +11,13 @@ const habit=(key:string,title:string,period:string,target:number,unit='days')=>[
 const fixture:any={user:{id:'synthetic',email:'prueba@example.test',role:'member',relationshipVersion:1,dataEpoch:1,coupleId:'synthetic-couple'},today,shared:[],partner:{name:'Alex',ideal:'',symbol:'heart',appearance:{symbol:'heart',image:''},shareSchedule:false,shareNotes:false,records:[]},own:[row('purpose',today.slice(0,7),{text:'Escuchar con paciencia y estar presente en mi familia.',review:''}),row('spaces','experience',{enabled:['personal','couple','group'],start:'personal'}),row('profile','me',{name:'Persona de prueba',ideal:'Líder de amor',symbol:'tree',shareNotes:false,shareSchedule:false}),...habit('morning','Oración de la mañana','day',1),...habit('exercise','Ejercicio','week',3,'times'),...habit('rosary','Rezar el rosario','month',2,'times'),...habit('novena','Novena a la Virgen','day',1),row('checks',today,{morning:'done',exercise:1,rosary:2})]};
 for(const r of fixture.own.filter((r:RecordItem)=>r.key==='novena')){const course={start:today,days:9};if(r.kind==='habit'){r.data.moment='Noche';r.data.frequency.course=course;}else if(r.kind==='habit_plan')r.data.versions=[{from:today,period:'day',target:1,unit:'days',active:true,course}];}
 for(let day=1;day<=20;day++){const entry=row('journal',today.slice(0,7)+'-'+String(day).padStart(2,'0'),{gratitude:'Agradezco el tiempo para escuchar con calma y compartir con quienes quiero.',offering:'Ofrezco mi trabajo de este día y la paciencia en los momentos difíciles.',meditation:'Quiero hacer espacio para lo importante, aunque sea con un gesto pequeño.'});fixture.own.push(entry);fixture.partner.records.push({...entry,data:{gratitude:entry.data.gratitude}});}
+if(new URLSearchParams(location.search).get('volume')==='50')for(let i=5;i<=50;i++)fixture.own.push(...habit('volume-'+i,'Compromiso de prueba '+i,'week',3));
 const community:CommunityState={groups:[],rosaries:[],invitations:[{id:'synthetic-invite',groupId:'synthetic-course',name:'Curso de alianza',senderName:'Andrea',status:'pending',version:1,expiresAt:new Date(Date.now()+7*86400000).toISOString()}]};
+if(new URLSearchParams(location.search).get('scenario')==='rosary'){
+ const base:any={ownerId:'synthetic',groupId:null,coupleId:null,mystery:'joyful',mode:'free',intention:'Ejemplo ficticio para revisar la navegación',cancelled:false,slots:[],mine:[],personalStep:67,progressVersion:1};
+ const slots=Array.from({length:5},(_,i)=>({decade:i+1,userId:'synthetic',done:true}));
+ community.rosaries.push({...base,id:'sample-salve'},{...base,id:'sample-finished',personalStep:69,slots,mine:slots.map(s=>({decade:s.decade,day:today}))},{...base,id:'sample-couple',coupleId:'synthetic-couple',personalStep:undefined},{...base,id:'sample-couple-finished',coupleId:'synthetic-couple',personalStep:undefined,slots});
+}
 async function communityRequest(p:Record<string,any>){
  const invitation=community.invitations?.find(i=>i.id===p.id);
  if(invitation&&p.action==='course_decline'){invitation.status='declined';invitation.version++;}
@@ -26,6 +32,19 @@ async function communityRequest(p:Record<string,any>){
 async function request(init?:RequestInit){
  if(init?.method!=='POST')return Response.json(fixture);
  const p=JSON.parse(String(init.body));
+ if(p.action==='save_current_month'){
+  const plan=fixture.own.find((r:RecordItem)=>r.kind==='month_plan'&&r.key===p.month),purpose=fixture.own.find((r:RecordItem)=>r.kind==='purpose'&&r.key===p.month);
+  if(p.month!==today.slice(0,7)||p.effectiveDate!==today||(plan?.version??0)!==p.version||(purpose?.version??0)!==p.purposeVersion||p.items.some((i:any)=>(fixture.own.find((r:RecordItem)=>r.kind==='habit'&&r.key===i.key)?.version??0)!==i.version))return Response.json({error:'El plan cambió. Tu borrador se conserva.'},{status:409});
+  for(const item of p.items){
+   const old=fixture.own.find((r:RecordItem)=>r.kind==='habit'&&r.key===item.key),data={...item.data,active:item.keep};
+   if(JSON.stringify(old?.data)===JSON.stringify(data))continue;
+   fixture.own=fixture.own.filter((r:RecordItem)=>r.kind!=='habit'||r.key!==item.key).concat({...row('habit',item.key,data),version:(old?.version??0)+1});
+   const history=fixture.own.find((r:RecordItem)=>r.kind==='habit_plan'&&r.key===item.key);
+   fixture.own=fixture.own.filter((r:RecordItem)=>r.kind!=='habit_plan'||r.key!==item.key).concat(row('habit_plan',item.key,{versions:[...(history?.data.versions??[]).filter((v:any)=>v.from<today),{...data.frequency,from:today,active:data.active}]}));
+  }
+  fixture.own=fixture.own.filter((r:RecordItem)=>!(['purpose','month_plan'].includes(r.kind)&&r.key===p.month)).concat({...row('purpose',p.month,{...purpose?.data,text:p.purpose,review:purpose?.data.review??''}),version:(purpose?.version??0)+1},{...row('month_plan',p.month,{purpose:p.purpose,items:p.items,applied:true}),version:p.version+1});
+  return Response.json({state:fixture});
+ }
  if(p.action==='prepare_month'){fixture.own=fixture.own.filter((r:RecordItem)=>r.kind!=='month_plan'||r.key!==p.month).concat({...row('month_plan',p.month,{purpose:p.purpose,items:p.items}),version:p.version+1});return Response.json({state:fixture});}
  if(!p.kind)return Response.json({error:'Esta operación no está habilitada en la prueba local.'},{status:400});
  const record={...row(p.kind,p.key,p.data),version:(p.version??0)+1},related:RecordItem[]=[];
@@ -37,4 +56,4 @@ async function request(init?:RequestInit){
  }
  return Response.json({record,related});
 }
-createRoot(document.getElementById('root')!).render(<><p style={{padding:12,background:'#fff',color:'#193649'}}>VERSIÓN DE PRUEBA · Datos ficticios · Se reinicia al recargar</p><Journal dataRequest={request} communityTransport={communityRequest} onSignOut={()=>{}}/></>);
+createRoot(document.getElementById('root')!).render(<><p style={{padding:12,background:'#fff',color:'#193649'}}>PRUEBA DEL SPRINT · Datos ficticios · Se reinicia al recargar. <a href="?scenario=rosary">Revisar Rosario</a> · <a href="?volume=50">Probar 50 compromisos</a> · <a href="?">Volver al ejemplo breve</a></p><Journal dataRequest={request} communityTransport={communityRequest} onSignOut={()=>{}}/></>);

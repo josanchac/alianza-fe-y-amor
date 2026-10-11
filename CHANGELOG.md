@@ -2,6 +2,8 @@
 
 ## Pendiente de publicación
 
+- Propuestos para revisión visual y editorial: acceso visible al rosario compartido, concluidos separados, letanías después del Salve, cierre/foco de formularios y etiquetas más claras. Misa informa la ausencia de respuesta del salmo; respuesta y leccionario costarricense siguen pendientes.
+
 - Preparar el mes actual permite seleccionar, ajustar, pausar y crear compromisos y guardar el propósito en una sola operación desde la fecha actual de Costa Rica. Conserva borradores, historial, revisiones y planes futuros ya preparados; requiere la migración de guardado mensual.
 
 - «Mis reflexiones» ocupa un acceso compacto en Hoy y abre una vista dedicada para releer ofrecimientos, agradecimientos y meditaciones. Volver restaura la posición de lectura. Editar conserva el guardado y las reglas de privacidad existentes.
