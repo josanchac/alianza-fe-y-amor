@@ -16,12 +16,14 @@ try{
  render(React.createElement(Journal,{dataRequest:request,onSignOut(){}}));
  await screen.findByRole('heading',{name:/^(Hoy|Mi día)$/});
  const progress=screen.getByRole('progressbar',{name:'Caminar'});assert.equal(progress.getAttribute('aria-valuenow'),'1');assert.equal(progress.getAttribute('aria-valuemax'),'3');assert(progress.querySelector('.symbol-progress-color').style.maskImage.includes('linear-gradient'));assert.equal(progress.querySelector('.symbol-progress-color').style.clipPath,'');
- const controls=()=>within(screen.getByRole('group',{name:'Registros de Caminar'}));
- await act(async()=>fireEvent.click(controls().getByRole('button',{name:'Agregar otro'})));await waitFor(()=>assert.equal(controls().getByText('2 hoy').textContent,'2 hoy'));
- fail=true;await act(async()=>fireEvent.click(controls().getByRole('button',{name:'Restar uno'})));await waitFor(()=>assert.equal(controls().getByRole('button',{name:'Restar uno'}).disabled,false));assert(controls().getByText('2 hoy'));
- fail=false;await act(async()=>fireEvent.click(controls().getByRole('button',{name:'Restar uno'})));assert.equal(controls().getByText('1 hoy').textContent,'1 hoy');assert.equal(fixture.own.find(r=>r.kind==='checks').data.Caminar,1);
- await act(async()=>fireEvent.click(controls().getByRole('button',{name:'Restar uno'})));await waitFor(()=>assert.equal(screen.queryByRole('group',{name:'Registros de Caminar'}),null));assert.equal(fixture.own.find(r=>r.kind==='checks').data.Caminar,undefined);
- await act(async()=>fireEvent.click(screen.getByRole('checkbox',{name:'Caminar'})));assert.equal(controls().getByText('1 hoy').textContent,'1 hoy');writes.length=0;
+ const countButton=count=>screen.getByRole('button',{name:`Caminar: ${count} hoy. Ajustar registros`});
+ async function adjust(count,label){fireEvent.click(countButton(count));await screen.findByRole('menu');await act(async()=>fireEvent.click(screen.getByRole('menuitem',{name:label})));}
+ assert.equal(screen.queryByRole('button',{name:'Restar uno'}),null);
+ await adjust(1,'Agregar uno');assert(countButton(2));
+ fail=true;await adjust(2,'Restar uno');assert(countButton(2));
+ fail=false;await adjust(2,'Restar uno');assert(countButton(1));assert.equal(fixture.own.find(r=>r.kind==='checks').data.Caminar,1);
+ await adjust(1,'Restar uno');assert.equal(screen.queryByRole('button',{name:/Caminar: .*Ajustar registros/}),null);assert.equal(fixture.own.find(r=>r.kind==='checks').data.Caminar,undefined);
+ await act(async()=>fireEvent.click(screen.getByRole('checkbox',{name:'Caminar'})));assert(countButton(1));writes.length=0;
  await menu('Nuevo');fireEvent.click(screen.getByRole('menuitem',{name:'Eliminar compromiso'}));
  await screen.findByRole('alertdialog');fireEvent.click(screen.getByRole('button',{name:'Cancelar'}));assert.equal(writes.length,0);
  await menu('Nuevo');fireEvent.click(screen.getByRole('menuitem',{name:'Eliminar compromiso'}));fireEvent.click(await screen.findByRole('button',{name:'Sí, eliminar'}));

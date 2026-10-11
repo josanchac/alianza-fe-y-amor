@@ -46,3 +46,7 @@ Misa: tercera prueba aprobada en su presentación actual. No constituye confirma
 Correcciones propuestas, pendientes de revisión visual/editorial: restar uno junto a sumar con cantidad del día visible; quitar el interruptor duplicado «Incluir en mi horario» y nombrar la acción «Pausar compromiso». El diálogo explica conservación del historial y ruta para retomar. «Editar y retomar» prepara active=true y solo guarda al confirmar Guardar; cerrar conserva la confirmación de descarte. Compromisos nuevos sin historial conservan eliminación explícita. No cambian reglas de frecuencia, permisos ni SQL.
 
 Se cotejó el diff de journal/habit-fields: nuevo acceso al decremento ya existente, etiquetas y eliminación de control duplicado; sin cambios de oración o referencia. La reactivación conserva el registro original para controlar borrador y versión.
+
+## Revisión visual · 11/10, 17:49 Costa Rica
+
+El propietario aprueba «Pausar compromiso» y confirma el funcionamiento de sumar/restar, pero rechaza la prominencia visual de los controles. Nueva propuesta pendiente: contador compacto al costado del título que abre Agregar uno / Restar uno; recupera la altura compacta de la fila. La cantidad corresponde al día seleccionado; el progreso del período conserva su ubicación y cálculo. Cotejo técnico/documental: presentación y acceso a acciones existentes, sin nuevos textos espirituales, permisos, datos ni reglas de cumplimiento. Tipos y regresión de sumar/restar, fallo, cero y pausa/retomar aprobados. Esta alternativa requiere aprobación visual y de interacción.
