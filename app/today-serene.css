@@ -128,3 +128,8 @@
 .workspace .serene-day .moment-date{font-size:16px;margin:0 0 20px;color:var(--app-muted)}
 .workspace .serene-day .moment-reading h2{font-size:18px;margin:0}
 .workspace .serene-day .moment-reading small{font-size:16px}
+.month-plan-controls{border:0;padding:0;margin:0;min-width:0}
+.month-plan-editor .s3-plan-item{padding:16px 0;border-bottom:1px solid var(--app-line)}
+.month-plan-editor .plan-change{font-size:16px;color:var(--app-control-ink);margin:6px 0}
+.month-plan-editor textarea{width:100%;font-size:16px;min-height:90px}
+.month-plan-editor .s3-check{font-size:16px}

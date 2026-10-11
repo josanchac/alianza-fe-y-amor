@@ -12,8 +12,8 @@ try{
  assert(screen.getByRole('heading',{name:'Preparar octubre de 2026'}));
  assert.equal(screen.queryByRole('textbox',{name:'¿Qué me ayudó?'}),null);
  fireEvent.click(screen.getAllByRole('button',{name:'Revisar septiembre de 2026'})[0]);assert.equal(month,'2026-09');
- fireEvent.click(screen.getByRole('button',{name:'Ajustar Caminar'}));assert.equal(edited[1],'walk');
- fireEvent.click(screen.getByRole('button',{name:'Agregar compromiso'}));assert.equal(edited[0],'habit');assert.equal(edited[3].active,true);
+ fireEvent.click(screen.getByRole('button',{name:'Elegir y ajustar compromisos'}));assert(screen.getByRole('checkbox',{name:'Caminar'}));
+ fireEvent.click(screen.getByRole('button',{name:'Agregar compromiso'}));assert(screen.getByRole('heading',{name:'Nuevo compromiso'}));fireEvent.click(screen.getByRole('button',{name:'Cancelar'}));fireEvent.click(screen.getByRole('button',{name:'Volver a mi mes'}));
  fireEvent.click(screen.getByRole('button',{name:'Reflexionar sobre este mes'}));assert(screen.getByRole('textbox',{name:'¿Qué me ayudó?'}));
  fireEvent.click(screen.getByRole('button',{name:'Volver a preparar mi mes'}));
  fireEvent.click(screen.getByRole('button',{name:'Preparar el siguiente mes'}));
