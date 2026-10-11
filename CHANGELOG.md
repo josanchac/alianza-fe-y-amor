@@ -2,6 +2,7 @@
 
 ## Pendiente de publicación
 
+- «Mis reflexiones» ocupa un acceso compacto en Hoy y abre una vista dedicada para releer ofrecimientos, agradecimientos y meditaciones. Volver restaura la posición de lectura. Editar conserva el guardado y las reglas de privacidad existentes.
 - El menú del compromiso espera un toque completo: apoyar el dedo para deslizar la lista ya no lo abre. Se conservan los accesos por teclado y las acciones existentes; pendiente de validación en Android real.
 - Las etiquetas Diario, Semanal y Mensual conservan la palabra completa y pasan a otra línea si no caben junto al título; se mantiene el tamaño de letra.
 

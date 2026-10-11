@@ -15,8 +15,10 @@ try{
  await screen.findByRole('heading',{name:'Tu primer compromiso'});
  assert.equal(screen.queryByRole('checkbox'),null);assert.equal(writes.length,0);
  assert.equal(screen.getByText('Necesito una idea para empezar').closest('details').open,false);
- assert(screen.getByRole('heading',{name:'Momento para vos'}));
+ fireEvent.click(screen.getByRole('button',{name:/Mis reflexiones/}));
+ assert(screen.getByRole('heading',{name:'Mis reflexiones'}));
  assert(screen.getByRole('button',{name:/Ofrecimiento/}));assert(screen.getByRole('button',{name:/Meditación/}));assert(screen.getByRole('button',{name:/Agradecimiento/}));
+ fireEvent.click(screen.getByRole('button',{name:'Volver a Hoy'}));
  console.log('PASS Empty first visit has no automatic commitments, checks, or writes');
  fireEvent.click(screen.getByText('Necesito una idea para empezar'));
  fireEvent.click(screen.getByRole('button',{name:'Ofrecer mi día a la Mater'}));
