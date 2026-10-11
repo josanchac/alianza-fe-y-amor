@@ -1,0 +1,93 @@
+<div id="alianza-compact-day" class="viz-dotted-background">
+<style>
+#alianza-compact-day{padding:12px 0;font:16px/1.5 Arial,sans-serif;color:light-dark(#203e4b,#e7efef)}
+#alianza-compact-day *{box-sizing:border-box}
+#alianza-compact-day [hidden]{display:none!important}
+#alianza-compact-day .phone{--paper:light-dark(#faf8f1,#17252a);--panel:light-dark(#fff,#213238);--soft:light-dark(#edf0ed,#2d4147);--ink:light-dark(#203e4b,#e7efef);--muted:light-dark(#586c72,#b8c9cb);--line:light-dark(#d7dfdc,#50666b);--active:light-dark(#203e4b,#c4d9de);--onactive:light-dark(#fff,#17252a);max-width:430px;margin:auto;background:var(--paper);color:var(--ink);border:1px solid var(--line);border-radius:24px;overflow-wrap:anywhere}
+#alianza-compact-day .example{max-width:430px;margin:0 auto 8px;font-size:14px}
+#alianza-compact-day header{padding:18px 18px 0}
+#alianza-compact-day .brand{font:28px Georgia,serif;display:flex;align-items:center;gap:10px}
+#alianza-compact-day .brand svg{width:30px;height:30px}
+#alianza-compact-day .sub{font-size:16px;color:var(--muted)}
+#alianza-compact-day button{font:inherit;color:var(--ink);min-height:44px;border:1px solid var(--line);border-radius:12px;padding:9px 12px;background:var(--panel);max-width:100%;white-space:normal}
+#alianza-compact-day button:disabled{opacity:.6}
+#alianza-compact-day .selected,#alianza-compact-day button[aria-pressed=true],#alianza-compact-day .primary{background:var(--active);color:var(--onactive);border-color:var(--active)}
+#alianza-compact-day .scope{display:flex;gap:6px;margin-top:16px}
+#alianza-compact-day .scope>*{flex:1;text-align:center;border-radius:12px;padding:9px 4px;border:1px solid var(--line)}
+#alianza-compact-day .period{display:flex;gap:4px;background:var(--soft);border-radius:12px;margin-top:12px;padding:4px}
+#alianza-compact-day .period span{flex:1;text-align:center;padding:9px 3px;border-radius:9px}
+#alianza-compact-day .period [aria-current]{background:var(--panel)}
+#alianza-compact-day main{padding:18px}
+#alianza-compact-day h1{font:30px/1.2 Georgia,serif;margin:12px 0}
+#alianza-compact-day h2{font:500 18px/1.4 Arial,sans-serif;margin:0}
+#alianza-compact-day p{margin:8px 0}
+#alianza-compact-day .purpose{margin:20px 0 22px}
+#alianza-compact-day .purpose p{font:22px/1.4 Georgia,serif;margin-top:5px}
+#alianza-compact-day .habit{display:flex;align-items:center;gap:12px;min-height:78px;border-bottom:1px solid var(--line);padding:12px 0}
+#alianza-compact-day .habit input{width:24px;height:24px;accent-color:var(--active);flex:none;margin:0}
+#alianza-compact-day .habit .sub{display:block}
+#alianza-compact-day .notes-entry{width:100%;display:flex;align-items:center;justify-content:space-between;gap:10px;text-align:left;background:var(--soft);margin-top:20px;padding:13px 14px}
+#alianza-compact-day .notes-entry .sub{display:block}
+#alianza-compact-day footer{display:flex;gap:5px;border-top:1px solid var(--line);padding:10px 12px}
+#alianza-compact-day footer span{flex:1;display:grid;justify-items:center;gap:4px;padding:8px 0;border-radius:12px;font-size:16px}
+#alianza-compact-day footer [aria-current]{background:var(--soft)}
+#alianza-compact-day .back{display:inline-flex;align-items:center;gap:8px}
+#alianza-compact-day .categories{display:flex;flex-wrap:wrap;gap:8px;margin:20px 0}
+#alianza-compact-day .categories button{flex:1 1 auto}
+#alianza-compact-day .note{font:22px/1.6 Georgia,serif;white-space:pre-wrap;overflow-wrap:anywhere;margin:16px 0 24px}
+#alianza-compact-day .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+#alianza-compact-day textarea{display:block;width:100%;min-height:180px;resize:vertical;font:18px/1.5 Arial,sans-serif;padding:12px;margin-top:8px;border:1px solid var(--line);border-radius:12px;background:var(--panel);color:var(--ink)}
+#alianza-compact-day .status:empty{display:none}
+#alianza-compact-day .status{margin-top:12px;color:var(--muted)}
+@media(max-width:360px){#alianza-compact-day header{padding:14px 12px 0}#alianza-compact-day main{padding:14px 12px}#alianza-compact-day .period{font-size:16px}#alianza-compact-day .categories button{flex-basis:100%}}
+</style>
+<div class="example">Propuesta · datos ficticios · sin cambios en tu app</div>
+<section class="phone" aria-label="Hoy completo, propuesta de acceso compacto">
+<div data-home>
+ <header>
+  <div class="brand"><i data-lucide="tree-deciduous" aria-hidden="true"></i>Alianza</div><div class="sub">FE Y AMOR</div>
+  <div class="scope" aria-label="Espacios, referencia visual"><span class="selected">Personal</span><span>Pareja</span><span>Cursos</span></div>
+  <div class="period" aria-label="Períodos, referencia visual"><span aria-current="page">Mi día</span><span>Mi mes</span><span>Mi recorrido</span></div>
+ </header>
+ <main>
+  <div class="sub">Viernes, 9 de octubre de 2026</div>
+  <section class="purpose"><div class="sub">Mi propósito del mes</div><p>Escuchar con más paciencia.</p></section>
+  <h2>Mis compromisos</h2>
+  <label class="habit"><input type="checkbox" checked><span>Oración de la mañana<span class="sub">Cada día · por la mañana</span></span></label>
+  <label class="habit"><input type="checkbox"><span>Caminar<span class="sub">3 veces por semana</span></span></label>
+  <label class="habit"><input type="checkbox"><span>Lectura espiritual<span class="sub">Cada día · por la noche</span></span></label>
+  <button class="notes-entry cursor-interaction" data-open><span>Mis reflexiones<span class="sub" data-count>2 guardadas hoy</span></span><i data-lucide="chevron-right" aria-hidden="true"></i></button>
+ </main>
+ <footer aria-label="Navegación principal, referencia visual"><span aria-current="page"><i data-lucide="sun" aria-hidden="true"></i>Hoy</span><span><i data-lucide="book-open" aria-hidden="true"></i>Oración</span><span><i data-lucide="user-round" aria-hidden="true"></i>Mi espacio</span></footer>
+</div>
+<main data-reader hidden>
+ <button class="back cursor-interaction" data-back><i data-lucide="arrow-left" aria-hidden="true"></i>Volver a Hoy</button>
+ <h1>Mis reflexiones</h1><div class="sub">9 de octubre · Personal</div>
+ <div class="categories" aria-label="Tipo de reflexión">
+  <button class="cursor-interaction" data-category="offering" aria-pressed="true">Ofrecimiento</button>
+  <button class="cursor-interaction" data-category="gratitude" aria-pressed="false">Agradecimiento</button>
+  <button class="cursor-interaction" data-category="meditation" aria-pressed="false">Meditación</button>
+ </div>
+ <div class="sub">Solo vos</div>
+ <section data-reading><p class="note" data-note></p><button class="cursor-interaction" data-edit>Editar</button></section>
+ <form data-editor hidden><label for="compact-note-text" data-label>Ofrecimiento</label><textarea id="compact-note-text"></textarea><div class="actions"><button class="primary cursor-interaction" type="submit">Guardar</button><button class="cursor-interaction" type="button" data-cancel>Cancelar</button></div></form>
+ <p class="status" role="status" aria-live="polite" data-status></p>
+</main>
+</section>
+<script>
+(()=>{
+ const root=document.getElementById('alianza-compact-day'),q=s=>root.querySelector(s);
+ const notes={offering:'Ofrezco este día por quienes necesitan compañía.',gratitude:'Agradezco el tiempo compartido en familia.',meditation:''};
+ const titles={offering:'Ofrecimiento',gratitude:'Agradecimiento',meditation:'Meditación'};
+ let selected='offering',returnY=0;
+ function reading(){q('[data-reading]').hidden=false;q('[data-editor]').hidden=true;q('[data-back]').disabled=false;root.querySelectorAll('[data-category]').forEach(b=>{b.disabled=false;b.setAttribute('aria-pressed',String(b.dataset.category===selected));});q('[data-note]').textContent=notes[selected]||'Todavía no escribiste aquí.';q('[data-edit]').textContent=notes[selected]?'Editar':'Escribir';q('[data-count]').textContent=Object.values(notes).some(Boolean)?Object.values(notes).filter(Boolean).length+' guardadas hoy':'Ofrecer, agradecer, meditar';}
+ q('[data-open]').onclick=()=>{returnY=window.scrollY;selected='offering';reading();q('[data-status]').textContent='';q('[data-home]').hidden=true;q('[data-reader]').hidden=false;q('[data-back]').focus({preventScroll:true});root.scrollIntoView({block:'start'});};
+ q('[data-back]').onclick=()=>{q('[data-reader]').hidden=true;q('[data-home]').hidden=false;q('[data-open]').focus({preventScroll:true});window.scrollTo({top:returnY,behavior:'instant'});};
+ root.querySelectorAll('[data-category]').forEach(b=>b.onclick=()=>{selected=b.dataset.category;reading();q('[data-status]').textContent='';});
+ q('[data-edit]').onclick=()=>{q('[data-reading]').hidden=true;q('[data-editor]').hidden=false;q('[data-back]').disabled=true;root.querySelectorAll('[data-category]').forEach(b=>b.disabled=true);q('[data-label]').textContent=titles[selected];q('textarea').value=notes[selected];q('[data-status]').textContent='';q('textarea').focus();};
+ q('[data-cancel]').onclick=()=>{reading();q('[data-edit]').focus();};
+ q('[data-editor]').onsubmit=e=>{e.preventDefault();notes[selected]=q('textarea').value.trim();reading();q('[data-status]').textContent='Guardado en este ejemplo.';q('[data-edit]').focus();};
+ reading();
+})();
+</script>
+</div>

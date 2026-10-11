@@ -1,3 +1,7 @@
+# Actualización 11/10/2026
+
+La presentación desplegada descrita abajo fue sustituida tras revisión del propietario por un acceso compacto con lectura aparte. Ver `FEEDBACK4_COMPACT_REFLECTIONS_20261011.md`. El resto se conserva como evidencia histórica de la primera implementación.
+
 # Notas guardadas visibles en Hoy
 
 Implementación del bloque de #20; seguimiento #13. El propietario revisó el prototipo, solicitó simplificar la confirmación mensual y cerró comentarios con «Eso era sigamos» el 08/10/2026 Costa Rica. Se incorpora el bloque diario aprobado al recorrido de trabajo. Sin publicación.

@@ -22,7 +22,8 @@ try{
  const writes=[];
  render(React.createElement(Journal,{dataRequest:async init=>{if(init?.method!=='POST')return Response.json(fixture);const p=JSON.parse(init.body);writes.push(p);const record={...row(p.kind,p.key,p.data),version:p.version+1};fixture.own=[...fixture.own.filter(r=>r.kind!==p.kind||r.key!==p.key),record];return Response.json({record});},onSignOut(){}}));
  await screen.findByRole('heading',{name:/^(Hoy|Mi día)$/});
- assert(screen.getByRole('heading',{name:'Momento para vos'}));
+ fireEvent.click(screen.getByRole('button',{name:/Mis reflexiones/}));
+ assert(screen.getByRole('heading',{name:'Mis reflexiones'}));
  assert(screen.getByRole('button',{name:/Ofrecimiento/}));
  assert(screen.getByRole('button',{name:/Meditación/}));
  assert(screen.getByRole('button',{name:/Agradecimiento/}));
@@ -38,6 +39,7 @@ try{
  await waitFor(()=>assert(!screen.queryByRole('dialog')));
  assert.equal(writes.at(-1).kind,'journal');assert.equal(writes.at(-1).data.meditation,'Una palabra que quiero guardar');
 
+ fireEvent.click(screen.getByRole('button',{name:'Volver a Hoy'}));
  fireEvent.mouseDown(screen.getByRole('tab',{name:'Oración'}),{button:0,ctrlKey:false});
  await screen.findByRole('heading',{name:'Oración'});
  assert(screen.getByRole('heading',{name:'Mis oraciones'}));
