@@ -38,3 +38,11 @@ Cotejo incremental M10/M12: nombres de campos conservan los datos personales exi
 Evidencia: la suite completa llegó hasta la última prueba de acceso al rosario; esa prueba tenía un evento sintético incorrecto para las pestañas y se corrigió a mouseDown, como los demás recorridos. Reejecutada, pasó sin cambios adicionales del producto. Pruebas previas, incluidas notas/foco, guardado mensual, Rosario y Misa, pasaron. El manifiesto documental no sustituye aprobación visual/editorial.
 
 Vista privada: https://alianza-revision-integral.josanchac.chatgpt.site. Datos ficticios, reinicio al recargar; variante `?scenario=rosary` y `?volume=50`. El adaptador de vista previa no sustituye los ensayos conectados. Navegador real no disponible en este entorno; pendiente inspección humana en móvil. Continúa la advertencia de tamaño de bloque JS; no se afirma rendimiento móvil medido.
+
+## Revisión del propietario · 11/10, 17:40 Costa Rica
+
+Misa: tercera prueba aprobada en su presentación actual. No constituye confirmación de la edición bíblica/leccionario de Costa Rica. Las referencias aportadas son pistas generales; no identifican aún un texto editorial exacto para reemplazar Evangelizo. Se conserva la fuente actual y el pendiente #34.
+
+Correcciones propuestas, pendientes de revisión visual/editorial: restar uno junto a sumar con cantidad del día visible; quitar el interruptor duplicado «Incluir en mi horario» y nombrar la acción «Pausar compromiso». El diálogo explica conservación del historial y ruta para retomar. «Editar y retomar» prepara active=true y solo guarda al confirmar Guardar; cerrar conserva la confirmación de descarte. Compromisos nuevos sin historial conservan eliminación explícita. No cambian reglas de frecuencia, permisos ni SQL.
+
+Se cotejó el diff de journal/habit-fields: nuevo acceso al decremento ya existente, etiquetas y eliminación de control duplicado; sin cambios de oración o referencia. La reactivación conserva el registro original para controlar borrador y versión.
