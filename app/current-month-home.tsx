@@ -1,10 +1,10 @@
 import type {RecordItem} from '@/lib/domain';
-import {frequencyLabel,monthBefore,monthLabel} from '@/lib/schedule';
+import {monthBefore,monthLabel} from '@/lib/schedule';
 
-type Props={own:RecordItem[];month:string;busy:boolean;onMonth:(month:string)=>void;onReview:()=>void;onPrepare:()=>void;edit:(kind:string,key:string,title:string,fallback:any)=>void};
+type Props={own:RecordItem[];month:string;busy:boolean;onMonth:(month:string)=>void;onReview:()=>void;onPrepare:()=>void;onPlan:()=>void;edit:(kind:string,key:string,title:string,fallback:any)=>void};
 
-/** Current-month entry only. All mutations still use the existing versioned editors. */
-export function CurrentMonthHome({own,month,busy,onMonth,onReview,onPrepare,edit}:Props){
+/** Current-month entry only. Purpose editing and the atomic commitment-plan editor have separate entry actions. */
+export function CurrentMonthHome({own,month,busy,onMonth,onReview,onPrepare,onPlan,edit}:Props){
  const purpose=own.find(r=>r.kind==='purpose'&&r.key===month);
  const previous=monthBefore(month);
  const previousPurpose=own.find(r=>r.kind==='purpose'&&r.key===previous);
@@ -19,9 +19,8 @@ export function CurrentMonthHome({own,month,busy,onMonth,onReview,onPrepare,edit
   <section className="card"><h3>Mi propósito</h3><p className="preserve">{purpose?.data.text||'¿Qué quiero cuidar este mes?'}</p><button disabled={busy} onClick={()=>edit('purpose',month,'Mi propósito',{text:'',review:''})}>{purpose?.data.text?'Editar mi propósito':'Definir mi propósito'}</button>{!purpose?.data.text&&previousPurpose?.data.text&&<button disabled={busy} onClick={()=>edit('purpose',month,'Continuar mi propósito',{text:previousPurpose.data.text,review:purpose?.data.review??''})}>Retomar el propósito anterior</button>}</section>
   <section className="card"><h3>Mis compromisos</h3><p className="muted">Los ajustes se aplican desde hoy. Los registros anteriores se conservan.</p>
    {!habits.length&&<p>Todavía no tenés compromisos.</p>}
-   {habits.filter(h=>h.data.active).map(h=><article className="s3-plan-item" key={h.key}><h3>{h.data.title}</h3><p>{frequencyLabel(h.data.frequency)}</p><button disabled={busy} onClick={()=>edit('habit',h.key,'Mi compromiso',h.data)}>Ajustar {h.data.title}</button></article>)}
-   {habits.some(h=>!h.data.active)&&<details><summary>Compromisos en pausa</summary>{habits.filter(h=>!h.data.active).map(h=><article className="s3-plan-item" key={h.key}><h3>{h.data.title}</h3><button disabled={busy} onClick={()=>edit('habit',h.key,'Retomar mi compromiso',h.data)}>Revisar {h.data.title}</button></article>)}</details>}
-   <button disabled={busy} onClick={()=>edit('habit',crypto.randomUUID(),'Mi compromiso',{title:'',active:true,moment:'Mañana',anchor:'',minimum:'',frequency:{period:'day',target:1}})}>Agregar compromiso</button>
+   {habits.length>0&&<p>{habits.filter(h=>h.data.active).length} en mi horario{habits.some(h=>!h.data.active)&&<> · {habits.filter(h=>!h.data.active).length} en pausa</>}</p>}
+   <button disabled={busy} onClick={onPlan}>Elegir y ajustar compromisos</button>
   </section>
   <div className="s3-actions"><button onClick={onReview}>Reflexionar sobre este mes</button><button onClick={onPrepare}>Preparar el siguiente mes</button></div>
   <button onClick={()=>onMonth(previous)}>Revisar {monthLabel(previous)}</button>
