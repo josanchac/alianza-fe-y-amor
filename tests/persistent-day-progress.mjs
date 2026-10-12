@@ -1,0 +1,35 @@
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import {dom} from './dom.mjs';
+const React=await import('react');
+const {render,screen,fireEvent,waitFor,cleanup}=await import('@testing-library/react');
+const {TodayHeader}=await import('../app/today-header.tsx');
+const {NavigationExperience}=await import('../review/navigation/experience.tsx');
+const date='2026-10-11';
+const row=(kind,key,data)=>({owner:'synthetic',kind,key,data,version:1,updated:''});
+const habit=(key,frequency)=>row('habit',key,{title:key,active:true,frequency});
+const habits=[habit('one',{period:'day',target:1}),habit('two',{period:'day',target:2,unit:'times'}),habit('weekly',{period:'week',target:3}),habit('novena',{period:'day',target:1,course:{start:date,days:9,weekdays:[0,1,2,3,4,5,6]}})];
+const props={date,today:date,symbol:'tree',rows:[...habits,row('checks',date,{one:'done',two:1})]};
+try{
+ const view=render(React.createElement(TodayHeader,props));
+ const bar=screen.getByRole('progressbar',{name:'Compromisos diarios'}),button=screen.getByRole('button',{name:'Ver mi avance'});
+ assert.equal(bar.getAttribute('aria-valuenow'),'1.5');assert.equal(bar.getAttribute('aria-valuemax'),'2');assert.equal(bar.style.getPropertyValue('--symbol-percent'),'75%');
+ const marker=document.querySelector('.app-chrome-marker'),header=document.querySelector('.today-heading');
+ marker.getBoundingClientRect=()=>({top:-64});fireEvent.scroll(window);
+ await waitFor(()=>assert.equal(header.style.getPropertyValue('--chrome-progress'),'1'));
+ assert.equal(header.getAttribute('data-raised'),'true');assert.equal(screen.getByRole('progressbar',{name:'Compromisos diarios'}),bar,'Scrolling retains the same live symbol');
+ fireEvent.click(button);assert(screen.getByRole('dialog'));assert(screen.getByText('1 de 2 compromisos completados'));fireEvent.keyDown(document,{key:'Escape'});await waitFor(()=>assert.equal(screen.queryByRole('dialog'),null));
+ view.rerender(React.createElement(TodayHeader,{...props,rows:[...habits,row('checks',date,{one:'done',two:2})]}));assert.equal(bar.style.getPropertyValue('--symbol-percent'),'100%');
+ view.rerender(React.createElement(TodayHeader,{...props,rows:props.rows}));assert.equal(bar.style.getPropertyValue('--symbol-percent'),'75%','Undo updates compact progress');
+ view.rerender(React.createElement(TodayHeader,{...props,date:'2026-10-10'}));assert.equal(bar.style.getPropertyValue('--symbol-percent'),'0%','Other dates do not inherit today’s count');
+ view.rerender(React.createElement(TodayHeader,{...props,progressStyle:'ring',image:'data:image/jpeg;base64,/9j/AA=='}));assert(bar.classList.contains('is-ring'));assert.equal(bar.querySelector('img')?.getAttribute('src'),'data:image/jpeg;base64,/9j/AA==');
+ cleanup();render(React.createElement(NavigationExperience,{volume:50}));
+ const sampleBar=screen.getByRole('progressbar',{name:'Compromisos diarios'}),sampleHeader=document.querySelector('.nr-title-row');
+ document.querySelector('.nr-day-start').getBoundingClientRect=()=>({top:-64});fireEvent.scroll(window);await waitFor(()=>assert.equal(sampleHeader.style.getPropertyValue('--chrome-progress'),'1'));
+ assert.equal(document.querySelector('.nr').getAttribute('data-day-view'),'true');assert.equal(sampleBar.getAttribute('aria-valuenow'),'1');
+ fireEvent.click(screen.getByRole('checkbox',{name:'Oración de la mañana'}));assert.equal(sampleBar.getAttribute('aria-valuenow'),'0');
+ fireEvent.click(screen.getByRole('checkbox',{name:'Oración de la mañana'}));assert.equal(sampleBar.getAttribute('aria-valuenow'),'1');
+ fireEvent.click(screen.getByRole('button',{name:'Mi mes',exact:true}));assert.equal(document.querySelector('.nr').getAttribute('data-day-view'),'false');assert.equal(screen.queryByRole('progressbar',{name:'Compromisos diarios'}),null);
+ const css=readFileSync('app/today-serene.css','utf8');assert(css.includes('position:sticky;top:var(--app-chrome-inset'));assert(css.includes('var(--chrome-progress,0)*.25'));assert(css.includes('prefers-reduced-motion:reduce'));
+ console.log('PASS persistent daily symbol: same live element on scroll, 75/100/75% mark/undo, period isolation, novena exclusion, detail action, custom image/ring, 50-item sample and reduced-motion CSS contract. Layout/device rendering not tested.');
+}finally{cleanup();dom.window.close();}

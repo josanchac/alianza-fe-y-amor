@@ -1,5 +1,5 @@
 /* Approved Today family: keep content and marking primary. */
-.workspace .serene-day .serene-heading{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--app-bg);margin:0;padding:18px 0 14px;border-bottom:1px solid transparent}
+.workspace .serene-day .serene-heading{position:sticky;top:var(--app-chrome-inset,0px);z-index:20;display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--app-bg);margin:0;padding:18px 0 14px;border-bottom:1px solid transparent}
 .today-sentinel{height:1px}
 .workspace .serene-day .serene-heading.is-compact{padding-top:8px;padding-bottom:8px;border-bottom-color:var(--app-line)}
 .workspace .serene-heading h1{font:32px/1.2 Georgia,serif;margin:0;transition:font-size .2s}
@@ -99,11 +99,14 @@
 @media(max-width:360px){.workspace .serene-day .moment-categories button{flex-basis:100%;justify-content:flex-start}}
 
 
-/* Scroll-linked transforms preserve the layout height and the list's position. */
+/* Daily progress owns this bar; the decorative Alianza mark never replaces it.
+   Scroll-linked transforms preserve layout height and the list's position. */
 .workspace .serene-day .serene-heading,.workspace .serene-day .serene-heading.is-compact{padding:12px 0;min-height:104px;border-bottom-color:transparent}
-.workspace .serene-heading>div{transform:scale(calc(1 - var(--header-collapse,0)*.125));transform-origin:left center}
+.workspace .serene-day .serene-heading{box-shadow:0 7px 12px -10px transparent;transition:box-shadow 240ms ease}
+.workspace .serene-day .serene-heading[data-raised=true]{box-shadow:var(--app-chrome-shadow)}
+.workspace .serene-heading>div{transform:scale(calc(1 - var(--chrome-progress,0)*.125));transform-origin:left center}
 .workspace .serene-heading h1,.workspace .serene-heading.is-compact h1{font-size:32px;transition:none}
-.workspace .serene-heading .today-progress-button{transform:scale(calc(1 - var(--header-collapse,0)*.25));transform-origin:right center}
+.workspace .serene-heading .today-progress-button{transform:scale(calc(1 - var(--chrome-progress,0)*.25));transform-origin:right center}
 .workspace .serene-heading.is-compact .symbol-progress{width:80px;height:80px}
 .workspace .serene-heading.is-compact .symbol-progress svg,.workspace .serene-heading.is-compact .symbol-progress img{width:76px;height:76px}
 .workspace .serene-heading.is-compact .symbol-progress.is-ring svg,.workspace .serene-heading.is-compact .symbol-progress.is-ring img{width:62px;height:62px}
@@ -117,8 +120,8 @@
 
 /* Compact entry; the dedicated reader replaces the day content while open. */
 .workspace .day-overview[hidden],.workspace .day-after-notes[hidden]{display:none!important}
-.workspace.moments-open>.topbar,.workspace.moments-open>.space-switcher,
-.workspace.moments-open .datebar,.workspace.moments-open .schedule-nav,
+.workspace.moments-open>.app-topbar,.workspace.moments-open>.app-spaces,
+.workspace.moments-open .app-datebar,.workspace.moments-open .app-view-tabs,
 .workspace.moments-open .bottom-nav{display:none!important}
 .workspace .serene-day .moment-entry{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;text-align:left;margin:16px 0 0;padding:13px 14px;min-height:60px;border:1px solid var(--app-line);border-radius:14px;background:var(--app-control-soft);color:var(--app-control-ink);font-size:16px}
 .workspace .serene-day .moment-entry small{display:block;font-size:16px;line-height:1.4;margin-top:3px}

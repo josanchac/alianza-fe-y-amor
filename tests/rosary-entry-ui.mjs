@@ -17,8 +17,11 @@ try{
  assert(screen.getByRole('heading',{name:'Misterios gozosos'}));
  assert.equal(screen.queryByRole('heading',{name:'Misterios gloriosos'}),null);
  fireEvent.click(screen.getByRole('button',{name:/Rosarios concluidos en pareja/}));
+ assert.equal(screen.queryByRole('heading',{name:'Misterios gloriosos'}),null);
+ fireEvent.click(screen.getByRole('button',{name:/Misterios gloriosos/}));
  assert(screen.getByRole('heading',{name:'Misterios gloriosos'}));
  assert.equal(screen.queryByRole('heading',{name:'Misterios gozosos'}),null);
+ fireEvent.click(screen.getByRole('button',{name:'Volver al historial'}));
  fireEvent.click(screen.getByRole('button',{name:'Volver a Rosario juntos'}));
  assert(screen.getByRole('heading',{name:'Misterios gozosos'}));assert.equal(writes,0);
  cleanup();sessionStorage.clear();

@@ -1,0 +1,26 @@
+/* Approved task pattern: return, independently scrolling fields, stable actions. */
+.workspace:has(.app-plan-task)>:not(.main-tabs),.workspace:has(.app-plan-task) .bottom-nav{display:none}
+.app-plan-task.s3-task{position:fixed;z-index:45;left:calc(var(--dialog-view-left,0px) + max(0px,(var(--dialog-view-width,100vw) - 42rem)/2));top:var(--dialog-view-top,0px);width:min(42rem,var(--dialog-view-width,100vw));height:var(--dialog-view-height,100dvh);max-width:none;margin:0;padding:0;background:var(--app-bg,#faf9f3);overflow:hidden}
+.app-plan-task .month-plan-controls{height:100%;min-height:0;min-width:0;display:flex;flex-direction:column;border:0;padding:0;margin:0}
+.app-plan-header{flex-shrink:0;padding:0 20px}.app-plan-header .app-back-header{position:relative;margin:0}.app-plan-header .app-chrome-marker{display:none}
+.app-plan-task .app-task-body{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:8px 22px 24px}.app-plan-task .app-task-footer{flex-shrink:0;max-height:45%;overflow-y:auto}
+.app-plan-task .app-task-footer p:empty{display:none}
+[data-slot=dialog-content].app-task-dialog{position:fixed;left:calc(var(--dialog-view-left,0px) + max(0px,(var(--dialog-view-width,100vw) - 42rem)/2));top:var(--dialog-view-top,0px);right:auto;bottom:auto;translate:none;transform:none;width:min(42rem,var(--dialog-view-width,100vw));max-width:none;height:var(--dialog-view-height,100dvh);max-height:none;min-height:0;margin:0;padding:0;display:grid;grid-template-rows:auto minmax(0,1fr) auto;gap:0;overflow:hidden;background:var(--app-bg,#faf9f3);color:var(--app-control-ink,#203c50);border-radius:0;animation:none}
+.app-task-header{padding:max(12px,env(safe-area-inset-top)) 20px 12px;background:inherit}
+.app-task-body.editor-form{overflow-y:auto;overscroll-behavior:contain;scroll-padding-block:20px;min-height:0;margin:0;padding:8px 22px 24px;gap:20px}
+.app-task-body .dialog-title{outline:none;margin:0}
+.app-task-footer{padding:12px 20px max(12px,env(safe-area-inset-bottom));border-top:1px solid var(--app-line,#dde3e3);background:inherit}
+.app-task-actions{display:flex;flex-wrap:wrap;justify-content:flex-end;align-items:center;gap:8px}
+.app-plan-task .app-task-actions button,.app-task-actions button{min-height:44px;min-width:0;white-space:nowrap;overflow-wrap:normal;font-size:16px;padding:10px 16px}
+.app-task-footer .save-hint{display:block;margin:8px 0 0;font-size:13px}
+@media(min-width:700px){[data-slot=dialog-content].app-task-dialog{top:calc(var(--dialog-view-top,0px) + 12px);height:calc(var(--dialog-view-height,100dvh) - 24px);border-radius:22px}}
+@media(prefers-reduced-motion:reduce){.app-task-dialog *{scroll-behavior:auto!important}}
+.app-task-portal-footer{display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-end;gap:8px;max-height:calc(var(--dialog-view-height,100dvh) * .4);overflow-y:auto}
+.app-task-portal-footer:empty{display:none}
+.app-task-portal-footer>p{flex-basis:100%;margin:0;overflow-wrap:anywhere}
+.app-task-dialog .app-task-portal-footer button{min-height:44px;white-space:nowrap;overflow-wrap:normal}
+.app-task-body>form{margin:0;min-width:0}
+.app-task-body .report-paper{min-width:0;overflow-wrap:anywhere}
+.app-task-body .report-paper table{width:100%;table-layout:fixed}
+
+.editor-form>.community-form-fields{display:contents}

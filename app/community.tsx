@@ -1,6 +1,7 @@
 import {RosaryPreparation} from './rosary-preparation';
 import {GroupsWorkspace} from './groups-workspace';
-import { useState, useRef } from "react";
+import { useState, useRef, useId } from "react";
+import {TaskActions,useTaskDialog} from "./task-dialog";
 import {RosaryPreferences} from './rosary-preferences';
 import type {RosaryOpening} from '@/lib/rosary-guide';
 import {Settings} from 'lucide-react';
@@ -59,12 +60,14 @@ export function Form({
   submit: (f: FormData) => Promise<unknown>;
   busy: boolean;
 }) {
+  const formId=useId(),task=useTaskDialog();
   const [error, setError] = useState(""),
-    [saved, setSaved] = useState(false);
+    [saved, setSaved] = useState(false),[pending,setPending]=useState(false);
   const editing = useRef<typeof submit | null>(null),
     sending = useRef(false);
   return (
     <form
+      id={formId}
       onChange={() => {
         if (!editing.current) editing.current = submit;
         setSaved(false);
@@ -72,32 +75,39 @@ export function Form({
       className="editor-form"
       onSubmit={async (e) => {
         e.preventDefault();
-        if (sending.current || saved) return;
+        if (sending.current || busy || saved) return;
         sending.current = true;
+        setPending(true);task?.setPending(true);
         const data = new FormData(e.currentTarget);
         setError("");
         try {
           await (editing.current ?? submit)(data);
           editing.current = null;
           setSaved(true);
+          task?.setDirty(false);
         } catch (e) {
           setError((e as Error).message);
         } finally {
           sending.current = false;
+          setPending(false);task?.setPending(false);
         }
       }}
     >
+      <fieldset className="community-form-fields" aria-label={title} disabled={!!task && (busy || pending)}>
       <h3>{title}</h3>
       {children}
+      </fieldset>
+      <TaskActions>
       {error && (
         <p role="alert" className="notice">
           {error}
         </p>
       )}
-      <button className="primary" disabled={busy || saved} type="submit">
+      <button className="primary" disabled={busy || pending || saved} type="submit" form={formId}>
         {saved ? "Guardado" : submitLabel}
       </button>
       {saved && <p role="status">Guardado correctamente.</p>}
+      </TaskActions>
     </form>
   );
 }

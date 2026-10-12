@@ -9,7 +9,7 @@
 .s3-task button,.s3-month button,.s3-pair button,.s3-invites button{min-height:44px;padding:9px 13px;border:0;border-radius:14px;background:var(--app-control-soft);color:var(--app-control-ink);font:400 14px/1.4 Arial,sans-serif;display:inline-flex;align-items:center;justify-content:center;gap:7px}
 .s3-task button.primary,.s3-month button.primary,.s3-pair button.primary{background:var(--app-control-ink);color:#fffefa}
 .s3-task button:disabled,.s3-month button:disabled,.s3-pair button:disabled{opacity:.5}
-.s3-task .app-back-button,.s3-month .app-back-button,.s3-pair .app-back-button{border-radius:50%;width:44px;height:44px;padding:0}
+
 .s3-row,.s3-actions,.s3-pager{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
 .s3-row,.s3-pager{justify-content:space-between}.s3-actions{margin:20px 0}.s3-icon{width:44px;padding:0!important;flex-shrink:0}
 .s3-month-columns{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:36px;margin:24px 0}

@@ -216,14 +216,16 @@
       "tag": "button",
       "label": "Quitar imagen del símbolo",
       "className": "\"text-button\"",
-      "handler": "{()=>setSymbolImage('')}",
+      "handler": "{()=>{setSymbolImage('');taskDialog?.setDirty(true);}}",
       "pressed": false,
       "expanded": false,
       "type": "secondary",
       "rationale": "Operación local o acceso a opciones: botón compacto; revisar etiqueta dinámica en contexto.",
       "review": "Validar patrón en contexto",
       "implementation": "classified-action",
-      "intent": "secondary"
+      "intent": "secondary",
+      "previousHandler": "{()=>setSymbolImage('')}",
+      "evidence": "tests/advanced-task-navigation.mjs: quitar imagen sigue siendo local; salida protege borrador y descartar conserva la imagen guardada."
     },
     {
       "id": "A050",
@@ -232,14 +234,16 @@
       "tag": "button",
       "label": "Quitar foto",
       "className": "\"text-button\"",
-      "handler": "{()=>setPhoto('')}",
+      "handler": "{()=>{setPhoto('');taskDialog?.setDirty(true);}}",
       "pressed": false,
       "expanded": false,
       "type": "secondary",
       "rationale": "Operación local o acceso a opciones: botón compacto; revisar etiqueta dinámica en contexto.",
       "review": "Validar patrón en contexto",
       "implementation": "classified-action",
-      "intent": "secondary"
+      "intent": "secondary",
+      "previousHandler": "{()=>setPhoto('')}",
+      "evidence": "tests/advanced-task-navigation.mjs: quitar imagen sigue siendo local; salida protege borrador y descartar conserva la imagen guardada."
     },
     {
       "id": "A061",
@@ -969,8 +973,11 @@
       "type": "navigation",
       "rationale": "Acceso o regreso: tratamiento liviano, sin competir con guardar.",
       "review": "Validar patrón en contexto",
-      "implementation": "classified-action",
-      "intent": "navigation"
+      "implementation": "shared-navigation",
+      "intent": "navigation",
+      "component": "BackHeader",
+      "handlerProp": "onBack",
+      "evidence": "app/back-header.tsx → app/back-button.tsx; tests/admin-ui.mjs: return retains personal draft"
     },
     {
       "id": "A307",

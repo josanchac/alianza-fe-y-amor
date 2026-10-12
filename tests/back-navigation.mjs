@@ -1,0 +1,31 @@
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import {dom} from './dom.mjs';
+const React=await import('react');
+const {render,screen,fireEvent,cleanup,waitFor}=await import('@testing-library/react');
+const {default:Journal}=await import('../app/journal.tsx');
+const headerMarker=button=>button.closest('.app-back-header').previousElementSibling;
+const row=(kind,key,data)=>({owner:'synthetic',kind,key,data,version:1,updated:''});
+const fixture={user:{id:'synthetic',role:'member',email:'test@example.test',relationshipVersion:1,dataEpoch:1},today:'2026-10-11',shared:[],own:[row('spaces','experience',{enabled:['personal'],start:'personal'}),row('profile','me',{name:'Prueba',ideal:'',shareSchedule:false,shareNotes:false})]};
+let writes=0;const scroll=[];window.scrollTo=p=>scroll.push(p);
+try{
+ render(React.createElement(Journal,{dataRequest:async init=>{if(init?.method==='POST')writes++;return Response.json(fixture);},communityTransport:async()=>Response.json({groups:[],rosaries:[]}),onSignOut(){}}));
+ await screen.findByRole('button',{name:/Mis reflexiones/});
+ fireEvent.mouseDown(screen.getByRole('tab',{name:'Oración'}),{button:0,ctrlKey:false});
+ Object.defineProperty(window,'scrollY',{value:580,configurable:true});
+ fireEvent.click(await screen.findByRole('button',{name:/Mis rosarios/}));
+ const back=screen.getByRole('button',{name:'Volver a Oración'});
+ assert(back.closest('.app-back-header'));
+ assert.equal(back.textContent,'Volver');
+ assert.equal(back.closest('.app-back-header').querySelector('h2'),null);
+ const sentinel=headerMarker(back),header=back.closest('.app-back-header');
+ sentinel.getBoundingClientRect=()=>({top:-30});fireEvent.scroll(window);
+ await waitFor(()=>assert.equal(header.dataset.raised,'true'));
+ sentinel.getBoundingClientRect=()=>({top:100});fireEvent.scroll(window);
+ await waitFor(()=>assert.equal(header.dataset.raised,'false'));
+ assert(screen.getByRole('heading',{name:'Mis aportes al rosario'}));
+ assert.equal(screen.queryByRole('heading',{name:'Oración',exact:true}),null);
+ fireEvent.click(back);assert.equal(scroll.at(-1).top,580);assert.equal(writes,0);
+ const css=readFileSync('app/back-button.css','utf8');assert(css.includes('position:sticky;top:var(--app-chrome-inset)'));assert(css.includes('z-index:20'));assert(css.includes('.app-back-header:not([hidden] *)'));
+ console.log('PASS compact history header, no duplicated heading, return scroll preserved, no writes. Sticky geometry requires visual review.');
+}finally{cleanup();dom.window.close();}

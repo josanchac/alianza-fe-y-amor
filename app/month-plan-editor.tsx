@@ -3,7 +3,7 @@ import {Pencil,Plus,Check} from 'lucide-react';
 import type {Habit,RecordItem} from '@/lib/domain';
 import {frequencyLabel,monthLabel} from '@/lib/schedule';
 import {HabitFields} from './habit-fields';
-import {BackButton} from './back-button';
+import {BackHeader} from './back-header';
 export type PlanItem={key:string;version:number;data:Habit;keep:boolean};
 type Snapshot={purpose:string;items:PlanItem[];version:number;purposeVersion:number;effectiveDate:string;baseline:{purpose:string;items:PlanItem[]};confirmed:boolean;editing:PlanItem|null};
 export type MonthPlanDrafts=Map<string,Snapshot>;
@@ -45,15 +45,14 @@ export function MonthPlanEditor({own,month,today,busy,onPrepare,onBack,drafts,on
   if(lock.current)return;lock.current=true;setSending(true);
   try{const fresh=onReload?await onReload():own;if(!fresh)throw Error('No pudimos actualizar. Tu borrador se conserva.');setData(snapshot(fresh,month,today));drafts?.delete(month);setDiscard(false);setFailed(false);setStatus('Se cargó la versión guardada.');}catch(e){setStatus((e as Error).message);}finally{lock.current=false;setSending(false);}
  }
- return <div className="s3-task month-plan-editor"><fieldset disabled={disabled} className="month-plan-controls">
+ return <div className="s3-task month-plan-editor app-plan-task"><fieldset disabled={disabled} className="month-plan-controls">
   {data.editing?<>
-   <BackButton label="Volver al plan" onClick={()=>change({...data,editing:null})}/><h2>{data.editing.version?'Editar compromiso':'Nuevo compromiso'}</h2>
-   <form className="editor-form" onSubmit={e=>{e.preventDefault();const item=data.editing!;if(!item.data.title.trim()||item.data.frequency?.weekdays?.length===0||item.data.frequency?.course?.weekdays?.length===0){setFailed(true);setStatus('Completá el nombre y elegí al menos un día.');return;}const applied={...item,keep:item.data.active};change({...data,items:data.items.some(x=>x.key===item.key)?data.items.map(x=>x.key===item.key?applied:x):[...data.items,applied],editing:null});}}>
-    <HabitFields effectiveDate={data.effectiveDate} data={data.editing.data} field={(key,value)=>change({...data,editing:{...data.editing!,data:{...data.editing!.data,[key]:value}}})} first={false} step={1}/>
-    <div className="s3-actions"><button type="submit" className="primary">Aplicar cambios</button><button type="button" onClick={()=>change({...data,editing:null})}>Cancelar</button></div>
-   </form>
+   <header className="app-plan-header"><BackHeader brand={false} label="Volver al plan" onBack={()=>change({...data,editing:null})}/></header>
+   <form id="app-plan-item" className="editor-form app-task-body" onSubmit={e=>{e.preventDefault();const item=data.editing!;if(!item.data.title.trim()||item.data.frequency?.weekdays?.length===0||item.data.frequency?.course?.weekdays?.length===0){setFailed(true);setStatus('Completá el nombre y elegí al menos un día.');return;}const applied={...item,keep:item.data.active};change({...data,items:data.items.some(x=>x.key===item.key)?data.items.map(x=>x.key===item.key?applied:x):[...data.items,applied],editing:null});}}>
+    <h2>{data.editing.version?'Editar compromiso':'Nuevo compromiso'}</h2><HabitFields effectiveDate={data.effectiveDate} data={data.editing.data} field={(key,value)=>change({...data,editing:{...data.editing!,data:{...data.editing!.data,[key]:value}}})} first={false} step={1}/>
+   </form><footer className="app-task-footer"><div className="app-task-actions"><button type="button" onClick={()=>change({...data,editing:null})}>Cancelar</button><button type="submit" form="app-plan-item" className="primary">Aplicar cambios</button></div><p role={failed?'alert':'status'}>{status}</p></footer>
   </>:<>
-   <BackButton label="Volver a mi mes" onClick={onBack}/><h2>Preparar {monthLabel(month)}</h2>
+   <header className="app-plan-header"><BackHeader brand={false} label="Volver a mi mes" onBack={onBack}/></header><div className="app-task-body"><h2>{'Preparar '+monthLabel(month)}</h2>
    <p className="muted">{current&&data.effectiveDate===today?'Desde hoy, '+dateLabel:'Desde el '+dateLabel}</p>
    <label>Mi propósito (opcional)<textarea maxLength={12000} value={data.purpose} onChange={e=>change({...data,purpose:e.target.value})}/></label>
    {data.purpose!==data.baseline.purpose&&<p className="plan-change">Propósito ajustado</p>}
@@ -61,9 +60,10 @@ export function MonthPlanEditor({own,month,today,busy,onPrepare,onBack,drafts,on
    {data.items.map(item=><article className="s3-plan-item" key={item.key}><div className="s3-row"><label className="s3-check"><input type="checkbox" checked={item.keep} onChange={e=>change({...data,items:data.items.map(x=>x.key===item.key?{...x,keep:e.target.checked,data:{...x.data,active:e.target.checked}}:x)})}/>{item.data.title}</label><button type="button" className="s3-icon" aria-label={'Editar '+item.data.title} onClick={()=>change({...data,editing:structuredClone({...item,data:{...item.data,active:item.keep}})})}><Pencil size={18}/></button></div><p className="muted">{frequencyLabel(item.data.frequency)}</p>{changes(item,data.baseline.items.find(x=>x.key===item.key))&&<p className="plan-change">{changes(item,data.baseline.items.find(x=>x.key===item.key))}</p>}</article>)}
    <button type="button" onClick={()=>change({...data,editing:{key:crypto.randomUUID(),version:0,keep:true,data:{title:'',active:true,moment:'Mañana',anchor:'',minimum:'',frequency:{period:'day',target:1}}}})}><Plus size={18}/>Agregar compromiso</button>
    {!current&&own.some(r=>r.kind==='habit'&&r.data.frequency?.course)&&<p className="muted">Los recorridos por tiempo conservan su avance al cambiar de mes.</p>}
-   <div className="s3-actions"><button type="button" className="primary" disabled={disabled||!onPrepare||data.confirmed&&!dirty} onClick={save}><Check size={18}/>{sending?'Guardando…':data.confirmed&&!dirty?'Guardado':'Guardar '+monthLabel(month)}</button></div>
+   </div><footer className="app-task-footer"><div className="app-task-actions"><button type="button" className="primary" disabled={disabled||!onPrepare||data.confirmed&&!dirty} onClick={save}><Check size={18}/>{sending?'Guardando…':data.confirmed&&!dirty?'Guardado':'Guardar '+monthLabel(month)}</button></div>
    {failed&&<button type="button" onClick={()=>setDiscard(true)}>Revisar versión guardada</button>}
    {discard&&<section className="notice"><p>¿Reemplazar este borrador con la versión guardada? Se perderán los cambios que todavía no guardaste.</p><button type="button" onClick={reload}>Descartar borrador y actualizar</button><button type="button" onClick={()=>setDiscard(false)}>Conservar mi borrador</button></section>}
+   <p role={failed?'alert':'status'}>{status}</p></footer>
   </>}
- </fieldset><p role={failed?'alert':'status'}>{status}</p></div>;
+ </fieldset></div>;
 }

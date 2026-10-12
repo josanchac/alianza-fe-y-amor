@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { dom } from "./dom.mjs";
 const React = await import("react");
-const { render, screen, fireEvent, cleanup, waitFor } = await import(
+const { render, screen, fireEvent, cleanup, waitFor, act: flushReact } = await import(
   "@testing-library/react"
 );
 const { PurposeCard, RosaryCard, CommunityPanel } = await import(
@@ -154,7 +154,7 @@ try {
   );
   assert.equal(saves, 1);
   assert(screen.getByRole("textbox").disabled);
-  finishSave(true);
+  await flushReact(async () => { finishSave(true); });
   await screen.findByText("Guardado para retomarlo cuando quieras.");
   const leaving = new dom.window.Event("beforeunload", { cancelable: true });
   window.dispatchEvent(leaving);
