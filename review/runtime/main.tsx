@@ -6,6 +6,8 @@ import type {CommunityState} from '../../lib/community';
 import {localDate,type RecordItem} from '../../lib/domain';
 import '../../app/globals.css';
 const today=localDate();
+const scenario=new URLSearchParams(location.search).get('scenario');
+try{sessionStorage.removeItem('alianza-rosary-open:synthetic');if(scenario==='litany')sessionStorage.setItem('alianza-rosary-open:synthetic','sample-salve');else if(scenario==='rosary')sessionStorage.setItem('alianza-rosary-open:synthetic','review-list');}catch{}
 const row=(kind:string,key:string,data:any):RecordItem=>({kind,key,data,owner:'synthetic',version:1,updated:new Date().toISOString()} as RecordItem);
 const habit=(key:string,title:string,period:string,target:number,unit='days')=>[row('habit',key,{title,moment:'Durante el día',active:true,anchor:'',minimum:'',frequency:{period,target,unit}}),row('habit_plan',key,{versions:[{from:today.slice(0,7)+'-01',period,target,unit,active:true}]})];
 const fixture:any={user:{id:'synthetic',email:'prueba@example.test',role:'member',relationshipVersion:1,dataEpoch:1,coupleId:'synthetic-couple'},today,shared:[],partner:{name:'Alex',ideal:'',symbol:'heart',appearance:{symbol:'heart',image:''},shareSchedule:false,shareNotes:false,records:[]},own:[row('purpose',today.slice(0,7),{text:'Escuchar con paciencia y estar presente en mi familia.',review:''}),row('spaces','experience',{enabled:['personal','couple','group'],start:'personal'}),row('profile','me',{name:'Persona de prueba',ideal:'Líder de amor',symbol:'tree',shareNotes:false,shareSchedule:false}),...habit('morning','Oración de la mañana','day',1),...habit('exercise','Ejercicio','week',3,'times'),...habit('rosary','Rezar el rosario','month',2,'times'),...habit('novena','Novena a la Virgen','day',1),row('checks',today,{morning:'done',exercise:1,rosary:2})]};
@@ -13,8 +15,8 @@ for(const r of fixture.own.filter((r:RecordItem)=>r.key==='novena')){const cours
 for(let day=1;day<=20;day++){const entry=row('journal',today.slice(0,7)+'-'+String(day).padStart(2,'0'),{gratitude:'Agradezco el tiempo para escuchar con calma y compartir con quienes quiero.',offering:'Ofrezco mi trabajo de este día y la paciencia en los momentos difíciles.',meditation:'Quiero hacer espacio para lo importante, aunque sea con un gesto pequeño.'});fixture.own.push(entry);fixture.partner.records.push({...entry,data:{gratitude:entry.data.gratitude}});}
 if(new URLSearchParams(location.search).get('volume')==='50')for(let i=5;i<=50;i++)fixture.own.push(...habit('volume-'+i,'Compromiso de prueba '+i,'week',3));
 const community:CommunityState={groups:[],rosaries:[],invitations:[{id:'synthetic-invite',groupId:'synthetic-course',name:'Curso de alianza',senderName:'Andrea',status:'pending',version:1,expiresAt:new Date(Date.now()+7*86400000).toISOString()}]};
-if(new URLSearchParams(location.search).get('scenario')==='rosary'){
- const base:any={ownerId:'synthetic',groupId:null,coupleId:null,mystery:'joyful',mode:'free',intention:'Ejemplo ficticio para revisar la navegación',cancelled:false,slots:[],mine:[],personalStep:67,progressVersion:1};
+if(scenario==='rosary'||scenario==='litany'){
+ const base:any={ownerId:'synthetic',groupId:null,coupleId:null,mystery:'joyful',mode:'free',intention:'Ejemplo ficticio para revisar la navegación',cancelled:false,slots:[],mine:[],personalStep:scenario==='litany'?68:67,progressVersion:1};
  const slots=Array.from({length:5},(_,i)=>({decade:i+1,userId:'synthetic',done:true}));
  community.rosaries.push({...base,id:'sample-salve'},{...base,id:'sample-finished',personalStep:69,slots,mine:slots.map(s=>({decade:s.decade,day:today}))},{...base,id:'sample-couple',coupleId:'synthetic-couple',personalStep:undefined},{...base,id:'sample-couple-finished',coupleId:'synthetic-couple',personalStep:undefined,slots});
 }
@@ -56,4 +58,4 @@ async function request(init?:RequestInit){
  }
  return Response.json({record,related});
 }
-createRoot(document.getElementById('root')!).render(<><p style={{padding:12,background:'#fff',color:'#193649'}}>PRUEBA DEL SPRINT · Datos ficticios · Se reinicia al recargar. <a href="?scenario=rosary">Revisar Rosario</a> · <a href="?volume=50">Probar 50 compromisos</a> · <a href="?">Volver al ejemplo breve</a></p><Journal dataRequest={request} communityTransport={communityRequest} onSignOut={()=>{}}/></>);
+createRoot(document.getElementById('root')!).render(<><p style={{padding:12,background:'#fff',color:'#193649'}}>PRUEBA DEL SPRINT · Datos ficticios · Se reinicia al recargar. <a href="?scenario=litany">Probar letanías · acceso rápido</a> · <a href="?scenario=rosary">Revisar lista de rosarios</a> · <a href="?volume=50">Probar 50 compromisos</a> · <a href="?">Volver al ejemplo breve</a></p><Journal dataRequest={request} communityTransport={communityRequest} onSignOut={()=>{}}/></>);
