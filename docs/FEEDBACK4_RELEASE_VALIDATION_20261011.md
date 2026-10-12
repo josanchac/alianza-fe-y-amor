@@ -56,3 +56,21 @@ El propietario aprueba «Pausar compromiso» y confirma el funcionamiento de sum
 El propietario rechaza el contador con menú y pide recuperar la apariencia original. Se restaura la fila original con su único botón de suma. Propuesta pendiente: aviso temporal «Registro añadido · Deshacer» durante ocho segundos después de un guardado exitoso. Deshacer restaura el valor anterior del día seleccionado usando la versión esperada del guardado recién hecho; si hubo otra modificación, el control de versiones existente impide sobrescribirla. Fallos no se anuncian como éxito, el aviso permite reintento y la opción existente «Deshacer último» continúa en el menú cuando el aviso desaparece. Se conserva «Pausar compromiso», ya aprobado.
 
 Cotejo incremental: restauración visual y reversión de un registro técnico; no añade contenido espiritual ni cambia frecuencias, permisos o SQL. Tipos y prueba de suma, deshacer, primer registro a cero, fallo/reintento, versión esperada y pausa/reactivación aprobados. Falta aprobación humana del aviso temporal.
+
+## Aprobación e integración · 11/10, 18:03 Costa Rica
+
+El propietario aprueba el diseño original con aviso Deshacer. Se conserva aprobación de Pausar compromiso y presentación de Misa; el Rosario no recibe aprobación implícita. PR42 se retargetea a main como candidata acumulada de #35–#41 para evitar despliegues intermedios. Main confirmado en 6f056e7420b11eb14897f0c8a126be602e1e2e6d; sin merge ni modificación de producción.
+
+CI del head fb980383: Auth/API y asesor de seguridad aprobados. El trabajo PostgreSQL se detuvo en la comprobación documental A146, que conservaba el handler anterior de retomar; no es fallo de restauración. Se actualiza únicamente esa entrada del inventario con el handler revisado, preservando previousHandler y evidencia de la prueba funcional; no se elimina ni flexibiliza la comparación de acciones. Regresión completa reejecutándose.
+
+Base de pruebas: 42 tablas privadas/backup, todas con RLS, ninguna con acceso directo anon/authenticated. Los RPC public.alianza_data y public.alianza_relationship son invoker y no ejecutables por anon. Comparación de hashes prosrc, security-definer y search_path de producción/pruebas: relationship (antes de current_month), apply_month_plans, valid_record y require_pilot_access coinciden. Producción ya soporta prepare_month; la migración mensual es la pendiente del sprint. El inventario de migraciones de producción usa entregas históricas agrupadas; no reaplicar archivos antiguos por diferencia de nombre.
+
+### Secuencia de publicación de la candidata
+
+1. Cerrar revisión humana restante y verificar respaldo externo/recuperación #15. Continúa bloqueado por acceso seguro al destino OneDrive, exportación DB y custodia de clave; no se han configurado credenciales ni exportado datos reales.
+2. Confirmar CI de la candidata final, congelar versión/changelog y comprobar nuevamente main.
+3. Respaldo recuperable previo; aplicar únicamente 20261011225018_current_month_plan en producción, sin recrear tablas. Ejecutar comprobaciones de permisos y ensayo sintético autorizado con rollback.
+4. Fusionar la candidata acumulada una sola vez; no fusionar las ramas intermedias por separado. Comprobar workflow Pages y una operación sintética de extremo a extremo.
+5. Ante fallo de cliente, restaurar cliente anterior, compatible con la migración aditiva. No borrar tablas, planes o registros nuevos como reversión. Una restauración de DB requiere el procedimiento ensayado y reaplicar decisiones de borrado/revocación posteriores.
+
+Alcance restante fuera de cierre automático: invitación al Rosario con aceptación/rechazo, respuesta del salmo/edición CR, semana/año e integración general de ámbitos. La candidata no acredita mejoras no implementadas ni medición móvil de rendimiento.

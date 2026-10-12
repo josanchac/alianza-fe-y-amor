@@ -455,14 +455,20 @@
       "tag": "button",
       "label": "Editar y retomar",
       "className": "\"text-button\"",
-      "handler": "{()=>edit('habit',r.key,'Retomar mi compromiso',r.data)}",
+      "handler": "{()=>{edit('habit',r.key,'Retomar mi compromiso',r.data);setEditor(e=>e?{...e,data:{...e.data,active:true}}:e);}}",
       "pressed": false,
       "expanded": false,
       "type": "secondary",
       "rationale": "Operación local o acceso a opciones: botón compacto; revisar etiqueta dinámica en contexto.",
       "review": "Validar patrón en contexto",
       "implementation": "classified-action",
-      "intent": "secondary"
+      "intent": "secondary",
+      "previousHandler": "{()=>edit('habit',r.key,'Retomar mi compromiso',r.data)}",
+      "reviewedChange": {
+        "date": "2026-10-11",
+        "reason": "Pausar compromiso aprobado: al retirar el interruptor duplicado, Editar y retomar prepara active=true sin guardar hasta confirmación. Conserva borrador, versión e historial.",
+        "evidence": "tests/commitment-actions-ui.mjs; docs/FEEDBACK4_RELEASE_VALIDATION_20261011.md"
+      }
     },
     {
       "id": "A150",
