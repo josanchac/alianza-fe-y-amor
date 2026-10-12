@@ -50,3 +50,9 @@ Se cotejó el diff de journal/habit-fields: nuevo acceso al decremento ya existe
 ## Revisión visual · 11/10, 17:49 Costa Rica
 
 El propietario aprueba «Pausar compromiso» y confirma el funcionamiento de sumar/restar, pero rechaza la prominencia visual de los controles. Nueva propuesta pendiente: contador compacto al costado del título que abre Agregar uno / Restar uno; recupera la altura compacta de la fila. La cantidad corresponde al día seleccionado; el progreso del período conserva su ubicación y cálculo. Cotejo técnico/documental: presentación y acceso a acciones existentes, sin nuevos textos espirituales, permisos, datos ni reglas de cumplimiento. Tipos y regresión de sumar/restar, fallo, cero y pausa/retomar aprobados. Esta alternativa requiere aprobación visual y de interacción.
+
+## Corrección de dirección visual · 11/10, 17:59 Costa Rica
+
+El propietario rechaza el contador con menú y pide recuperar la apariencia original. Se restaura la fila original con su único botón de suma. Propuesta pendiente: aviso temporal «Registro añadido · Deshacer» durante ocho segundos después de un guardado exitoso. Deshacer restaura el valor anterior del día seleccionado usando la versión esperada del guardado recién hecho; si hubo otra modificación, el control de versiones existente impide sobrescribirla. Fallos no se anuncian como éxito, el aviso permite reintento y la opción existente «Deshacer último» continúa en el menú cuando el aviso desaparece. Se conserva «Pausar compromiso», ya aprobado.
+
+Cotejo incremental: restauración visual y reversión de un registro técnico; no añade contenido espiritual ni cambia frecuencias, permisos o SQL. Tipos y prueba de suma, deshacer, primer registro a cero, fallo/reintento, versión esperada y pausa/reactivación aprobados. Falta aprobación humana del aviso temporal.
