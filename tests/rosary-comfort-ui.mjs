@@ -20,7 +20,11 @@ try{
  fireEvent.pointerDown(document.body);assert(screen.getByRole('dialog'));
  fireEvent.keyDown(screen.getByRole('dialog'),{key:'Escape'});assert(screen.getByText('¿Pausar el rosario?'));
  fireEvent.click(screen.getByRole('button',{name:'Seguir rezando'}));assert(screen.getByRole('heading',{name:'Señal de la cruz'}));
- fireEvent.click(screen.getByRole('button',{name:'Opciones del rezo'}));fireEvent.click(screen.getByRole('button',{name:'Aumentar letra'}));assert.equal(localStorage.getItem('alianza-prayer-font'),'26');
+ fireEvent.click(screen.getByRole('button',{name:'Opciones del rezo'}));
+ const screenSwitch=screen.getByRole('switch',{name:'Mantener la pantalla encendida'});assert.equal(screenSwitch.getAttribute('aria-checked'),'true');fireEvent.click(screenSwitch);assert.equal(localStorage.getItem('alianza-prayer-awake'),'off');fireEvent.click(screenSwitch);assert.equal(localStorage.getItem('alianza-prayer-awake'),'on');
+ const sources=screen.getByText('Fuentes de las oraciones').closest('details');assert.equal(sources.open,false);fireEvent.click(screen.getByText('Fuentes de las oraciones'));assert.equal(sources.open,true);assert(screen.getByRole('link',{name:'Letanías · Santa Sede'}).href.includes('vatican.va'));
+ assert(!document.querySelector('.rosary-focus-body').contains(screen.getByRole('button',{name:'Volver al rezo'})));
+ fireEvent.click(screen.getByRole('button',{name:'Aumentar letra'}));assert.equal(localStorage.getItem('alianza-prayer-font'),'26');
  fireEvent.click(screen.getByRole('button',{name:'Descartar este rosario'}));fail=true;
  fireEvent.click(screen.getByRole('button',{name:'Sí, descartar'}));await screen.findByRole('alert');assert(screen.getByText('¿Descartar este rosario?'));
  fail=false;fireEvent.click(screen.getByRole('button',{name:'Sí, descartar'}));await waitFor(()=>assert.equal(screen.queryByRole('dialog'),null));
