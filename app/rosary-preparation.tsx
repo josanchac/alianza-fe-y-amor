@@ -5,7 +5,7 @@ import {type CommunityAction,type Mystery,MYSTERIES,mysteriesFor} from '@/lib/co
 import {type RosaryOpening} from '@/lib/rosary-guide';
 import {localDate} from '@/lib/domain';
 import {RosaryMap} from './personal-rosary';
-import {BackButton} from './back-button';
+import {BackHeader} from './back-header';
 export function RosaryPreparation({act,busy,ownerId,preferences,onSavePreferences,onCreated,onBack}:{act:CommunityAction;busy:boolean;ownerId?:string;preferences?:RosaryOpening;onSavePreferences?:(value:RosaryOpening)=>Promise<boolean>;onCreated?:()=>void;onBack?:()=>void}){
  const suggested=mysteriesFor(localDate());
  const [mystery,setMystery]=useState<Mystery>(suggested),[intention,setIntention]=useState('');
@@ -23,7 +23,7 @@ export function RosaryPreparation({act,busy,ownerId,preferences,onSavePreference
   onCreated?.();
  }catch(e){setError((e as Error).message);}finally{sending.current=false;setSaving(false);}}
  return <section className="rosary-preparation">
-  <header className="rosary-preparation-header">{onBack?<BackButton label="Volver a Oración" onClick={onBack}/>:<span/>}<h2>Nuevo rosario</h2><button type="button" className="rosary-quiet-icon" aria-label="Preferencias del rosario" disabled={disabled} onClick={()=>{setDraft(opening);setError('');setPanel('preferences');}}><Settings size={22}/></button></header>
+  {onBack?<BackHeader title="Nuevo rosario" brand={false} label="Volver a Oración" onBack={onBack} actions={<button type="button" className="rosary-quiet-icon" aria-label="Preferencias del rosario" disabled={disabled} onClick={()=>{setDraft(opening);setError('');setPanel('preferences');}}><Settings size={22}/></button>}/>:<header className="rosary-preparation-header"><h2>Nuevo rosario</h2><button type="button" className="rosary-quiet-icon" aria-label="Preferencias del rosario" disabled={disabled} onClick={()=>{setDraft(opening);setError('');setPanel('preferences');}}><Settings size={22}/></button></header>}
   <form onSubmit={start}>
    <div className="rosary-mystery-heading"><div><p>{mystery===suggested?'Misterios de hoy':'Misterios elegidos'}</p><h3>{MYSTERIES[mystery].name}</h3></div><button className="rosary-quiet-icon" type="button" aria-label="Cambiar misterios" disabled={disabled} onClick={()=>setPanel('mysteries')}><Pencil size={21}/></button></div>
    <RosaryMap step={0} opening={opening}/>

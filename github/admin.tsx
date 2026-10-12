@@ -1,3 +1,4 @@
+import {BackHeader} from '../app/back-header';
 import React, { useEffect, useState, useCallback } from "react";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import {PilotPanel} from './pilot';
@@ -57,10 +58,7 @@ export function AdminPanel({
   };
   return (
     <main className="admin-page">
-      <button className="action-button" data-action="navigation" onClick={onBack}>
-        ← Volver a mi espacio
-      </button>
-      <h1>Uso y mejora de Alianza</h1>
+      <BackHeader label="Volver a mi espacio" onBack={onBack} title="Uso y mejora de Alianza" level={1}/>
       {invitationsEnabled&&<nav className="admin-tabs" aria-label="Administración"><button aria-pressed={section==='activity'} onClick={()=>setSection('activity')}>Uso del piloto</button><button aria-pressed={section==='invitations'} onClick={()=>setSection('invitations')}>Personas e invitaciones</button><button aria-pressed={section==='support'} onClick={()=>setSection('support')}>Solicitudes y mejoras</button></nav>}
       {section==='invitations'?<InvitationAdmin client={client}/>:section==='support'?<SupportAdmin client={client}/>:<>
       <PilotPulse client={client}/><details className="admin-detail"><summary>Detalle de uso de los últimos 30 días</summary><PilotPanel client={client}/></details><details className="admin-detail"><summary>Medición general voluntaria</summary><h2>Medición general</h2>

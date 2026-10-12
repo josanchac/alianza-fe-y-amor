@@ -5,9 +5,11 @@ import Journal from '../../app/journal';
 import type {CommunityState} from '../../lib/community';
 import {localDate,type RecordItem} from '../../lib/domain';
 import '../../app/globals.css';
+import {NavigationExperience} from '../navigation/experience';
+import '../navigation/experience.css';
 const today=localDate();
 const scenario=new URLSearchParams(location.search).get('scenario');
-try{sessionStorage.removeItem('alianza-rosary-open:synthetic');if(scenario==='litany')sessionStorage.setItem('alianza-rosary-open:synthetic','sample-salve');else if(scenario==='rosary')sessionStorage.setItem('alianza-rosary-open:synthetic','review-list');}catch{}
+try{sessionStorage.removeItem('alianza-rosary-open:synthetic');if(scenario==='litany')sessionStorage.setItem('alianza-rosary-open:synthetic','sample-salve');else if((scenario==='rosary'||scenario==='navigation'))sessionStorage.setItem('alianza-rosary-open:synthetic','review-list');}catch{}
 const row=(kind:string,key:string,data:any):RecordItem=>({kind,key,data,owner:'synthetic',version:1,updated:new Date().toISOString()} as RecordItem);
 const habit=(key:string,title:string,period:string,target:number,unit='days')=>[row('habit',key,{title,moment:'Durante el día',active:true,anchor:'',minimum:'',frequency:{period,target,unit}}),row('habit_plan',key,{versions:[{from:today.slice(0,7)+'-01',period,target,unit,active:true}]})];
 const fixture:any={user:{id:'synthetic',email:'prueba@example.test',role:'member',relationshipVersion:1,dataEpoch:1,coupleId:'synthetic-couple'},today,shared:[],partner:{name:'Alex',ideal:'',symbol:'heart',appearance:{symbol:'heart',image:''},shareSchedule:false,shareNotes:false,records:[]},own:[row('purpose',today.slice(0,7),{text:'Escuchar con paciencia y estar presente en mi familia.',review:''}),row('spaces','experience',{enabled:['personal','couple','group'],start:'personal'}),row('profile','me',{name:'Persona de prueba',ideal:'Líder de amor',symbol:'tree',shareNotes:false,shareSchedule:false}),...habit('morning','Oración de la mañana','day',1),...habit('exercise','Ejercicio','week',3,'times'),...habit('rosary','Rezar el rosario','month',2,'times'),...habit('novena','Novena a la Virgen','day',1),row('checks',today,{morning:'done',exercise:1,rosary:2})]};
@@ -15,12 +17,35 @@ for(const r of fixture.own.filter((r:RecordItem)=>r.key==='novena')){const cours
 for(let day=1;day<=20;day++){const entry=row('journal',today.slice(0,7)+'-'+String(day).padStart(2,'0'),{gratitude:'Agradezco el tiempo para escuchar con calma y compartir con quienes quiero.',offering:'Ofrezco mi trabajo de este día y la paciencia en los momentos difíciles.',meditation:'Quiero hacer espacio para lo importante, aunque sea con un gesto pequeño.'});fixture.own.push(entry);fixture.partner.records.push({...entry,data:{gratitude:entry.data.gratitude}});}
 if(new URLSearchParams(location.search).get('volume')==='50')for(let i=5;i<=50;i++)fixture.own.push(...habit('volume-'+i,'Compromiso de prueba '+i,'week',3));
 const community:CommunityState={groups:[],rosaries:[],invitations:[{id:'synthetic-invite',groupId:'synthetic-course',name:'Curso de alianza',senderName:'Andrea',status:'pending',version:1,expiresAt:new Date(Date.now()+7*86400000).toISOString()}]};
-if(scenario==='rosary'||scenario==='litany'){
+if(scenario==='courses'){
+ fixture.own.find((r:RecordItem)=>r.kind==='spaces').data.start='group';
+ community.groups.push({id:'synthetic-course-review',name:'Curso de prueba',ownerId:'synthetic',ideal:'',motto:'Datos ficticios para revisar formularios',version:1,members:[{id:'synthetic',name:'Persona de prueba'},...Array.from({length:50},(_,i)=>({id:'member-'+i,name:'Integrante de prueba '+(i+1)}))],purposes:[],meeting:null,coordinators:[],permissions:{rosary:{mode:'all',users:[]}}});
+ community.invitations=[];
+}
+if(scenario==='reports'){
+ let step=0;const start=Date.now(),timer=setInterval(()=>{
+  const name=step===0?'Mi recorrido':'Preparar reporte para mi asesor';
+  const button=[...document.querySelectorAll('button')].find(b=>b.textContent?.trim()===name);
+  if(button){button.click();step++;if(step===2)clearInterval(timer);}else if(Date.now()-start>10000)clearInterval(timer);
+ },100);
+}
+if(scenario==='rosary'||scenario==='litany'||scenario==='navigation'||scenario==='integrated'){
  const base:any={ownerId:'synthetic',groupId:null,coupleId:null,mystery:'joyful',mode:'free',intention:'Ejemplo ficticio para revisar la navegación',cancelled:false,slots:[],mine:[],personalStep:scenario==='litany'?68:67,progressVersion:1};
  const slots=Array.from({length:5},(_,i)=>({decade:i+1,userId:'synthetic',done:true}));
  community.rosaries.push({...base,id:'sample-salve'},{...base,id:'sample-finished',personalStep:69,slots,mine:slots.map(s=>({decade:s.decade,day:today}))},{...base,id:'sample-couple',coupleId:'synthetic-couple',personalStep:undefined},{...base,id:'sample-couple-finished',coupleId:'synthetic-couple',personalStep:undefined,slots});
 }
+if(scenario==='navigation'){const sample=community.rosaries.find(r=>r.id==='sample-finished')!;for(let i=1;i<=24;i++)community.rosaries.push({...sample,id:'history-'+i});const start=Date.now(),timer=setInterval(()=>{const button=[...document.querySelectorAll('button')].find(b=>b.textContent?.includes('Mis rosarios'));if(button){clearInterval(timer);button.click();}else if(Date.now()-start>10000)clearInterval(timer);},100);}
 async function communityRequest(p:Record<string,any>){
+ if(scenario==='courses'&&p.action){
+  const group=community.groups.find(g=>g.id===p.groupId);
+  if(!group||!['group_permissions','group_update','meeting_save'].includes(p.action))return Response.json({error:'Esta acción no está habilitada en la demostración. No se guardaron cambios.'},{status:400});
+  const version=p.action==='meeting_save'?(group.meeting?.version??0):group.version;
+  if(p.version!==version)return Response.json({error:'El registro cambió. Tu borrador se conserva.'},{status:409});
+  if(p.action==='group_permissions'){group.permissions=p.permissions;group.coordinators=p.coordinators;group.version++;}
+  if(p.action==='group_update'){for(const key of ['name','ideal','motto','photo','symbol','symbolImage'] as const)if(key in p)(group as any)[key]=p[key];group.version++;}
+  if(p.action==='meeting_save')group.meeting={version:version+1,data:p.data,responses:[]};
+  return Response.json(community);
+ }
  const invitation=community.invitations?.find(i=>i.id===p.id);
  if(invitation&&p.action==='course_decline'){invitation.status='declined';invitation.version++;}
  if(invitation&&p.action==='course_restore'){invitation.status='pending';invitation.version++;}
@@ -58,4 +83,10 @@ async function request(init?:RequestInit){
  }
  return Response.json({record,related});
 }
-createRoot(document.getElementById('root')!).render(<><p style={{padding:12,background:'#fff',color:'#193649'}}>PRUEBA DEL SPRINT · Datos ficticios · Se reinicia al recargar. <a href="?scenario=litany">Probar letanías · acceso rápido</a> · <a href="?scenario=rosary">Revisar lista de rosarios</a> · <a href="?volume=50">Probar 50 compromisos</a> · <a href="?">Volver al ejemplo breve</a></p><Journal dataRequest={request} communityTransport={communityRequest} onSignOut={()=>{}}/></>);
+const experience=scenario===null||scenario==='experience';
+const requestedView=new URLSearchParams(location.search).get('view');
+const initialView=requestedView==='history'||requestedView==='form'?requestedView:'home';
+createRoot(document.getElementById('root')!).render(experience?<>
+ <details className="nr-review-tools"><summary>Prueba visual · 3 recorridos</summary><p>Datos ficticios. Nada se guarda en tu app y recargar reinicia el ejemplo. Revisá claridad, espacio para el contenido y facilidad para volver.</p><nav aria-label="Escenarios de revisión"><a href="?scenario=experience" aria-current={initialView==='home'?'page':undefined}>1 · Navegación</a><a href="?scenario=experience&view=history" aria-current={initialView==='history'?'page':undefined}>2 · Historial y regreso</a><a href="?scenario=experience&view=form" aria-current={initialView==='form'?'page':undefined}>3 · Edición y teclado</a><a href="?scenario=experience&volume=50">50 compromisos</a><a href="?scenario=litany">Letanías aprobadas</a></nav></details>
+ <NavigationExperience initialView={initialView} volume={new URLSearchParams(location.search).get('volume')==='50'?50:3}/>
+</>:<><p style={{padding:12,background:'#fff',color:'#193649'}}>REVISIÓN INTEGRADA · Datos ficticios · Se reinicia al recargar. <a href="?scenario=experience">Diseño aprobado</a> · <a href="?scenario=courses">Revisar Cursos</a> · <a href="?scenario=reports&volume=50">Revisar reporte</a> · <a href="?scenario=navigation">Probar Volver · 24 rosarios</a> · <a href="?scenario=litany">Probar letanías · acceso rápido</a> · <a href="?scenario=rosary">Revisar lista de rosarios</a> · <a href="?scenario=legacy&volume=50">Probar 50 compromisos</a></p><Journal dataRequest={request} communityTransport={communityRequest} onSignOut={()=>{}}/></>);

@@ -1,12 +1,23 @@
-button.app-back-button {
-  display:inline-flex;align-items:center;justify-content:center;flex:0 0 44px;
-  width:44px;height:44px;min-width:44px;min-height:44px;padding:0;
-  border:0;border-radius:50%;background:var(--app-control-soft,#eeeee7);
-  color:var(--app-control-ink,#203c50);cursor:pointer;
-  transition:transform .12s ease,background-color .12s ease;
-}
-button.app-back-button svg {width:21px;height:21px;flex-shrink:0;}
-button.app-back-button:active:not(:disabled) {transform:scale(.96);}
-button.app-back-button:focus-visible {outline:3px solid #92743e;outline-offset:3px;}
-button.app-back-button:disabled {opacity:.45;cursor:default;}
-@media(prefers-reduced-motion:reduce){button.app-back-button{transition:none;}}
+/* Approved navigation primitives; no global button resets. */
+.workspace .couple-primary-tabs[hidden],.workspace .page-heading[hidden]{display:none!important}
+.compact-couple:has(.compact-partner[data-detail=true]:not([hidden] *))>.page-heading,.compact-couple:has(.compact-partner[data-detail=true]:not([hidden] *))>.couple-primary-tabs{display:none}
+.app-history-row{display:flex;align-items:center;gap:12px;min-height:80px;padding:16px 0;width:100%;border:0;border-bottom:1px solid var(--app-line,#dde3e3);background:none;text-align:left;scroll-margin-block:90px;color:var(--app-control-ink,#203c50)}
+.app-history-row>span:nth-child(2){flex:1;min-width:0}.app-history-row strong{display:block;font-size:17px;font-weight:550}.app-history-row small{display:block;margin-top:4px;font-size:14px;color:var(--app-muted,#60717b)}.app-history-state{display:grid;place-items:center;flex-shrink:0;width:32px;height:32px;border-radius:50%;background:#edf1eb;color:#4b6753}
+:root{--app-chrome-inset:env(safe-area-inset-top,0px);--app-chrome-height:64px;--app-chrome-shadow:0 7px 12px -10px #18374724}
+.app-shell button.app-back-button,button.app-back-button{display:inline-flex;align-items:center;justify-content:center;gap:4px;flex:0 0 auto;width:auto;min-width:44px;min-height:44px;padding:8px 14px 8px 8px;border:1px solid #bdcbd0;border-radius:14px;background:var(--app-control-soft,#eeeee7);color:var(--app-control-ink,#203c50);font:600 16px/1.2 var(--font-sans,Arial,sans-serif);cursor:pointer}
+button.app-back-button svg{width:21px;height:21px;flex-shrink:0}button.app-back-button:focus-visible{outline:3px solid #92743e;outline-offset:3px}button.app-back-button:disabled{opacity:.45;cursor:default}
+.app-chrome-marker{display:block;height:1px;pointer-events:none}
+.app-back-header{position:sticky;top:var(--app-chrome-inset);z-index:20;display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:var(--app-chrome-height);padding:8px 0;margin-bottom:16px;background:var(--app-bg,#faf9f3);box-shadow:0 7px 12px -10px transparent;transition:box-shadow 240ms ease}
+.app-back-header[data-raised=true]{box-shadow:var(--app-chrome-shadow)}.app-back-tools{display:flex;align-items:center;gap:8px}.back-small-brand{width:30px;height:38px;object-fit:contain}.back-page-title{margin:8px 0 18px}
+.app-compact-brand{position:sticky;top:var(--app-chrome-inset);z-index:20;display:flex;align-items:center;justify-content:space-between;gap:12px;height:56px;margin-bottom:-56px;padding:8px 0;pointer-events:none;opacity:var(--chrome-progress,0);background:var(--app-bg,#faf9f3);box-shadow:var(--app-chrome-shadow);transition:opacity 100ms linear}
+.app-compact-brand img{width:30px;height:38px;object-fit:contain;transform:scale(calc(.94 + .06 * var(--chrome-progress,0)))}.app-compact-brand>span{font-size:14px;color:var(--app-muted,#60717b)}
+.workspace:has(.app-back-header:not([hidden] *))>.app-compact-brand,.workspace:has(.month-plan-editor)>.app-compact-brand,.workspace.moments-open>.app-compact-brand,.workspace.preparing-rosary>.app-compact-brand{display:none}
+.workspace:has(.app-back-header:not([hidden] *))>.app-topbar,.workspace:has(.app-back-header:not([hidden] *))>.app-spaces,.workspace:has(.month-plan-editor)>.app-topbar,.workspace:has(.month-plan-editor)>.app-spaces,.workspace.moments-open>.app-topbar,.workspace.moments-open>.app-spaces{display:none}
+.workspace:has(.month-plan-editor) .app-view-tabs,.workspace:has(.month-review.is-consulting) .app-view-tabs{display:none}
+.app-topbar{display:flex;align-items:center;justify-content:space-between;gap:14px;min-height:112px;padding:20px 0;flex-wrap:wrap}
+.app-topbar .brand-home{display:flex;align-items:center;gap:14px;border:0;background:none;padding:0;text-align:left;color:var(--app-control-ink,#203c50)}.app-topbar .brand-home>img{width:50px;height:65px;object-fit:contain}.app-topbar .brand-word{font:38px/1 Georgia,serif}.app-topbar .brand-word>span{display:block;font:11px/1.5 var(--font-sans,Arial,sans-serif);letter-spacing:.27em;color:var(--gold,#967237);margin-top:7px}.app-topbar .account-pill{display:none}
+.app-spaces{margin-bottom:18px;border-bottom:1px solid var(--border,#dde3e3)}.app-spaces .space-switcher-label{display:none}.app-space-tabs{display:flex;gap:4px}.app-space-tabs button{flex:1;display:flex;align-items:center;justify-content:center;min-height:48px;padding:8px 5px;border:0;border-bottom:3px solid transparent;background:none;color:var(--app-muted,#60717b);font-size:16px}.app-space-tabs button[aria-pressed=true]{border-bottom-color:var(--gold,#967237);color:var(--app-control-ink,#203c50);font-weight:650}.app-space-tabs svg,.app-space-tabs .space-label-full{display:none}.app-space-tabs .space-label-short{display:inline}
+.app-view-tabs{display:flex;gap:4px;padding:3px;background:#eef1ed;border-radius:13px;margin:0 0 12px}.app-view-tabs button{flex:1;min-height:44px;padding:8px 4px;border:0;border-radius:10px;background:none;color:var(--app-muted,#60717b);font-size:16px}.app-view-tabs button[aria-pressed=true]{background:#fff;color:var(--app-control-ink,#203c50);box-shadow:0 1px 3px #15334212;font-weight:600}.app-space-tabs button:focus-visible,.app-view-tabs button:focus-visible{outline:3px solid #92743e;outline-offset:3px}
+.app-datebar{display:flex;align-items:center;justify-content:center;gap:4px;padding:4px 0 8px}.app-datebar .date-control{flex:1;font-size:15px}.app-datebar button{flex-shrink:0}
+.app-back-header+*,[data-mass-anchor]{scroll-margin-top:calc(var(--app-chrome-height) + var(--app-chrome-inset) + 12px)}
+@media(prefers-reduced-motion:reduce){.app-back-header,.app-compact-brand{transition:none}.app-compact-brand{opacity:0}.app-compact-brand[data-raised=true]{opacity:1}.app-compact-brand img{transform:none}}
