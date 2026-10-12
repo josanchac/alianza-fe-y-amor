@@ -6,6 +6,7 @@ const {PersonalRosary}=await import('../app/personal-rosary.tsx');
 const {usePrayerScreen}=await import('../app/use-prayer-screen.ts');
 const {localDate}=await import('../lib/domain.ts');
 const {prayerFor,ROSARY_STEPS,nextPrayerStep}=await import('../lib/rosary-guide.ts');
+HTMLElement.prototype.scrollTo=function({top}){this.scrollTop=top;};
 const base={id:'comfort-test',ownerId:'owner',groupId:null,coupleId:null,mystery:'joyful',mode:'free',intention:'',cancelled:false,slots:[],mine:[],personalStep:0,progressVersion:0};
 const calls=[];let fail=false;
 const habits=[{key:'h',data:{title:'Rezar el rosario',active:true}}];
@@ -43,7 +44,7 @@ try{
  fireEvent.click(screen.getByRole('button',{name:'Avanzar'}));
  fireEvent.click(await screen.findByRole('button',{name:'Rezar las letanías (opcional)'}));
  assert(screen.getByRole('heading',{name:'Letanías'}));
- const exitLitany=screen.getByRole('button',{name:'Terminar letanías'});const reading=document.querySelector('.rosary-focus-body');assert(!reading.contains(exitLitany));assert.equal(document.querySelectorAll('.litany-line').length,68);const beforeExit=calls.length;fireEvent.click(exitLitany);assert.equal(calls.length,beforeExit);assert(screen.getByRole('button',{name:'Terminé el rosario'}));
+ const exitLitany=screen.getByRole('button',{name:'Terminar letanías'});const reading=document.querySelector('.rosary-focus-body');assert(!reading.contains(exitLitany));assert.equal(document.querySelectorAll('.litany-line').length,68);reading.scrollTop=800;fireEvent.scroll(reading);fireEvent.click(screen.getByRole('button',{name:'Opciones del rezo'}));fireEvent.click(screen.getByRole('button',{name:'Aumentar letra'}));fireEvent.click(screen.getByRole('button',{name:'Volver al rezo'}));assert.equal(reading.scrollTop,800,'Returning from font settings retains the reading position');assert.equal(document.querySelector('.litany-footer .prayer-advance svg'),null);const beforeExit=calls.length;fireEvent.click(screen.getByRole('button',{name:'Terminar letanías'}));assert.equal(calls.length,beforeExit);assert(screen.getByRole('button',{name:'Terminé el rosario'}));
  assert.equal(calls.at(-1).step,68);assert.equal(calls.filter(p=>p.action==='rosary_today').length,0);await clear();
  render(React.createElement(Harness,{initial:{...base,personalStep:69,mine:[{decade:1,day:localDate()}]}}));
  assert.equal(screen.queryByRole('img',{name:'Rosario concluido'}),null);

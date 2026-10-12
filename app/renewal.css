@@ -137,3 +137,15 @@ html body .rosary-focus button{min-height:48px}
 .rosary-focus .litany-line{padding:14px 0;border-bottom:1px solid #dfe6e5}
 .rosary-focus .litany-line p{margin:0}
 .rosary-focus .litany-line .litany-response{margin-top:5px;color:#50676e;font-weight:600}
+
+/* Litany reading keeps native scrolling and a quiet, persistent exit. */
+.rosary-focus .litany-prayer{max-width:38rem;margin:0 auto;overflow-wrap:anywhere}
+.rosary-focus .litany-line{padding:12px 0}
+.rosary-focus .litany-line .litany-call{font-family:Georgia,serif;line-height:1.55}
+.rosary-focus .litany-line .litany-response{font-size:calc(var(--prayer-size,24px) * .9);line-height:1.6;font-weight:500}
+.rosary-focus-body{scroll-behavior:auto;scroll-padding-block:16px;-webkit-overflow-scrolling:touch}
+.rosary-focus .litany-footer{display:flex;align-items:center;gap:12px;padding-top:10px;padding-bottom:max(10px,env(safe-area-inset-bottom))}
+html body .rosary-focus .litany-footer button.prayer-advance{flex:1;width:auto;min-width:0;min-height:48px;border-radius:14px;font-size:1rem;line-height:1.4;padding:10px 16px;background:#e9f0ef;color:#264651;border:1px solid #c5d3d4}
+html body .rosary-focus .litany-footer button.prayer-advance:hover{background:#dfe9e8}
+.rosary-focus .litany-footer .prayer-secondary{flex:0 0 auto}
+.rosary-focus .litany-footer .prayer-secondary button{width:48px;padding:10px}
