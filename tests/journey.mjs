@@ -32,6 +32,33 @@ try{
  fireEvent.click(screen.getByRole('button',{name:'Guardar revisión',exact:true}));await screen.findByText('Revisión guardada');assert.equal(readMonthlyReview(writes.at(-1).data.review).answers[0],'Lo que aprendí');
  assert.equal(writes.at(-1).key,previous);assert.equal(fixture.own.find(r=>r.kind==='purpose'&&r.key===month).data.text,'Propósito actual');
  console.log('PASS Reviewing the previous month preserves the current purpose and its review');
+ // A monthly draft survives internal navigation, with a native unload warning.
+ const unloading=()=>{const event=new dom.window.Event('beforeunload',{cancelable:true});window.dispatchEvent(event);return event.defaultPrevented;};
+ assert.equal(unloading(),false);
+ fireEvent.change(screen.getByRole('textbox',{name:'¿Qué me ayudó?'}),{target:{value:'Borrador conservado'}});
+ assert.equal(unloading(),true);
+ fireEvent.click(screen.getByRole('button',{name:'Mi día',exact:true}));
+ assert.equal(unloading(),true,'Warn even while the monthly form is unmounted');
+ fireEvent.click(screen.getByRole('button',{name:'Mi mes',exact:true}));
+ assert.equal(screen.getByRole('textbox',{name:'¿Qué me ayudó?'}).value,'Borrador conservado');
+ fireEvent.change(screen.getByLabelText('Mi mes'),{target:{value:month}});
+ fireEvent.click(screen.getByRole('button',{name:'Reflexionar sobre este mes'}));
+ assert.notEqual(screen.getByRole('textbox',{name:'¿Qué me ayudó?'}).value,'Borrador conservado');
+ fireEvent.change(screen.getByLabelText('Mi mes'),{target:{value:previous}});
+ assert.equal(screen.getByRole('textbox',{name:'¿Qué me ayudó?'}).value,'Borrador conservado');
+ fireEvent.click(screen.getByRole('button',{name:'Guardar revisión',exact:true}));
+ await waitFor(()=>assert.equal(unloading(),false));
+ assert.equal(readMonthlyReview(writes.at(-1).data.review).answers[0],'Borrador conservado');
+ console.log('PASS Monthly draft survives day/month navigation; confirmed save clears unload warning');
+ fireEvent.change(screen.getByRole('textbox',{name:'¿Qué me ayudó?'}),{target:{value:'No recuperar tras reiniciar'}});
+ fixture.user.dataEpoch=2;
+ fireEvent.focus(window);
+ await screen.findByRole('heading',{name:'Tu espacio está listo para comenzar de nuevo'});
+ assert.equal(unloading(),false,'A reset invalidates old monthly drafts');
+ cleanup();mount();await screen.findByRole('heading',{name:/^(Hoy|Mi día)$/});
+ fireEvent.click(screen.getByRole('button',{name:'Mi mes',exact:true}));
+ fireEvent.change(screen.getByLabelText('Mi mes'),{target:{value:previous}});
+ assert.equal(screen.getByRole('textbox',{name:'¿Qué me ayudó?'}).value,'Borrador conservado','A new Journal cannot restore the previous session draft');
  // Continuing is an editable draft, not an automatic copy or a replacement of an existing text.
  cleanup();fixture.own=fixture.own.map(r=>r.kind==='purpose'&&r.key===month?{...r,data:{text:'',review:'Conservar mi revisión'}}:r);
  mount();await screen.findByRole('heading',{name:/^(Hoy|Mi día)$/});fireEvent.mouseDown(screen.getByRole('tab',{name:'Hoy',exact:true}),{button:0,ctrlKey:false});fireEvent.click(screen.getByRole('button',{name:'Mi mes',exact:true}));

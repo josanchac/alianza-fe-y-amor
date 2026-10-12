@@ -22,7 +22,7 @@ try{
  assert.equal(daily.getAttribute('aria-valuenow'),'1');
  assert.equal(screen.getByRole('progressbar',{name:'Rosarios'}).getAttribute('aria-valuemax'),'2');
  await waitFor(()=>assert.equal(screen.getByRole('button',{name:'Editar: Rosarios'}).disabled,false));
- fireEvent.pointerDown(screen.getByRole('button',{name:'Editar: Rosarios'}),{button:0,ctrlKey:false,pointerType:'mouse'});
+ fireEvent.click(screen.getByRole('button',{name:'Editar: Rosarios'}),{button:0,ctrlKey:false,pointerType:'mouse'});
  fireEvent.click(await screen.findByRole('menuitem',{name:'Deshacer último'}));
  await waitFor(()=>assert.equal(screen.queryByText('+1 adicional')===null,true));
  assert.equal(writes.at(-1).data.Rosarios,2);
@@ -61,7 +61,7 @@ try{
  fireEvent.click(screen.getByRole('checkbox',{name:'Novena'}));
  await waitFor(()=>assert.equal(novena.getAttribute('aria-valuenow'),'1'));
  assert.equal(screen.getByRole('progressbar',{name:'Compromisos diarios'}).getAttribute('aria-valuenow'),'2');
- assert(screen.getByRole('heading',{name:'Momento para vos'}));
+ assert(screen.getByRole('button',{name:/Mis reflexiones/}));
  cleanup();
  let edited;
  function Form(){const [data,set]=React.useState({title:'Ejercicio',moment:'Durante el día',active:true,anchor:'',minimum:'',frequency:{period:'week',target:3}});edited=data;return React.createElement(HabitFields,{data,first:false,step:1,field:(k,v)=>set({...data,[k]:v})});}

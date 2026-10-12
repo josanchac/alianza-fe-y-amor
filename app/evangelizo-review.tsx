@@ -18,9 +18,9 @@ export function EvangelizoReview({date,today,kind,activeReading,onToggle}:{date:
 
     {error?<div role="status"><p>{error}</p><button className="mass-button" onClick={()=>setRetry(n=>n+1)}>Reintentar</button><a className="mass-button" href={'https://evangeliodeldia.org/SP/gospel/'+date} target="_blank" rel="noreferrer">Abrir en Evangelizo</a></div>:!result||result.date!==date?<p role="status">Cargando lecturas…</p>:<>
       <p>{result.title}</p>
-      <div className="mass-reading-set">{result.readings.map(r=><div className="mass-moment mass-reading" key={r.id}><button type="button" aria-expanded={expanded===r.id} aria-controls={uid+r.id} data-mass-anchor={'evangelizo-'+r.id} onClick={()=>{if(onToggle)onToggle(r.id);else setOpen(expanded===r.id?null:r.id);}}>{r.title}</button>{expanded===r.id&&<div id={uid+r.id}><p className="mass-reference">{r.reference}</p><p className="mass-text">{r.text}</p></div>}</div>)}</div>
+      <div className="mass-reading-set">{result.readings.map(r=><div className="mass-moment mass-reading" key={r.id}><button type="button" aria-expanded={expanded===r.id} aria-controls={uid+r.id} data-mass-anchor={'evangelizo-'+r.id} onClick={()=>{if(onToggle)onToggle(r.id);else setOpen(expanded===r.id?null:r.id);}}>{r.title}</button>{expanded===r.id&&<div id={uid+r.id}><p className="mass-reference">{r.reference}</p>{r.id==='reading_text2'&&<p className="mass-source-note">La respuesta del salmo no está disponible en esta fuente.</p>}<p className="mass-text">{r.text}</p></div>}</div>)}</div>
       <details className="compact-reading-source"><summary>Fuente de estas lecturas</summary><p className="mass-attribution">Evangelizo · Biblia: El Libro del Pueblo de Dios.</p>
-      <a className="mass-button" href={result.source} target="_blank" rel="noreferrer">Ver fuente en Evangelizo</a><p className="mass-meta">Calendario romano general.</p></details>
+      <a className="mass-button" href={result.source} target="_blank" rel="noreferrer">Ver fuente en Evangelizo</a><p className="mass-meta">Calendario romano general. La traducción puede diferir de la que escuchás en tu parroquia; la correspondencia con el leccionario de Costa Rica está pendiente de verificar.</p></details>
     </>}
   </div>;
 }

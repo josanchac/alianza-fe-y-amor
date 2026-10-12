@@ -47,6 +47,17 @@ try{
  await assert.rejects(()=>rpc(b.client,'data',{...habit,owner:a.id}),e=>e.code==='22023');
  assert((await a.client.from('records').select('*')).error,'Private tables are not exposed');
  pass('PostgREST isolates personal records, rejects owner injection and rejects stale writes');
+ // Current-month plan over the real public RPC, with an independent synthetic account.
+ const monthly=await person('current-month-plan');
+ const ms=await rpc(monthly.client,'data'),mm=ms.today.slice(0,7);
+ const monthPayload={action:'save_current_month',month:mm,effectiveDate:ms.today,dataEpoch:ms.user.dataEpoch,relationshipVersion:ms.user.relationshipVersion,version:0,purposeVersion:0,purpose:'Propósito ficticio',items:[{key:'month-walk',version:0,keep:true,data:habit.data}]};
+ const monthSaved=(await rpc(monthly.client,'relationship',monthPayload)).state;
+ assert(monthSaved.own.some(r=>r.kind==='habit'&&r.key==='month-walk'));
+ assert.equal(monthSaved.own.find(r=>r.kind==='purpose'&&r.key===mm).data.text,'Propósito ficticio');
+ assert.deepEqual((await rpc(monthly.client,'data')).own,monthSaved.own,'Saved plan survives a fresh API read');
+ await assert.rejects(()=>rpc(monthly.client,'relationship',monthPayload),e=>e.code==='PT409');
+ assert(!(await rpc(b.client,'data')).own.some(r=>r.key==='month-walk'),'Other account cannot read monthly commitments');
+ pass('Current-month public RPC saves atomically, survives reload, rejects duplicate versions and isolates owners');
  const inv=await rpc(a.client,'relationship',{action:'create',email:b.email,relationshipVersion:1});
  assert.equal((await rpc(a.client,'data')).user.coupleId,null);
  await assert.rejects(()=>rpc(c.client,'relationship',{action:'accept',token:inv.token,relationshipVersion:1}));

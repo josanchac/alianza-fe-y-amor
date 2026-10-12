@@ -27,7 +27,7 @@ try{
  globalThis.fetch=async()=>new Response('',{status:503});
  render(React.createElement(EvangelizoReview,{date:'2026-09-20',today:'2026-09-20',kind:'general'}));
  await screen.findByRole('button',{name:'Reintentar'});globalThis.fetch=async()=>new Response(xml());fireEvent.click(screen.getByRole('button',{name:'Reintentar'}));
- fireEvent.click(await screen.findByRole('button',{name:'Primera lectura'}));assert(screen.getByText('Inicio FIN SINTÉTICO'));fireEvent.click(screen.getByRole('button',{name:'Evangelio'}));assert.equal(screen.getByRole('button',{name:'Primera lectura'}).getAttribute('aria-expanded'),'false');cleanup();
+ fireEvent.click(await screen.findByRole('button',{name:'Primera lectura'}));assert(screen.getByText('Inicio FIN SINTÉTICO'));fireEvent.click(screen.getByRole('button',{name:'Salmo'}));assert(screen.getByText('La respuesta del salmo no está disponible en esta fuente.'));fireEvent.click(screen.getByRole('button',{name:'Evangelio'}));assert.equal(screen.getByRole('button',{name:'Primera lectura'}).getAttribute('aria-expanded'),'false');cleanup();
  let resolveFirst;
  globalThis.fetch=()=>new Promise(resolve=>{resolveFirst=resolve;});
  const view=render(React.createElement(EvangelizoReview,{date:'2026-09-20',today:'2026-09-20',kind:'general'}));

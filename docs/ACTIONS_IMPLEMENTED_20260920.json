@@ -455,14 +455,20 @@
       "tag": "button",
       "label": "Editar y retomar",
       "className": "\"text-button\"",
-      "handler": "{()=>edit('habit',r.key,'Retomar mi compromiso',r.data)}",
+      "handler": "{()=>{edit('habit',r.key,'Retomar mi compromiso',r.data);setEditor(e=>e?{...e,data:{...e.data,active:true}}:e);}}",
       "pressed": false,
       "expanded": false,
       "type": "secondary",
       "rationale": "Operación local o acceso a opciones: botón compacto; revisar etiqueta dinámica en contexto.",
       "review": "Validar patrón en contexto",
       "implementation": "classified-action",
-      "intent": "secondary"
+      "intent": "secondary",
+      "previousHandler": "{()=>edit('habit',r.key,'Retomar mi compromiso',r.data)}",
+      "reviewedChange": {
+        "date": "2026-10-11",
+        "reason": "Pausar compromiso aprobado: al retirar el interruptor duplicado, Editar y retomar prepara active=true sin guardar hasta confirmación. Conserva borrador, versión e historial.",
+        "evidence": "tests/commitment-actions-ui.mjs; docs/FEEDBACK4_RELEASE_VALIDATION_20261011.md"
+      }
     },
     {
       "id": "A150",
@@ -871,14 +877,20 @@
       "tag": "button",
       "label": "Atrás",
       "className": "\"text-button\"",
-      "handler": "{()=>litany!==null?setLitany(litany-1):move(-1)}",
+      "handler": "{()=>move(-1)}",
       "pressed": false,
       "expanded": false,
       "type": "navigation",
       "rationale": "Acceso o regreso: tratamiento liviano, sin competir con guardar.",
       "review": "Validar patrón en contexto",
       "implementation": "classified-action",
-      "intent": "navigation"
+      "intent": "navigation",
+      "previousHandler": "{()=>litany!==null?setLitany(litany-1):move(-1)}",
+      "reviewedChange": {
+        "date": "2026-10-11",
+        "reason": "Propietario aprueba lectura continua de letanías a las 19:45; Atrás conserva regreso de cuenta del rosario y ya no pagina invocaciones. Terminar letanías es local y visible fuera del scroll.",
+        "evidence": "tests/rosary-comfort-ui.mjs; tests/rosary-entry-ui.mjs; tests/rosary-order.mjs"
+      }
     },
     {
       "id": "A250",

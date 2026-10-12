@@ -6,6 +6,7 @@ const {PersonalRosary}=await import('../app/personal-rosary.tsx');
 const {usePrayerScreen}=await import('../app/use-prayer-screen.ts');
 const {localDate}=await import('../lib/domain.ts');
 const {prayerFor,ROSARY_STEPS,nextPrayerStep}=await import('../lib/rosary-guide.ts');
+HTMLElement.prototype.scrollTo=function({top}){this.scrollTop=top;};
 const base={id:'comfort-test',ownerId:'owner',groupId:null,coupleId:null,mystery:'joyful',mode:'free',intention:'',cancelled:false,slots:[],mine:[],personalStep:0,progressVersion:0};
 const calls=[];let fail=false;
 const habits=[{key:'h',data:{title:'Rezar el rosario',active:true}}];
@@ -19,7 +20,11 @@ try{
  fireEvent.pointerDown(document.body);assert(screen.getByRole('dialog'));
  fireEvent.keyDown(screen.getByRole('dialog'),{key:'Escape'});assert(screen.getByText('¿Pausar el rosario?'));
  fireEvent.click(screen.getByRole('button',{name:'Seguir rezando'}));assert(screen.getByRole('heading',{name:'Señal de la cruz'}));
- fireEvent.click(screen.getByRole('button',{name:'Opciones del rezo'}));fireEvent.click(screen.getByRole('button',{name:'Aumentar letra'}));assert.equal(localStorage.getItem('alianza-prayer-font'),'26');
+ fireEvent.click(screen.getByRole('button',{name:'Opciones del rezo'}));
+ const screenSwitch=screen.getByRole('switch',{name:'Mantener la pantalla encendida'});assert.equal(screenSwitch.getAttribute('aria-checked'),'true');fireEvent.click(screenSwitch);assert.equal(localStorage.getItem('alianza-prayer-awake'),'off');fireEvent.click(screenSwitch);assert.equal(localStorage.getItem('alianza-prayer-awake'),'on');
+ const sources=screen.getByText('Fuentes de las oraciones').closest('details');assert.equal(sources.open,false);fireEvent.click(screen.getByText('Fuentes de las oraciones'));assert.equal(sources.open,true);assert(screen.getByRole('link',{name:'Letanías · Santa Sede'}).href.includes('vatican.va'));
+ assert(!document.querySelector('.rosary-focus-body').contains(screen.getByRole('button',{name:'Volver al rezo'})));
+ fireEvent.click(screen.getByRole('button',{name:'Aumentar letra'}));assert.equal(localStorage.getItem('alianza-prayer-font'),'26');
  fireEvent.click(screen.getByRole('button',{name:'Descartar este rosario'}));fail=true;
  fireEvent.click(screen.getByRole('button',{name:'Sí, descartar'}));await screen.findByRole('alert');assert(screen.getByText('¿Descartar este rosario?'));
  fail=false;fireEvent.click(screen.getByRole('button',{name:'Sí, descartar'}));await waitFor(()=>assert.equal(screen.queryByRole('dialog'),null));
@@ -35,7 +40,19 @@ try{
  assert.equal(calls.filter(p=>p.action==='rosary_today').length,0);
  const mark=screen.getByRole('button',{name:'Marcar mi compromiso'});await waitFor(()=>assert(!mark.disabled));fireEvent.click(mark);await screen.findByRole('button',{name:'Ya está marcado'});
  assert.equal(calls.filter(p=>p.action==='rosary_today').length,1);
- fireEvent.click(screen.getByRole('button',{name:'Rezar las letanías'}));assert(screen.getByRole('heading',{name:'Señor, ten piedad.'}));fireEvent.click(screen.getByRole('button',{name:'Avanzar'}));assert(screen.getByRole('heading',{name:'Cristo, ten piedad.'}));assert.equal(calls.filter(p=>p.action==='rosary_step').length,1);await clear();
+ fireEvent.click(screen.getByRole('button',{name:'Rezar las letanías'}));assert(screen.getByRole('heading',{name:'Letanías'}));assert(screen.getByText('Cristo, ten piedad.'));fireEvent.click(screen.getByRole('button',{name:'Terminar letanías'}));assert(screen.getByRole('heading',{name:'Rosario concluido'}));assert.equal(calls.filter(p=>p.action==='rosary_step').length,1);await clear();
+ // Letanies are offered after Salve, before the final sign of the cross.
+ render(React.createElement(Harness,{initial:{...base,personalStep:67,progressVersion:67}}));
+ fireEvent.click(screen.getByRole('button',{name:'Continuar rezando'}));
+ assert.equal(screen.queryByRole('button',{name:'Rezar las letanías (opcional)'}),null);
+ fireEvent.click(screen.getByRole('button',{name:'Avanzar'}));
+ fireEvent.click(await screen.findByRole('button',{name:'Rezar las letanías (opcional)'}));
+ assert(screen.getByRole('heading',{name:'Letanías'}));
+ const exitLitany=screen.getByRole('button',{name:'Terminar letanías'});const reading=document.querySelector('.rosary-focus-body');assert(!reading.contains(exitLitany));assert.equal(document.querySelectorAll('.litany-line').length,68);reading.scrollTop=800;fireEvent.scroll(reading);fireEvent.click(screen.getByRole('button',{name:'Opciones del rezo'}));fireEvent.click(screen.getByRole('button',{name:'Aumentar letra'}));fireEvent.click(screen.getByRole('button',{name:'Volver al rezo'}));assert.equal(reading.scrollTop,800,'Returning from font settings retains the reading position');assert.equal(document.querySelector('.litany-footer .prayer-advance svg'),null);const beforeExit=calls.length;fireEvent.click(screen.getByRole('button',{name:'Terminar letanías'}));assert.equal(calls.length,beforeExit);assert(screen.getByRole('button',{name:'Terminé el rosario'}));
+ assert.equal(calls.at(-1).step,68);assert.equal(calls.filter(p=>p.action==='rosary_today').length,0);await clear();
+ render(React.createElement(Harness,{initial:{...base,personalStep:69,mine:[{decade:1,day:localDate()}]}}));
+ assert.equal(screen.queryByRole('img',{name:'Rosario concluido'}),null);
+ assert(screen.getByRole('button',{name:'Ver registro'}));assert.equal(screen.queryByRole('button',{name:'Continuar rezando'}),null);await clear();
  // Auto marking requires a remembered opt-in AND a completion transition in this session.
  localStorage.setItem('alianza-rosary-auto:owner','h');
  const finished={...base,personalStep:69,mine:Array.from({length:5},(_,i)=>({decade:i+1,day:localDate()}))};

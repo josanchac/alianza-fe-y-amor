@@ -121,3 +121,57 @@ html body .rosary-focus button{min-height:48px}
 .space-switcher .space-buttons button[aria-pressed=true],.space-default .space-buttons button[aria-pressed=true]{background:#e9f0f2;color:#203b49;border-color:#829da7;box-shadow:none}
 .space-selected-check{visibility:hidden}.space-buttons button[aria-pressed=true] .space-selected-check{visibility:visible}
 .course-controls{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.weekday-options{display:flex;gap:10px;flex-wrap:wrap}.weekday-options label{display:flex!important;align-items:center;gap:8px;min-height:44px}.weekday-options input{width:22px!important;height:22px}.course-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.course-fields input{min-width:0;width:100%}@media(max-width:400px){.course-fields{grid-template-columns:1fr}}
+
+/* One compact entry pattern; scope is conveyed by text and icon as well as tint. */
+.rosary-resume-list{display:grid;gap:10px;margin:24px 0}
+.rosary-resume-list .subheading{margin:0 0 4px}
+.rosary-resume-entry{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:14px 16px;border:1px solid var(--app-line,#dfe6e5);border-radius:18px;background:var(--app-card,#fff);color:var(--app-ink,#203e4b);min-height:88px}
+.rosary-resume-entry:focus-visible{outline:3px solid var(--app-ink,#203e4b);outline-offset:3px}
+.rosary-resume-icon{display:grid;place-items:center;flex:0 0 38px;width:38px;height:38px;border-radius:50%;background:#eaf1f3;color:#355965}
+.is-couple .rosary-resume-icon{background:#f3efe4;color:#856b32}
+.rosary-resume-copy{display:grid;gap:3px;min-width:0;flex:1}
+.rosary-resume-copy small{font-size:.8rem;color:var(--app-muted,#63747a)}
+.rosary-resume-copy strong{font-size:1.05rem;line-height:1.35;overflow-wrap:anywhere}
+.rosary-resume-copy>span{font-size:.85rem;line-height:1.4;color:var(--app-muted,#63747a)}
+.rosary-resume-entry>svg{flex-shrink:0}
+.rosary-focus .litany-line{padding:14px 0;border-bottom:1px solid #dfe6e5}
+.rosary-focus .litany-line p{margin:0}
+.rosary-focus .litany-line .litany-response{margin-top:5px;color:#50676e;font-weight:600}
+
+/* Litany reading keeps native scrolling and a quiet, persistent exit. */
+.rosary-focus .litany-prayer{max-width:38rem;margin:0 auto;overflow-wrap:anywhere}
+.rosary-focus .litany-line{padding:12px 0}
+.rosary-focus .litany-line .litany-call{font-family:Georgia,serif;line-height:1.55}
+.rosary-focus .litany-line .litany-response{font-size:calc(var(--prayer-size,24px) * .9);line-height:1.6;font-weight:500}
+.rosary-focus-body{scroll-behavior:auto;scroll-padding-block:16px;-webkit-overflow-scrolling:touch}
+.rosary-focus .litany-footer{display:flex;align-items:center;gap:12px;padding-top:10px;padding-bottom:max(10px,env(safe-area-inset-bottom))}
+html body .rosary-focus .litany-footer button.prayer-advance{flex:1;width:auto;min-width:0;min-height:48px;border-radius:14px;font-size:1rem;line-height:1.4;padding:10px 16px;background:#e9f0ef;color:#264651;border:1px solid #c5d3d4}
+html body .rosary-focus .litany-footer button.prayer-advance:hover{background:#dfe9e8}
+.rosary-focus .litany-footer .prayer-secondary{flex:0 0 auto}
+.rosary-focus .litany-footer .prayer-secondary button{width:48px;padding:10px}
+
+/* Prayer settings use compact rows and disclose supporting information on demand. */
+.rosary-focus .prayer-settings{max-width:34rem;margin:0 auto;text-align:left}
+.rosary-focus .prayer-settings h3{font:600 1.2rem/1.4 system-ui;margin:0 0 18px}
+.prayer-settings-group{border:1px solid #dce5e5;border-radius:18px;overflow:hidden;background:#fff;margin:0 0 16px}
+.prayer-settings-row{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:10px 16px;min-height:68px;font-size:1rem;line-height:1.4}
+.prayer-settings-row+.prayer-settings-row,.prayer-settings-detail+.prayer-settings-detail{border-top:1px solid #e6ecec}
+.prayer-settings-row>label{flex:1;cursor:pointer;min-width:0}
+.prayer-letter-buttons{display:flex;gap:6px;flex-shrink:0}
+html body .rosary-focus .prayer-letter-buttons button{min-width:44px;min-height:44px;width:44px;padding:8px;border-radius:12px;font-size:1rem;background:#edf2f2;color:#264651;border:0;flex:none}
+html body .rosary-focus .prayer-awake-switch{width:48px;min-width:48px;height:48px;min-height:48px;display:grid;place-items:center;flex:none;padding:0;border:0;background:transparent}
+.prayer-awake-switch>span{display:block;width:46px;height:28px;border-radius:20px;background:#cad5d6;position:relative}
+.prayer-awake-switch[aria-checked=true]>span{background:#294953}
+.prayer-awake-switch>span:after{content:'';position:absolute;width:22px;height:22px;top:3px;left:3px;border-radius:50%;background:#fff;transition:transform 120ms ease}
+.prayer-awake-switch[aria-checked=true]>span:after{transform:translateX(18px)}
+.rosary-focus .prayer-settings p.prayer-settings-status{font-size:.8rem;line-height:1.45;color:#50676e;margin:0;padding:0 16px 14px}
+.prayer-settings-detail>summary{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px;min-height:56px;cursor:pointer;list-style:none;font-size:1rem;line-height:1.4}
+.prayer-settings-detail>summary::-webkit-details-marker{display:none}
+.prayer-settings-detail>summary:after{content:'›';font-size:1.4rem;color:#63777c;flex:none}
+.prayer-settings-detail[open]>summary:after{transform:rotate(90deg)}
+.prayer-settings-detail>div{padding:0 16px 16px}
+.rosary-focus .prayer-settings-detail p{font-size:.95rem;line-height:1.55;margin:0 0 8px}
+.rosary-focus .prayer-settings-detail .quiet-source{font-size:.9rem;margin:0;padding:10px 0;min-height:44px;line-height:1.5;text-decoration:underline;text-underline-offset:3px}
+html body .rosary-focus .prayer-settings-footer button{width:100%;min-height:48px;border-radius:14px;background:#e9f0ef;color:#264651;border:1px solid #c5d3d4;font-size:1rem}
+.rosary-focus .prayer-settings .prayer-discard{font-size:.9rem;margin:4px 0;color:#835451}
+@media(max-width:350px){.prayer-settings-row{padding:10px 12px;gap:8px}.prayer-letter-buttons{gap:4px}}

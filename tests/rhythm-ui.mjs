@@ -24,7 +24,7 @@ try{
  fireEvent.click(await screen.findByRole('button',{name:'Agregar otro'}));
  await waitFor(()=>assert.equal(fixture.own.find(r=>r.kind==='checks').data.rosary,2));
  await waitFor(()=>assert(screen.getByText(/2 de 2 veces/)));
- fireEvent.pointerDown(screen.getByRole('button',{name:'Editar: Dos rosarios al mes'}),{button:0,ctrlKey:false,pointerType:'mouse'});
+ fireEvent.click(screen.getByRole('button',{name:'Editar: Dos rosarios al mes'}),{button:0,ctrlKey:false,pointerType:'mouse'});
  fireEvent.click(await screen.findByRole('menuitem',{name:'Deshacer último'}));
  await waitFor(()=>assert.equal(fixture.own.find(r=>r.kind==='checks').data.rosary,1));
  assert.equal(screen.getByRole('progressbar',{name:'Compromisos diarios'}).getAttribute('aria-valuenow'),'1');

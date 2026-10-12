@@ -146,6 +146,7 @@ export function PurposeCard({
   coupleId?: string | null;
   userId: string;
   compact?: boolean;
+  onActiveChange?: (active:boolean)=>void;
 }) {
   const [day, setDay] = useState(localDate()),
     [error, setError] = useState(""), [feedback,setFeedback]=useState(""), [dateOpen,setDateOpen]=useState(false);
@@ -376,6 +377,8 @@ export function CreateRosary({
   );
 }
 export function RosaryCard({
+  compact = false,
+  onActiveChange,
   r,
   act,
   busy,
@@ -386,6 +389,8 @@ export function RosaryCard({
   checks = {},
   onLinked,
 }: {
+  compact?: boolean;
+  onActiveChange?: (active:boolean)=>void;
   r: Rosary;
   act: CommunityAction;
   busy: boolean;
@@ -396,7 +401,7 @@ export function RosaryCard({
   checks?: Record<string,string>;
   onLinked?: () => void;
 }) {
-  if(!r.groupId&&!r.coupleId)return <PersonalRosary r={r} act={act} busy={busy} habits={habits} checks={checks} onLinked={onLinked}/>;
+  if(!r.groupId&&!r.coupleId)return <PersonalRosary compact={compact} onActiveChange={onActiveChange} r={r} act={act} busy={busy} habits={habits} checks={checks} onLinked={onLinked}/>;
   return <SharedRosaryCard r={r} act={act} busy={busy} userId={userId} names={names} canManage={canManage} habits={habits} onLinked={onLinked}/>;
 }
 function SharedRosaryCard({r,act,busy,userId,names={},canManage=false,habits=[],onLinked}:Parameters<typeof RosaryCard>[0]){
