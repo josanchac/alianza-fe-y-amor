@@ -95,3 +95,9 @@ Regresión completa local y build de la versión anterior 5b88799 aprobados; CI 
 ## Revisión de configuración del rezo · 11/10 · 20:04 Costa Rica
 
 El propietario aprueba las letanías completas, salida y lectura. Nuevo hallazgo: A mi manera parece página de texto. Propuesta implementada solo en candidata/vista privada: filas agrupadas para letra y pantalla encendida, interruptor accesible con objetivo 48 px, detalles del rosario y fuentes bajo demanda, retorno fijo al rezo. Fuentes y contenido íntegros, mismas preferencias locales y protección de descarte; no se añaden permisos ni escrituras de progreso. Tests de interruptor/persistencia, fuentes accesibles, retorno fuera del scroll y conservación de posición. Apariencia de configuración pendiente de revisión del propietario.
+
+## Aprobación final y candidata 0.4.0-alpha.3 · 11/10 · 20:11 Costa Rica
+
+El propietario aprueba la configuración y ordena avanzar. Quedan aprobados los cambios visuales/editoriales presentados; no se introducen oraciones ni fuentes nuevas. CI 38194615934 y 38194615940: success sobre 5b24a06. La preparación final solo actualiza versión, fecha y evidencia de aprobación; conserva los textos aprobados de novedades.
+
+La secuencia vigente sustituye los bloqueos históricos: #15 diferido expresamente por el propietario. Se mantiene el checkpoint privado existente, sin afirmar recuperación externa. Como producción ya consulta alianza_service_status cada 15 segundos y al recuperar foco, se reutiliza ese cierre remoto y su bloqueo de escrituras; no se necesita publicar otra configuración para instalar una protección que ya existe. Mantenimiento → checkpoint interno verificado → única migración current_month_plan con cotejo de datos antes del commit → permisos → publicación Pages → comprobación de versión/recursos → reapertura con versión requerida. No ejecutar tests que crean Auth.users en producción: esos ensayos quedaron aislados.

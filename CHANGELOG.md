@@ -1,14 +1,17 @@
 # Historial de versiones de Alianza
 
-## Pendiente de publicación
+## 0.4.0-alpha.3 — 2026-10-11
 
-- Propuestos para revisión visual y editorial: acceso visible al rosario compartido, concluidos separados, letanías después del Salve, cierre/foco de formularios y etiquetas más claras. Misa informa la ausencia de respuesta del salmo; respuesta y leccionario costarricense siguen pendientes.
+- Aprobados por el propietario: acceso visible al rosario compartido, concluidos separados, letanías después del Salve, cierre/foco de formularios y etiquetas más claras. Misa informa la ausencia de respuesta del salmo; respuesta y leccionario costarricense siguen pendientes.
 
-- Preparar el mes actual permite seleccionar, ajustar, pausar y crear compromisos y guardar el propósito en una sola operación desde la fecha actual de Costa Rica. Conserva borradores, historial, revisiones y planes futuros ya preparados; requiere la migración de guardado mensual.
+- Preparar el mes actual permite seleccionar, ajustar, pausar y crear compromisos y guardar el propósito en una sola operación desde la fecha actual de Costa Rica. Conserva borradores, historial, revisiones y planes futuros ya preparados; incluye la migración de guardado mensual.
 
 - «Mis reflexiones» ocupa un acceso compacto en Hoy y abre una vista dedicada para releer ofrecimientos, agradecimientos y meditaciones. Volver restaura la posición de lectura. Editar conserva el guardado y las reglas de privacidad existentes.
 - El menú del compromiso espera un toque completo: apoyar el dedo para deslizar la lista ya no lo abre. Se conservan los accesos por teclado y las acciones existentes; pendiente de validación en Android real.
 - Las etiquetas Diario, Semanal y Mensual conservan la palabra completa y pasan a otra línea si no caben junto al título; se mantiene el tamaño de letra.
+
+- Diseño original de compromisos con Deshacer tras registrar y opción explícita de pausar.
+- Rosario personal y de pareja con entradas compactas coherentes; letanías completas de lectura continua, salida siempre visible y configuración compacta con fuentes conservadas.
 
 ## 0.2.0-alpha.9 — 2026-09-17 (preparada para publicación)
 
