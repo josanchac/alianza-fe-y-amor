@@ -877,14 +877,20 @@
       "tag": "button",
       "label": "Atrás",
       "className": "\"text-button\"",
-      "handler": "{()=>litany!==null?setLitany(litany-1):move(-1)}",
+      "handler": "{()=>move(-1)}",
       "pressed": false,
       "expanded": false,
       "type": "navigation",
       "rationale": "Acceso o regreso: tratamiento liviano, sin competir con guardar.",
       "review": "Validar patrón en contexto",
       "implementation": "classified-action",
-      "intent": "navigation"
+      "intent": "navigation",
+      "previousHandler": "{()=>litany!==null?setLitany(litany-1):move(-1)}",
+      "reviewedChange": {
+        "date": "2026-10-11",
+        "reason": "Propietario aprueba lectura continua de letanías a las 19:45; Atrás conserva regreso de cuenta del rosario y ya no pagina invocaciones. Terminar letanías es local y visible fuera del scroll.",
+        "evidence": "tests/rosary-comfort-ui.mjs; tests/rosary-entry-ui.mjs; tests/rosary-order.mjs"
+      }
     },
     {
       "id": "A250",

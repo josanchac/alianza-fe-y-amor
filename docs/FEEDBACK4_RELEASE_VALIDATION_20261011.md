@@ -74,3 +74,14 @@ Base de pruebas: 42 tablas privadas/backup, todas con RLS, ninguna con acceso di
 5. Ante fallo de cliente, restaurar cliente anterior, compatible con la migración aditiva. No borrar tablas, planes o registros nuevos como reversión. Una restauración de DB requiere el procedimiento ensayado y reaplicar decisiones de borrado/revocación posteriores.
 
 Alcance restante fuera de cierre automático: invitación al Rosario con aceptación/rechazo, respuesta del salmo/edición CR, semana/año e integración general de ámbitos. La candidata no acredita mejoras no implementadas ni medición móvil de rendimiento.
+
+
+## Decisiones y refinamiento de Rosario · 11/10 · 19:31–19:45 Costa Rica
+
+El propietario difiere arquitectura de respaldos y configuración OneDrive (#15) a otra sesión: deja de bloquear esta entrega. No se configuraron credenciales ni se exportaron datos; no se acredita recuperación externa. Esta decisión sustituye la condición anterior de bloqueo, conservada como historial. Los workflows 38186878817 y 38186878805 aprobaron sobre b6e6ce; son evidencia de la candidata anterior a este refinamiento, no de producción.
+
+A las 19:41 aprobó la entrada de letanías después del Salve, pero pidió unificar accesos personal/pareja y eliminar los 68 toques. A las 19:45 aprobó sección compacta común y lectura continua, solicitando Terminar letanías siempre visible durante el desplazamiento.
+
+Implementación: misma entrada con etiqueta, icono, misterios y avance; personales y pareja reunidos bajo Continuar un rosario; concluidos en historial. Personal mantiene su diálogo hasta cerrar la conclusión y las oraciones finales siguen pendientes aunque ya se hayan completado cinco misterios. Intención consultable en opciones del rezo. Texto íntegro LITANY sin cambios ni nuevas fuentes. Lectura desplazable independiente del footer persistente; Terminar letanías no escribe ni marca cumplimiento y devuelve al paso anterior. El manifiesto A249 documenta la retirada de paginación de invocaciones conservando Atrás para cuentas del rosario.
+
+Cotejo M10/M12: cambios de presentación e interacción aprobados conceptualmente, sin cambios de oraciones, reglas de progreso, compartición o backend. Pruebas de entrada, cierre, integridad de 68 invocaciones, salida sin escrituras y orden del rosario. Inspección visual final en teléfono pendiente en vista privada; no se afirma verificación de navegador local ni publicación al piloto.

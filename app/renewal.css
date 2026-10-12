@@ -121,3 +121,19 @@ html body .rosary-focus button{min-height:48px}
 .space-switcher .space-buttons button[aria-pressed=true],.space-default .space-buttons button[aria-pressed=true]{background:#e9f0f2;color:#203b49;border-color:#829da7;box-shadow:none}
 .space-selected-check{visibility:hidden}.space-buttons button[aria-pressed=true] .space-selected-check{visibility:visible}
 .course-controls{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.weekday-options{display:flex;gap:10px;flex-wrap:wrap}.weekday-options label{display:flex!important;align-items:center;gap:8px;min-height:44px}.weekday-options input{width:22px!important;height:22px}.course-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.course-fields input{min-width:0;width:100%}@media(max-width:400px){.course-fields{grid-template-columns:1fr}}
+
+/* One compact entry pattern; scope is conveyed by text and icon as well as tint. */
+.rosary-resume-list{display:grid;gap:10px;margin:24px 0}
+.rosary-resume-list .subheading{margin:0 0 4px}
+.rosary-resume-entry{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:14px 16px;border:1px solid var(--app-line,#dfe6e5);border-radius:18px;background:var(--app-card,#fff);color:var(--app-ink,#203e4b);min-height:88px}
+.rosary-resume-entry:focus-visible{outline:3px solid var(--app-ink,#203e4b);outline-offset:3px}
+.rosary-resume-icon{display:grid;place-items:center;flex:0 0 38px;width:38px;height:38px;border-radius:50%;background:#eaf1f3;color:#355965}
+.is-couple .rosary-resume-icon{background:#f3efe4;color:#856b32}
+.rosary-resume-copy{display:grid;gap:3px;min-width:0;flex:1}
+.rosary-resume-copy small{font-size:.8rem;color:var(--app-muted,#63747a)}
+.rosary-resume-copy strong{font-size:1.05rem;line-height:1.35;overflow-wrap:anywhere}
+.rosary-resume-copy>span{font-size:.85rem;line-height:1.4;color:var(--app-muted,#63747a)}
+.rosary-resume-entry>svg{flex-shrink:0}
+.rosary-focus .litany-line{padding:14px 0;border-bottom:1px solid #dfe6e5}
+.rosary-focus .litany-line p{margin:0}
+.rosary-focus .litany-line .litany-response{margin-top:5px;color:#50676e;font-weight:600}

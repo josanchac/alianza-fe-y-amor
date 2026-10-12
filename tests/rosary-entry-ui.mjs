@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import {dom} from './dom.mjs';
 const React=await import('react');
-const {render,screen,fireEvent,cleanup}=await import('@testing-library/react');
+const {render,screen,fireEvent,cleanup,within,waitFor}=await import('@testing-library/react');
 const {default:Journal}=await import('../app/journal.tsx');
 const {localDate}=await import('../lib/domain.ts');
 const row=(kind,key,data)=>({owner:'synthetic',kind,key,data,version:1,updated:''});
@@ -13,7 +13,7 @@ try{
  render(React.createElement(Journal,{dataRequest:async init=>{if(init?.method==='POST')writes++;return Response.json(fixture);},communityTransport:async p=>{if(p.action!=='snapshot')writes++;return Response.json(community);},onSignOut(){}}));
  await screen.findByRole('button',{name:/Mis reflexiones/});
  fireEvent.mouseDown(screen.getByRole('tab',{name:'Oración'}),{button:0,ctrlKey:false});
- fireEvent.click(await screen.findByRole('button',{name:/Continuar el rosario en pareja/}));
+ fireEvent.click(await screen.findByRole('button',{name:/Continuar rosario en pareja/}));
  assert(screen.getByRole('heading',{name:'Misterios gozosos'}));
  assert.equal(screen.queryByRole('heading',{name:'Misterios gloriosos'}),null);
  fireEvent.click(screen.getByRole('button',{name:/Rosarios concluidos en pareja/}));
@@ -21,5 +21,20 @@ try{
  assert.equal(screen.queryByRole('heading',{name:'Misterios gozosos'}),null);
  fireEvent.click(screen.getByRole('button',{name:'Volver a Rosario juntos'}));
  assert(screen.getByRole('heading',{name:'Misterios gozosos'}));assert.equal(writes,0);
+ cleanup();sessionStorage.clear();
+ const personal={...shared,id:'personal',ownerId:'synthetic',coupleId:null,personalStep:68,progressVersion:1,slots:Array.from({length:5},(_,i)=>({decade:i+1,userId:'synthetic',done:true}))};
+ const completed={...personal,id:'past',personalStep:69,slots:Array.from({length:5},(_,i)=>({decade:i+1,userId:'synthetic',done:true}))};
+ let data={groups:[],rosaries:[personal,shared,completed]};const mutations=[];
+ render(React.createElement(Journal,{dataRequest:async()=>Response.json(fixture),communityTransport:async p=>{if(p.action==='rosary_step'){mutations.push(p);data={...data,rosaries:data.rosaries.map(r=>r.id===p.id?{...r,personalStep:p.step,progressVersion:2,slots:completed.slots,mine:completed.slots.map(s=>({decade:s.decade,day:localDate()}))}:r)};}return Response.json(data);},onSignOut(){}}));
+ await screen.findByRole('button',{name:/Mis reflexiones/});fireEvent.mouseDown(screen.getByRole('tab',{name:'Oración'}),{button:0,ctrlKey:false});
+ const resume=await screen.findByRole('region',{name:'Continuar un rosario'});
+ assert.equal(within(resume).getAllByRole('button').length,2);assert.equal(resume.querySelector('.rosary-map'),null);
+ fireEvent.click(within(resume).getByRole('button',{name:/Continuar rosario personal/}));
+ fireEvent.click(await screen.findByRole('button',{name:'Rezar las letanías (opcional)'}));
+ fireEvent.click(screen.getByRole('button',{name:'Terminar letanías'}));assert.equal(mutations.length,0);
+ fireEvent.click(screen.getByRole('button',{name:'Terminé el rosario'}));
+ await screen.findByRole('heading',{name:'Rosario concluido'});assert.equal(mutations.length,1);
+ await waitFor(()=>assert(!screen.getByRole('button',{name:'Cerrar',exact:true}).disabled));fireEvent.click(screen.getByRole('button',{name:'Cerrar',exact:true}));
+ await waitFor(()=>assert.equal(screen.queryByRole('button',{name:/Continuar rosario personal/}),null));assert(screen.getByRole('button',{name:/Continuar rosario en pareja/}));
  console.log('PASS prayer entry discovers the same partner rosary, separates completed history and navigates without writes');
 }finally{cleanup();dom.window.close();}
